@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://signals.example/schemas/aspect.schema.json",
+  "title": "Player-facing railway signal aspect",
+  "type": "object",
+  "required": ["id", "country", "system", "designation", "recognition", "meaning", "playerAction", "visual", "evidence"],
+  "properties": {
+    "id": { "type": "string" },
+    "country": { "type": "string", "const": "DE" },
+    "system": { "type": "string" },
+    "designation": { "type": "string" },
+    "aliases": { "type": "array", "items

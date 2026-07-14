@@ -1,0 +1,150 @@
+{
+  "system": "de.ks",
+  "status": "in-progress",
+  "coordinateSystem": {
+    "units": "normalised",
+    "origin": "top-left",
+    "range": [0, 1]
+  },
+  "aspects": [
+    {
+      "id": "de.ks.hp0",
+      "designation": "Hp 0",
+      "title": "Stop",
+      "recognition": "One steady red light on a Ks signal with main-signal function.",
+      "meaning": "Stop before the signal.",
+      "playerAction": [
+        "Bring the train to a stand before the signal.",
+        "Do not pass without an appropriate authority or subsidiary indication."
+      ],
+      "display": {
+        "lamps": [
+          { "id": "red", "colour": "red", "state": "steady" }
+        ]
+      },
+      "safetySystems": {
+        "pzb": {
+          "summary": "Passing an active 2000 Hz magnet without authority causes an emergency brake application.",
+          "acknowledge": false,
+          "notes": ["The magnet state and permitted passing procedure depend on the operational situation and any subsidiary indication."]
+        }
+      },
+      "compatibleFunctions": ["main", "multi-section"],
+      "svg": "assets/germany/ks/aspects/hp0.svg",
+      "routeEvidence": [],
+      "confidence": "high",
+      "sources": [
+        {
+          "type": "regulatory-summary",
+          "title": "Eisenbahn-Signalordnung and DB Signalbuch overview",
+          "url": "https://www.gesetze-im-internet.de/eso_1959/"
+        }
+      ]
+    },
+    {
+      "id": "de.ks.ks1",
+      "designation": "Ks 1",
+      "title": "Proceed, expect proceed",
+      "recognition": "One steady green light.",
+      "meaning": "Proceed. The signal does not announce a stop at the next main signal. Any displayed speed indicator still applies.",
+      "playerAction": [
+        "Proceed at the speed permitted by the timetable, cab signalling and any Zs 3 indication.",
+        "Check for a Zs 3v indication announcing a lower speed at the next signal."
+      ],
+      "display": {
+        "lamps": [
+          { "id": "green", "colour": "green", "state": "steady" }
+        ]
+      },
+      "safetySystems": {
+        "pzb": {
+          "summary": "The plain proceed aspect normally requires no PZB acknowledgement.",
+          "acknowledge": false,
+          "notes": ["Other signs or restrictions at the same location may independently require action."]
+        }
+      },
+      "compatibleFunctions": ["main", "distant", "multi-section"],
+      "svg": "assets/germany/ks/aspects/ks1.svg",
+      "routeEvidence": [],
+      "confidence": "high",
+      "sources": [
+        {
+          "type": "technical-summary",
+          "title": "Ks-Signalsystem",
+          "url": "https://de.wikipedia.org/wiki/Ks-Signalsystem"
+        }
+      ]
+    },
+    {
+      "id": "de.ks.ks1-flashing",
+      "designation": "Ks 1 flashing",
+      "title": "Proceed, expect a lower indicated speed",
+      "recognition": "One flashing green light, used with a Zs 3v speed pre-indicator.",
+      "meaning": "Proceed. Expect the lower speed shown by Zs 3v from the next signal or defined location.",
+      "playerAction": [
+        "Proceed at the currently permitted speed.",
+        "Read the yellow Zs 3v numeral and begin braking so the announced speed is reached at its required point.",
+        "Acknowledge PZB when the associated 1000 Hz influence is active."
+      ],
+      "display": {
+        "lamps": [
+          { "id": "green", "colour": "green", "state": "flashing", "frequencyHz": null }
+        ],
+        "requiredIndicators": ["de.zs.zs3v"]
+      },
+      "safetySystems": {
+        "pzb": {
+          "summary": "A restrictive speed announcement may be protected by an active 1000 Hz magnet and require acknowledgement.",
+          "acknowledge": "conditional",
+          "notes": ["The database must not infer magnet activation solely from lamp colour; route evidence should record the simulated implementation."]
+        }
+      },
+      "compatibleFunctions": ["distant", "multi-section"],
+      "svg": "assets/germany/ks/aspects/ks1-flashing.svg",
+      "routeEvidence": [],
+      "confidence": "high",
+      "sources": [
+        {
+          "type": "technical-summary",
+          "title": "Ks 1 with Zs 3v",
+          "url": "https://de.wikipedia.org/wiki/Ks-Signalsystem"
+        }
+      ]
+    },
+    {
+      "id": "de.ks.ks2",
+      "designation": "Ks 2",
+      "title": "Proceed, expect stop",
+      "recognition": "One steady yellow light.",
+      "meaning": "Proceed and expect the next main signal to show stop.",
+      "playerAction": [
+        "Acknowledge PZB when the 1000 Hz influence is active.",
+        "Begin braking and approach the next main signal prepared to stop before it.",
+        "Observe any speed indication displayed with the signal."
+      ],
+      "display": {
+        "lamps": [
+          { "id": "yellow", "colour": "yellow", "state": "steady" }
+        ]
+      },
+      "safetySystems": {
+        "pzb": {
+          "summary": "The warning is normally associated with a 1000 Hz influence requiring acknowledgement when active.",
+          "acknowledge": "conditional",
+          "notes": ["PZB monitoring depends on train type and the simulated magnet state."]
+        }
+      },
+      "compatibleFunctions": ["distant", "multi-section"],
+      "svg": "assets/germany/ks/aspects/ks2.svg",
+      "routeEvidence": [],
+      "confidence": "high",
+      "sources": [
+        {
+          "type": "technical-summary",
+          "title": "Ks-Signalsystem",
+          "url": "https://de.wikipedia.org/wiki/Ks-Signalsystem"
+        }
+      ]
+    }
+  ]
+}
