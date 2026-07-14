@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" role="img" aria-labelledby="title desc">
+  <title id="title">Ne 2 distant signal board</title>
+  <desc id="desc">Recognition-grade black-and-white chequered rectangular board.</desc>
+  <rect x="8" y="8" width="144" height="104" fill="#f4f4f2" stroke="#151515" stroke-width="8"/>
+  <g fill="#151515">
+    <rect x="12" y="12" width="34" height="24"/>
+    <rect x="80" y="12" width="34" height="24"/>
+    <rect x="46" y="36" width="34" height="24"/>
+    <rect x="114" y="36" width="34" height="24"/>
+    <rect x="12" y="60" width="34" height="24"/>
+    <rect x="80" y="60" width="34" height="24"/>
+    <rect x="46" y="84" width="34" height="24"/>
+    <rect x="114" y="84" width="34" height="24"/>
+  </g>
+</svg>
