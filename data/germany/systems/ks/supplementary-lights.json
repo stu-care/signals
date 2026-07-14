@@ -1,0 +1,55 @@
+{
+  "system": "de.ks",
+  "status": "in-progress",
+  "supplementaryLights": [
+    {
+      "id": "de.ks.light.short-braking-distance",
+      "title": "Shortened braking-distance marker",
+      "recognition": "A steady white supplementary light above the main Ks lamps.",
+      "meaning": "The next announced stopping point is at a braking distance shortened by more than five percent.",
+      "playerAction": [
+        "Treat the displayed warning or speed announcement as having less distance than normal.",
+        "Brake promptly enough to meet the announced stop or speed at the required point."
+      ],
+      "position": "above-main-lamps",
+      "state": "steady",
+      "colour": "white",
+      "shownWith": ["de.ks.ks2", "de.ks.ks1-flashing"],
+      "notASeparateAspect": true,
+      "routeEvidence": [],
+      "confidence": "high",
+      "sources": [
+        {
+          "type": "technical-summary",
+          "title": "Ks-Signalsystem",
+          "url": "https://de.wikipedia.org/wiki/Ks-Signalsystem"
+        }
+      ]
+    },
+    {
+      "id": "de.ks.light.distant-repeater",
+      "title": "Distant-signal repeater marker",
+      "recognition": "A steady white supplementary light below the main Ks lamps when the repeated indication is restrictive.",
+      "meaning": "This signal repeats distant information that was already given earlier, usually because the next main signal is difficult to see.",
+      "playerAction": [
+        "Respond to the repeated Ks indication exactly as you would at the original distant indication.",
+        "Do not assume a new full braking distance begins at the repeater."
+      ],
+      "position": "below-main-lamps",
+      "state": "steady",
+      "colour": "white",
+      "shownWith": ["de.ks.ks2", "de.ks.ks1-flashing"],
+      "suppressedWith": ["de.ks.ks1"],
+      "notASeparateAspect": true,
+      "routeEvidence": [],
+      "confidence": "high",
+      "sources": [
+        {
+          "type": "technical-summary",
+          "title": "Vorsignalwiederholer",
+          "url": "https://de.wikipedia.org/wiki/Vorsignalwiederholer"
+        }
+      ]
+    }
+  ]
+}
