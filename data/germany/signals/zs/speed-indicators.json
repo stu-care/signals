@@ -1,0 +1,83 @@
+{
+  "country": "DE",
+  "family": "de.zs.speed",
+  "status": "in-progress",
+  "signals": [
+    {
+      "id": "de.zs.zs3.light",
+      "designation": "Zs 3",
+      "germanName": "Geschwindigkeitsanzeiger",
+      "englishName": "Speed indicator",
+      "recognition": "A white illuminated numeral on a dark indicator panel.",
+      "meaning": "The displayed numeral multiplied by 10 is the maximum speed in km/h from the signal through the following points and crossings area.",
+      "playerAction": [
+        "Read the white numeral and multiply it by 10.",
+        "Do not exceed that speed from the signal.",
+        "Continue to observe any more restrictive timetable, cab-signalling or lineside limit."
+      ],
+      "display": {
+        "type": "illuminated-numeral",
+        "colour": "white",
+        "background": "black",
+        "valueRule": { "multiplierKph": 10 },
+        "values": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+      },
+      "typicalPlacement": ["above-main-signal", "standalone"],
+      "compatibleSystems": ["de.ks", "de.hv"],
+      "svgComponent": "assets/germany/zs/components/numeric-indicator.svg",
+      "routeEvidence": [],
+      "confidence": "high",
+      "notes": [
+        "The listed values are rendering support, not a claim that every value appears on every Train Sim World route.",
+        "Route observations must record which numerals are actually represented."
+      ],
+      "sources": [
+        {
+          "type": "regulatory-summary",
+          "title": "Eisenbahn-Signalordnung and DB Signalbuch meaning of Zs 3",
+          "url": "https://www.gesetze-im-internet.de/eso_1959/"
+        }
+      ]
+    },
+    {
+      "id": "de.zs.zs3v.light",
+      "designation": "Zs 3v",
+      "germanName": "Geschwindigkeitsvoranzeiger",
+      "englishName": "Distant speed indicator",
+      "recognition": "A yellow illuminated numeral on a dark indicator panel.",
+      "meaning": "Expect a Zs 3 with the same numeral. The numeral multiplied by 10 is the speed in km/h to be observed from that later signal or defined point.",
+      "playerAction": [
+        "Read the yellow numeral and multiply it by 10.",
+        "Begin braking in time to reach that speed at the associated Zs 3.",
+        "Acknowledge PZB when an associated 1000 Hz influence is active."
+      ],
+      "display": {
+        "type": "illuminated-numeral",
+        "colour": "yellow",
+        "background": "black",
+        "valueRule": { "multiplierKph": 10 },
+        "values": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+      },
+      "typicalPlacement": ["below-distant-or-combination-signal"],
+      "compatibleSystems": ["de.ks", "de.hv"],
+      "requiresWithKs": {
+        "aspect": "de.ks.ks1-flashing",
+        "reason": "Flashing green draws attention to the speed announcement."
+      },
+      "svgComponent": "assets/germany/zs/components/numeric-indicator.svg",
+      "routeEvidence": [],
+      "confidence": "high",
+      "notes": [
+        "PZB action is conditional on the simulated magnet state and must be verified per route.",
+        "The listed values are rendering support, not confirmed TSW route coverage."
+      ],
+      "sources": [
+        {
+          "type": "regulatory-summary",
+          "title": "Eisenbahn-Signalordnung and DB Signalbuch meaning of Zs 3v",
+          "url": "https://www.gesetze-im-internet.de/eso_1959/"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "system": "de.ks",
+  "status": "in-progress",
+  "coordinateSystem": {
+    "units": "normalised",
+    "origin": "top-left",
+    "range": [0, 1]
+  },
+  "assets": [
+    {
+      "id": "de.ks.head.standard-two-lamp",
+      "title": "Standard Ks two-lamp head",
+      "purpose": "Generic recognisable head for main, distant and multi-section Ks functions.",
+      "shape": {
+        "type": "rounded-rectangle",
+        "width": 1,
+        "height": 1.8,
+        "cornerRadius": 0.18
+      },
+      "lamps": [
+        {
+          "id": "upper",
+          "position": { "x": 0.5, "y": 0.31 },
+          "supportedColours": ["red", "green", "white"],
+          "notes": ["Actual colour capability depends on the fitted signal function and route asset."]
+        },
+        {
+          "id": "lower",
+          "position": { "x": 0.5, "y": 0.69 },
+          "supportedColours": ["yellow", "white"],
+          "notes": ["Actual colour capability depends on the fitted signal function and route asset."]
+        }
+      ],
+      "functions": ["main", "distant", "multi-section"],
+      "mountings": ["mast", "gantry", "cantilever"],
+      "compatibleIndicators": ["de.zs.zs3.light", "de.zs.zs3v.light", "de.zs.zs2.light", "de.zs.zs2v.light", "de.zs.zs6.light"],
+      "svgComponent": "assets/germany/ks/components/standard-two-lamp-head.svg",
+      "accuracy": "recognition-grade",
+      "routeEvidence": [],
+      "notes": [
+        "This is a reusable diagram component, not a manufacturer-specific engineering drawing.",
+        "Lamp capability is deliberately broader than any single installed head so route observations can narrow it later."
+      ]
+    },
+    {
+      "id": "de.ks.mounting.mast",
+      "title": "Ks mast mounting",
+      "type": "mounting",
+      "supportedHeads": ["de.ks.head.standard-two-lamp"],
+      "indicatorPositions": {
+        "aboveHead": ["de.zs.zs3.light"],
+        "belowHead": ["de.zs.zs3v.light", "de.zs.zs2.light", "de.zs.zs2v.light"],
+        "side": ["de.zs.zs6.light"]
+      },
+      "accuracy": "layout-guidance",
+      "notes": ["Indicator position records describe common diagram placement and must be overridden where route evidence shows a different assembly."]
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "system": "de.ks",
+  "status": "in-progress",
+  "combinations": [
+    {
+      "id": "de.ks.combo.ks1-zs3",
+      "title": "Proceed with speed from this signal",
+      "aspect": "de.ks.ks1",
+      "components": ["de.ks.head.standard-two-lamp", "de.zs.zs3.light"],
+      "layout": { "de.zs.zs3.light": "aboveHead" },
+      "meaningTemplate": "Proceed. Do not exceed {speedKph} km/h from this signal through the following points and crossings area.",
+      "playerActionTemplate": [
+        "Read the white numeral as {speedKph} km/h.",
+        "Reduce speed before the signal if necessary.",
+        "Proceed while observing any lower applicable limit."
+      ],
+      "parameters": { "speedKph": { "fromIndicator": "de.zs.zs3.light", "multiplier": 10 } },
+      "routeEvidence": []
+    },
+    {
+      "id": "de.ks.combo.ks1-flashing-zs3v",
+      "title": "Proceed and expect a lower indicated speed",
+      "aspect": "de.ks.ks1-flashing",
+      "components": ["de.ks.head.standard-two-lamp", "de.zs.zs3v.light"],
+      "layout": { "de.zs.zs3v.light": "belowHead" },
+      "meaningTemplate": "Proceed. Expect {speedKph} km/h at the associated following Zs 3.",
+      "playerActionTemplate": [
+        "Read the yellow numeral as {speedKph} km/h.",
+        "Begin braking so the announced speed is reached at the required point.",
+        "Acknowledge PZB if the associated 1000 Hz influence is active."
+      ],
+      "parameters": { "speedKph": { "fromIndicator": "de.zs.zs3v.light", "multiplier": 10 } },
+      "routeEvidence": []
+    },
+    {
+      "id": "de.ks.combo.ks2-zs3",
+      "title": "Proceed at restricted speed and expect stop",
+      "aspect": "de.ks.ks2",
+      "components": ["de.ks.head.standard-two-lamp", "de.zs.zs3.light"],
+      "layout": { "de.zs.zs3.light": "aboveHead" },
+      "meaningTemplate": "Proceed at no more than {speedKph} km/h from this signal and expect the next main signal to show stop.",
+      "playerActionTemplate": [
+        "Observe {speedKph} km/h from this signal.",
+        "Acknowledge PZB if the warning influence is active.",
+        "Approach the next main signal prepared to stop."
+      ],
+      "parameters": { "speedKph": { "fromIndicator": "de.zs.zs3.light", "multiplier": 10 } },
+      "routeEvidence": []
+    },
+    {
+      "id": "de.ks.combo.ks2-zs3-zs3v",
+      "title": "Restricted speed, expect stop, and speed announcement",
+      "aspect": "de.ks.ks2",
+      "components": ["de.ks.head.standard-two-lamp", "de.zs.zs3.light", "de.zs.zs3v.light"],
+      "layout": {
+        "de.zs.zs3.light": "aboveHead",
+        "de.zs.zs3v.light": "belowHead"
+      },
+      "meaningTemplate": "Proceed at no more than {currentSpeedKph} km/h, expect stop at the next main signal, and observe the separately announced {nextSpeedKph} km/h where its Zs 3 applies.",
+      "parameters": {
+        "currentSpeedKph": { "fromIndicator": "de.zs.zs3.light", "multiplier": 10 },
+        "nextSpeedKph": { "fromIndicator": "de.zs.zs3v.light", "multiplier": 10 }
+      },
+      "routeEvidence": [],
+      "notes": ["This record models the data relationship. Actual permitted combinations and TSW occurrences require route evidence."]
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 210" role="img" aria-labelledby="title desc">
+  <title id="title">Reusable two-lamp Ks signal head</title>
+  <desc id="desc">Recognition-grade Ks signal head with two configurable lamp positions.</desc>
+  <rect id="head" x="12" y="8" width="96" height="194" rx="18" fill="#202124" stroke="#111" stroke-width="6"/>
+  <g id="upper-lamp">
+    <circle cx="60" cy="66" r="27" fill="#111" stroke="#080808" stroke-width="5"/>
+    <circle id="upper-lens" cx="60" cy="66" r="19" fill="var(--upper-colour, #343434)" opacity="var(--upper-opacity, 1)"/>
+  </g>
+  <g id="lower-lamp">
+    <circle cx="60" cy="144" r="27" fill="#111" stroke="#080808" stroke-width="5"/>
+    <circle id="lower-lens" cx="60" cy="144" r="19" fill="var(--lower-colour, #343434)" opacity="var(--lower-opacity, 1)"/>
+  </g>
+</svg>
