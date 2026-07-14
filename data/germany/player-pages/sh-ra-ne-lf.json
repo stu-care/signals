@@ -1,0 +1,68 @@
+{
+  "pages": [
+    {
+      "id": "page.de.sh.sh2",
+      "entity": "de.sh.sh2",
+      "title": "Red stop board (Sh 2)",
+      "recognise": "A red rectangular board with a white border.",
+      "meaning": "Stop because the line or track is closed or obstructed beyond the board.",
+      "doThis": ["Stop before the board.", "Do not pass without explicit authority."],
+      "visual": "assets/germany/sh-ra/boards.svg#sh2"
+    },
+    {
+      "id": "page.de.ra.ra10",
+      "entity": "de.ra.ra10",
+      "title": "Shunting limit board (Ra 10)",
+      "recognise": "A white semicircular board reading Halt für Rangierfahrten.",
+      "meaning": "Shunting movements must stop here.",
+      "doThis": ["Stop the shunting movement before the board."],
+      "visual": "assets/germany/sh-ra/boards.svg#ra10"
+    },
+    {
+      "id": "page.de.ne.ne1",
+      "entity": "de.ne.ne1",
+      "title": "Trapezoid board (Ne 1)",
+      "recognise": "A white trapezoid with a black border.",
+      "meaning": "A route-specific stop or reporting point used under defined operating procedures.",
+      "doThis": ["Follow the route or timetable instruction associated with the board.", "Be prepared to stop."],
+      "visual": "assets/germany/boards/ne-lf.svg#ne1"
+    },
+    {
+      "id": "page.de.ne.ne2",
+      "entity": "de.ne.ne2",
+      "title": "Distant signal board (Ne 2)",
+      "recognise": "A white rectangle with two black triangles meeting in the centre.",
+      "meaning": "Identifies a distant-signal function.",
+      "doThis": ["Read the accompanying warning and prepare for the next main signal."],
+      "visual": "assets/germany/boards/ne-lf.svg#ne2"
+    },
+    {
+      "id": "page.de.lf.lf6",
+      "entity": "de.lf.lf6",
+      "title": "Speed announcement board (Lf 6)",
+      "recognise": "A yellow downward-pointing triangle with a black numeral.",
+      "meaning": "A lower speed is coming. Multiply the numeral by ten for km/h.",
+      "doThis": ["Start braking now.", "Reach the announced speed by the following Lf 7 or defined location."],
+      "visual": "assets/germany/boards/ne-lf.svg#lf6"
+    },
+    {
+      "id": "page.de.lf.lf7",
+      "entity": "de.lf.lf7",
+      "title": "Speed board (Lf 7)",
+      "recognise": "A white rectangular board with a black numeral.",
+      "meaning": "The displayed speed applies from this point. Multiply the numeral by ten for km/h.",
+      "doThis": ["Be at or below the displayed speed when you reach the board."],
+      "visual": "assets/germany/boards/ne-lf.svg#lf7"
+    }
+  ],
+  "visualIndex": [
+    {"entity":"de.sh.sh2","terms":["red board","red rectangle","white border","track closed","stop board"]},
+    {"entity":"de.ra.ra10","terms":["white semicircle","halt für rangierfahrten","shunting limit"]},
+    {"entity":"de.sh.sh0-mechanical","terms":["white horizontal bar","black board","mechanical shunting stop"]},
+    {"entity":"de.sh.sh1-mechanical","terms":["white diagonal bar","black board","mechanical shunting proceed"]},
+    {"entity":"de.ne.ne1","terms":["white trapezoid","trapezoid board","black border"]},
+    {"entity":"de.ne.ne2","terms":["two black triangles","white rectangle","distant signal board"]},
+    {"entity":"de.lf.lf6","terms":["yellow triangle","speed warning","speed announcement","point down"]},
+    {"entity":"de.lf.lf7","terms":["white speed board","black number","speed applies here"]}
+  ]
+}

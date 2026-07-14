@@ -1,0 +1,72 @@
+{
+  "country": "DE",
+  "status": "in-progress",
+  "boards": [
+    {
+      "id": "de.ne.ne1",
+      "designation": "Ne 1",
+      "title": "Trapezoid board",
+      "recognition": "A white trapezoid with a black border on a black-and-white post.",
+      "meaning": "Marks a location where a train may be required to stop before entering the following section under the applicable operating procedure.",
+      "playerAction": [
+        "Be prepared to stop at the board when required by the route or timetable situation.",
+        "Do not assume it behaves like an ordinary colour-light main signal."
+      ],
+      "visual": { "shape": "trapezoid", "field": "white", "border": "black" },
+      "svg": "assets/germany/boards/ne-lf.svg#ne1",
+      "routeEvidence": [],
+      "confidence": "medium",
+      "notes": ["The exact operating procedure depends on line and signalling context; route-specific guidance is required."]
+    },
+    {
+      "id": "de.ne.ne2",
+      "designation": "Ne 2",
+      "title": "Distant signal board",
+      "recognition": "A white rectangular board with a black border and two black triangles meeting at the centre.",
+      "meaning": "Identifies a distant-signal function or marks the location of a distant signal.",
+      "playerAction": ["Read the associated distant indication and prepare for the next main signal."],
+      "visual": { "shape": "rectangle", "field": "white", "marking": "two-black-triangles" },
+      "svg": "assets/germany/boards/ne-lf.svg#ne2",
+      "routeEvidence": [],
+      "confidence": "high"
+    },
+    {
+      "id": "de.lf.lf6",
+      "designation": "Lf 6",
+      "title": "Speed announcement board",
+      "recognition": "A yellow triangular board, point down, with a black numeral.",
+      "meaning": "Announces a lower speed that will apply from a following Lf 7 board or other defined point.",
+      "playerAction": [
+        "Read the numeral as one tenth of the speed in km/h.",
+        "Begin braking so the announced speed is reached by the following speed board or defined location."
+      ],
+      "visual": { "shape": "triangle-point-down", "field": "yellow", "numeral": "parameter" },
+      "svg": "assets/germany/boards/ne-lf.svg#lf6",
+      "routeEvidence": [],
+      "confidence": "high"
+    },
+    {
+      "id": "de.lf.lf7",
+      "designation": "Lf 7",
+      "title": "Speed board",
+      "recognition": "A white rectangular board with a black numeral.",
+      "meaning": "The displayed speed applies from this location.",
+      "playerAction": [
+        "Read the numeral as one tenth of the speed in km/h.",
+        "Ensure the train is at or below that speed when reaching the board."
+      ],
+      "visual": { "shape": "rectangle", "field": "white", "numeral": "parameter" },
+      "svg": "assets/germany/boards/ne-lf.svg#lf7",
+      "routeEvidence": [],
+      "confidence": "high"
+    }
+  ],
+  "sources": [
+    {
+      "type": "authoritative-railway-source",
+      "title": "Eisenbahn-Signalordnung and DB Signalbuch signal families",
+      "url": "https://www.gesetze-im-internet.de/eso_1959/",
+      "retrieved": "2026-07-14"
+    }
+  ]
+}

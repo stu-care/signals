@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 220" role="img" aria-labelledby="title desc">
+  <title id="title">German Sh and Ra board forms</title>
+  <desc id="desc">Recognition-grade sprite containing Sh 2, Ra 10, mechanical Sh 0 and mechanical Sh 1.</desc>
+  <g id="sh2" transform="translate(20 20)">
+    <rect width="150" height="110" fill="#d51f2a" stroke="#fff" stroke-width="12"/>
+    <rect x="-4" y="-4" width="158" height="118" fill="none" stroke="#111" stroke-width="4"/>
+  </g>
+  <g id="ra10" transform="translate(210 20)">
+    <path d="M0 100 A80 80 0 0 1 160 100 Z" fill="#fff" stroke="#111" stroke-width="7"/>
+    <text x="80" y="70" text-anchor="middle" font-family="sans-serif" font-size="17" font-weight="700">Halt für</text>
+    <text x="80" y="92" text-anchor="middle" font-family="sans-serif" font-size="17" font-weight="700">Rangierfahrten</text>
+  </g>
+  <g id="sh0-mechanical" transform="translate(410 20)">
+    <rect width="130" height="110" rx="4" fill="#161616" stroke="#777" stroke-width="4"/>
+    <rect x="22" y="48" width="86" height="14" fill="#fff"/>
+  </g>
+  <g id="sh1-mechanical" transform="translate(610 20)">
+    <rect width="130" height="110" rx="4" fill="#161616" stroke="#777" stroke-width="4"/>
+    <rect x="22" y="48" width="86" height="14" fill="#fff" transform="rotate(-30 65 55)"/>
+  </g>
+</svg>

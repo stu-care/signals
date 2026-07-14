@@ -1,0 +1,72 @@
+{
+  "system": "de.sh-ra",
+  "status": "in-progress",
+  "records": [
+    {
+      "id": "de.sh.sh2",
+      "designation": "Sh 2",
+      "category": "protective-stop-board",
+      "recognition": "A rectangular red board with a white border.",
+      "meaning": "Stop. The track is closed or obstructed beyond this point.",
+      "playerAction": [
+        "Stop before the board.",
+        "Do not pass unless the operating situation explicitly authorises it."
+      ],
+      "visual": { "shape": "rectangle", "field": "red", "border": "white" },
+      "svg": "assets/germany/sh-ra/boards.svg#sh2",
+      "routeEvidence": [],
+      "confidence": "high"
+    },
+    {
+      "id": "de.ra.ra10",
+      "designation": "Ra 10",
+      "category": "shunting-limit-board",
+      "recognition": "A white semicircular board with a black border and the words Halt für Rangierfahrten.",
+      "meaning": "Shunting movements must not pass this point.",
+      "playerAction": [
+        "Stop the shunting movement before the board.",
+        "Do not treat it as a general stop point for ordinary train movements unless other rules or signals also require this."
+      ],
+      "visual": { "shape": "semicircle", "field": "white", "border": "black", "text": "Halt für Rangierfahrten" },
+      "svg": "assets/germany/sh-ra/boards.svg#ra10",
+      "routeEvidence": [],
+      "confidence": "high"
+    },
+    {
+      "id": "de.sh.sh0-mechanical",
+      "designation": "Sh 0 mechanical",
+      "category": "mechanical-shunting-stop",
+      "recognition": "A black rectangular or square board showing a white horizontal bar.",
+      "meaning": "Stop for shunting movements.",
+      "playerAction": ["Stop before the signal."],
+      "visual": { "field": "black", "bar": "white-horizontal" },
+      "svg": "assets/germany/sh-ra/boards.svg#sh0-mechanical",
+      "routeEvidence": [],
+      "confidence": "medium",
+      "notes": ["Physical form and mounting vary; direct TSW route observations are still required."]
+    },
+    {
+      "id": "de.sh.sh1-mechanical",
+      "designation": "Sh 1 mechanical",
+      "category": "mechanical-shunting-proceed",
+      "recognition": "A black board showing a white diagonal bar rising to the right.",
+      "meaning": "The shunting movement may proceed.",
+      "playerAction": [
+        "Proceed only as a shunting movement and remain able to stop short of obstacles or vehicles."
+      ],
+      "visual": { "field": "black", "bar": "white-diagonal-up-right" },
+      "svg": "assets/germany/sh-ra/boards.svg#sh1-mechanical",
+      "routeEvidence": [],
+      "confidence": "medium",
+      "notes": ["Physical form and mounting vary; direct TSW route observations are still required."]
+    }
+  ],
+  "sources": [
+    {
+      "type": "authoritative-railway-source",
+      "title": "Eisenbahn-Signalordnung and DB Signalbuch signal families",
+      "url": "https://www.gesetze-im-internet.de/eso_1959/",
+      "retrieved": "2026-07-14"
+    }
+  ]
+}
