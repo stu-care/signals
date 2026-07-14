@@ -1,0 +1,36 @@
+{
+  "id": "de.safety.gnt",
+  "name": "Geschwindigkeitsüberwachung Neigetechnik (GNT)",
+  "status": "in-progress",
+  "summary": "GNT supervises higher permitted speeds for authorised tilting trains on suitably equipped routes. It supplements rather than replaces ordinary signalling and train protection.",
+  "playerRecognition": [
+    "A GNT or Neigetechnik indication is active in the cab.",
+    "The permitted speed may exceed the conventional speed shown for non-tilting trains.",
+    "The train may display GNT-specific supervision or fault indications depending on the cab."
+  ],
+  "playerActions": [
+    "Enable GNT only when the vehicle, service and route support it.",
+    "Follow the train's supervised permitted speed and all lineside signals.",
+    "Do not assume a tilting train may always use the higher speed; GNT must be available and active.",
+    "If GNT becomes unavailable, obey the lower conventional speed profile and any train-specific transition instructions."
+  ],
+  "relationships": {
+    "pzb": "PZB can remain relevant for lineside restrictions and signal-related supervision.",
+    "lzb": "On LZB sections, cab supervision may govern movement independently of GNT route speed benefits.",
+    "tilt": "Physical body tilt and GNT speed supervision are related but not the same function. A visible tilt does not prove that higher-speed supervision is active."
+  },
+  "tswNotes": [
+    "Controls, annunciators and activation steps are specific to the simulated train.",
+    "The DB BR 411 ICE T on Frankfurt–Fulda is the initial TSW profile targeted by this project.",
+    "GNT relevance varies by route section and timetable service."
+  ],
+  "routeEvidence": [
+    {"routeId":"tsw.de.frankfurt-fulda","vehicleId":"tsw.vehicle.db-br-411-ice-t","status":"official-route-documentation","confidence":"medium"}
+  ],
+  "confidence": "medium",
+  "openQuestions": [
+    "Which Frankfurt–Fulda sections expose active GNT supervision in TSW?",
+    "Which BR 411 cab indications and controls are fully functional in TSW 6?",
+    "How does the game handle loss or isolation of GNT during a service?"
+  ]
+}
