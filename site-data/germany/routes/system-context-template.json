@@ -1,0 +1,36 @@
+{
+  "id": "template.route-system-context",
+  "purpose": "Render route guidance that changes according to the selected train and service.",
+  "sections": [
+    {
+      "id": "route-overview",
+      "fields": ["routeName", "era", "linesideSystems", "knownTransitionPoints"]
+    },
+    {
+      "id": "choose-your-train",
+      "fields": ["availableVehicleProfiles", "ownedDlcRequirements", "timetableLayer"]
+    },
+    {
+      "id": "before-departure",
+      "fields": ["fittedSystems", "activationControls", "confirmationIndications", "unavailableSystems"]
+    },
+    {
+      "id": "while-driving",
+      "fields": ["activeSystem", "linesidePriority", "cabSupervision", "acknowledgements", "transitionWarnings"]
+    },
+    {
+      "id": "intervention-recovery",
+      "fields": ["interventionType", "vehicleSpecificRecovery", "resumeConditions"]
+    },
+    {
+      "id": "evidence",
+      "fields": ["gameVersion", "routeVersion", "vehicleVariant", "sources", "confidence"]
+    }
+  ],
+  "decisionRules": [
+    "Never show a route-level system as available for every train.",
+    "Never show a fitted vehicle system as active without route or service context.",
+    "Prefer an explicit unknown state to an inferred control sequence.",
+    "Display version-specific differences next to the affected instruction."
+  ]
+}
