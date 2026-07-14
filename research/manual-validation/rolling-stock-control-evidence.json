@@ -1,0 +1,55 @@
+{
+  "status": "in-progress",
+  "purpose": "Track the evidence required before publishing exact Train Sim World cab controls and recovery procedures.",
+  "rules": [
+    "Do not infer a control location from another vehicle in the same family.",
+    "Do not publish a universal penalty-brake reset sequence.",
+    "Record the game version, vehicle variant and source edition for every control mapping.",
+    "Separate a system being fitted from it being enabled, active or usable on a particular service."
+  ],
+  "requiredEvidence": {
+    "control": ["displayLabel", "cabLocation", "inputBinding", "pressOrHoldBehaviour", "source"],
+    "startup": ["initialState", "activationSequence", "confirmationIndication", "source"],
+    "recovery": ["interventionType", "requiredTrainState", "releaseSequence", "source"],
+    "transition": ["fromSystem", "toSystem", "routeLocation", "driverAction", "source"]
+  },
+  "vehicles": [
+    {
+      "vehicleId": "tsw.vehicle.db-br-411-ice-t",
+      "priority": "highest",
+      "reasons": ["PZB", "LZB", "GNT", "Sifa", "Frankfurt-Fulda anchor vehicle"],
+      "verified": [],
+      "openQuestions": [
+        "Exact Sifa and PZB/LZB isolation switch locations",
+        "Wachsam, Frei and Befehl control labels and bindings",
+        "GNT enablement and active-state indications",
+        "LZB end acknowledgement procedure",
+        "Penalty-brake recovery for each system"
+      ]
+    },
+    {
+      "vehicleId": "tsw.vehicle.db-br-403-ice-3",
+      "priority": "high",
+      "reasons": ["PZB", "LZB", "Sifa", "multiple high-speed routes"],
+      "verified": [],
+      "openQuestions": [
+        "PZB/LZB and Sifa activation controls",
+        "LZB entry and end indications",
+        "Befehl use and penalty recovery",
+        "Differences between route-pack and layered variants"
+      ]
+    },
+    {
+      "vehicleId": "tsw.vehicle.db-br-423",
+      "priority": "high",
+      "reasons": ["common S-Bahn vehicle", "PZB", "Sifa", "multiple route variants"],
+      "verified": [],
+      "openQuestions": [
+        "Sifa and PZB activation controls",
+        "PZB indication mapping",
+        "Penalty-brake recovery",
+        "Variant differences between Frankfurt, Munich and Köln use"
+      ]
+    }
+  ]
+}
