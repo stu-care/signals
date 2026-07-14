@@ -1,0 +1,8 @@
+{
+  "system":"de.sifa",
+  "pages":[
+    {"id":"de.sifa.overview","slug":"germany/sifa","title":"Sifa","recognition":"A periodic vigilance warning appears or sounds if the driver has not reset the system.","meaning":"The train is checking that the driver remains responsive.","playerAction":["Operate the Sifa control regularly.","Respond immediately to visual or audible warnings."],"warning":"Sifa is not a signalling or movement-authority system."},
+    {"id":"de.sifa.warning","slug":"germany/sifa/warnings","title":"Sifa warning sequence","recognition":"A visual warning is followed by an audible warning if unanswered.","meaning":"The vigilance timer has expired.","playerAction":["Reset Sifa immediately.","Keep control of speed and braking while responding."]},
+    {"id":"de.sifa.intervention","slug":"germany/sifa/intervention","title":"Sifa brake intervention","recognition":"The train applies a penalty or emergency brake after no response.","meaning":"The vigilance warning was not acknowledged in time.","playerAction":["Allow the train to stop or slow as required.","Reset Sifa.","Use the train-specific recovery sequence before continuing."]}
+  ]
+}
