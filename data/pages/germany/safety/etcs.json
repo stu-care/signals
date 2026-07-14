@@ -1,0 +1,42 @@
+{
+  "system": "de.safety.etcs",
+  "pages": [
+    {
+      "id":"de.etcs.overview",
+      "title":"ETCS: read the cab display",
+      "recognition":"A standardised DMI shows the supervised speed, target information and ETCS mode.",
+      "meaning":"ETCS can supervise movement authority and braking through the cab rather than relying only on lineside signal observation.",
+      "playerAction":["Check the active level and mode.","Keep at or below the permitted speed.","Use target speed and distance to plan braking."],
+      "warnings":["ETCS behaviour depends heavily on the active mode.","Vehicle startup and acknowledgement controls are train-specific."]
+    },
+    {
+      "id":"de.etcs.full-supervision",
+      "title":"FS: Full Supervision",
+      "recognition":"The DMI mode field shows FS and provides complete supervised movement information.",
+      "meaning":"ETCS has sufficient data to supervise the train against its movement authority and braking curve.",
+      "playerAction":["Follow permitted speed and target information.","Brake early enough to remain outside the warning and intervention curves."]
+    },
+    {
+      "id":"de.etcs.on-sight",
+      "title":"OS: On Sight",
+      "recognition":"The DMI mode field shows OS with a restrictive supervised speed.",
+      "meaning":"Movement is authorised under on-sight conditions rather than full route-clear assurance.",
+      "playerAction":["Proceed at no more than the supervised speed.","Be prepared to stop short of an obstruction or occupied section."]
+    },
+    {
+      "id":"de.etcs.staff-responsible",
+      "title":"SR: Staff Responsible",
+      "recognition":"The DMI mode field shows SR.",
+      "meaning":"The driver is proceeding under an external authority without full ETCS route supervision.",
+      "playerAction":["Proceed only under the applicable authority.","Apply the route and scenario's restrictive operating rules.","Do not treat SR as normal clear-running authority."]
+    },
+    {
+      "id":"de.etcs.trip-recovery",
+      "title":"ETCS trip and recovery",
+      "recognition":"The DMI enters Trip mode and the train is stopped by the system.",
+      "meaning":"ETCS detected an unauthorised or unsafe movement condition.",
+      "playerAction":["Bring the train to a stand if it has not already stopped.","Acknowledge and recover using the vehicle-specific procedure.","Proceed only with the required authority, commonly through Post Trip or another instructed mode."],
+      "warnings":["There is no safe universal button sequence for every TSW vehicle."]
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "status": "in-progress",
+  "profilePurpose": "Connect generic safety-system guidance to the controls and systems available on a specific Train Sim World vehicle. Exact switch locations and reset sequences require manual or in-game evidence.",
+  "profiles": [
+    {
+      "id":"tsw.vehicle.db-br-411-ice-t",
+      "name":"DB BR 411 ICE T",
+      "primaryRoute":"tsw.de.frankfurt-fulda",
+      "systems":[
+        {"systemId":"de.safety.sifa","availability":"confirmed","defaultState":"verify-in-cab"},
+        {"systemId":"de.safety.pzb90","availability":"confirmed","defaultState":"verify-in-cab"},
+        {"systemId":"de.safety.lzb","availability":"confirmed","defaultState":"route-dependent"},
+        {"systemId":"de.safety.gnt","availability":"confirmed","defaultState":"route-and-service-dependent"}
+      ],
+      "playerChecklist":[
+        "Confirm Sifa, PZB/LZB and GNT states during cab setup.",
+        "Verify the active train-protection mode before departure.",
+        "Use GNT speed benefits only when the cab shows the system is available and active.",
+        "Follow LZB cab supervision when admitted to an LZB section."
+      ],
+      "evidenceStatus":"official-route-documentation-plus-in-game-validation-needed",
+      "confidence":"medium"
+    },
+    {
+      "id":"tsw.vehicle.db-br-403-ice-3",
+      "name":"DB BR 403 ICE 3",
+      "primaryRoutes":["tsw.de.koeln-aachen","tsw.de.kassel-wuerzburg"],
+      "systems":[
+        {"systemId":"de.safety.sifa","availability":"confirmed"},
+        {"systemId":"de.safety.pzb90","availability":"confirmed"},
+        {"systemId":"de.safety.lzb","availability":"confirmed","defaultState":"route-dependent"}
+      ],
+      "playerChecklist":[
+        "Enable and verify Sifa and PZB/LZB during setup.",
+        "Expect the active supervision method to change between conventional and LZB sections.",
+        "Use the vehicle-specific acknowledgement and recovery controls described by its manual."
+      ],
+      "evidenceStatus":"route-and-vehicle-manual-validation-needed",
+      "confidence":"medium"
+    },
+    {
+      "id":"tsw.vehicle.db-br-423",
+      "name":"DB BR 423",
+      "primaryRoutes":["tsw.de.frankfurt-fulda","tsw.de.muenchen-augsburg"],
+      "systems":[
+        {"systemId":"de.safety.sifa","availability":"confirmed"},
+        {"systemId":"de.safety.pzb90","availability":"confirmed"}
+      ],
+      "playerChecklist":[
+        "Verify Sifa and PZB are active before departure.",
+        "Use the train-specific PZB controls and cab indications.",
+        "Do not assume LZB is available merely because another train uses it on the same route."
+      ],
+      "evidenceStatus":"route-and-vehicle-manual-validation-needed",
+      "confidence":"medium"
+    }
+  ],
+  "requiredFutureFields":[
+    "cab control names and locations",
+    "startup sequence",
+    "indicator mapping",
+    "penalty brake recovery",
+    "route-specific system transitions",
+    "TSW version-specific quirks"
+  ]
+}
