@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 280" role="img" aria-labelledby="title desc">
+  <title id="title">German H/V signal aspects</title>
+  <desc id="desc">Recognition-grade sprite for Hp 0, Hp 1, Hp 2, Vr 0, Vr 1 and Vr 2.</desc>
+  <defs>
+    <style>
+      .head { fill:#202124; stroke:#111; stroke-width:5; }
+      .off { fill:#343434; }
+      .red { fill:#ef3b3b; }
+      .green { fill:#29d657; }
+      .yellow { fill:#ffd83d; }
+      .label { font: 18px sans-serif; fill:#111; text-anchor:middle; }
+    </style>
+  </defs>
+  <g id="hp0" transform="translate(20 20)"><rect class="head" width="90" height="180" rx="15"/><circle class="red" cx="45" cy="50" r="18"/><circle class="off" cx="45" cy="120" r="18"/><text class="label" x="45" y="215">Hp 0</text></g>
+  <g id="hp1" transform="translate(130 20)"><rect class="head" width="90" height="180" rx="15"/><circle class="green" cx="45" cy="50" r="18"/><circle class="off" cx="45" cy="120" r="18"/><text class="label" x="45" y="215">Hp 1</text></g>
+  <g id="hp2" transform="translate(240 20)"><rect class="head" width="90" height="180" rx="15"/><circle class="green" cx="45" cy="50" r="18"/><circle class="yellow" cx="45" cy="120" r="18"/><text class="label" x="45" y="215">Hp 2</text></g>
+  <g id="vr0" transform="translate(370 20)"><rect class="head" width="90" height="180" rx="45"/><circle class="yellow" cx="28" cy="120" r="16"/><circle class="yellow" cx="62" cy="60" r="16"/><text class="label" x="45" y="215">Vr 0</text></g>
+  <g id="vr1" transform="translate(480 20)"><rect class="head" width="90" height="180" rx="45"/><circle class="green" cx="28" cy="120" r="16"/><circle class="green" cx="62" cy="60" r="16"/><text class="label" x="45" y="215">Vr 1</text></g>
+  <g id="vr2" transform="translate(590 20)"><rect class="head" width="90" height="180" rx="45"/><circle class="green" cx="28" cy="120" r="16"/><circle class="yellow" cx="62" cy="60" r="16"/><text class="label" x="45" y="215">Vr 2</text></g>
+</svg>

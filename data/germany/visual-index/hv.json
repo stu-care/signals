@@ -1,0 +1,13 @@
+{
+  "system": "de.hv",
+  "entries": [
+    {"id":"de.hv.hp0","designation":"Hp 0","visualRef":"assets/germany/hv/aspects/hv-sprite.svg#hp0","searchTerms":["one red light","red main signal","stop"],"summary":"Stop before the main signal."},
+    {"id":"de.hv.hp1","designation":"Hp 1","visualRef":"assets/germany/hv/aspects/hv-sprite.svg#hp1","searchTerms":["one green light","green main signal","proceed"],"summary":"Proceed at the permitted speed."},
+    {"id":"de.hv.hp2","designation":"Hp 2","visualRef":"assets/germany/hv/aspects/hv-sprite.svg#hp2","searchTerms":["green over yellow","green and yellow","proceed slowly"],"summary":"Proceed at reduced speed and check any Zs 3 indication."},
+    {"id":"de.hv.vr0","designation":"Vr 0","visualRef":"assets/germany/hv/aspects/hv-sprite.svg#vr0","searchTerms":["two yellow diagonal","yellow distant signal","expect stop"],"summary":"Expect the associated main signal to show stop."},
+    {"id":"de.hv.vr1","designation":"Vr 1","visualRef":"assets/germany/hv/aspects/hv-sprite.svg#vr1","searchTerms":["two green diagonal","green distant signal","expect proceed"],"summary":"Expect the associated main signal to show proceed."},
+    {"id":"de.hv.vr2","designation":"Vr 2","visualRef":"assets/germany/hv/aspects/hv-sprite.svg#vr2","searchTerms":["green and yellow diagonal","mixed distant signal","expect slow"],"summary":"Expect a reduced-speed indication at the associated main signal."}
+  ],
+  "routeEvidence": [],
+  "notes": ["The artwork is recognition-grade and route occurrence is not yet claimed."]
+}

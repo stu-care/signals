@@ -1,0 +1,25 @@
+{
+  "system": "de.hl",
+  "pageTemplateVersion": 1,
+  "intro": {
+    "title": "Hl signalling",
+    "summary": "Hl signals combine the speed permitted from this signal with what to expect at the next main signal.",
+    "readingOrder": [
+      "Read the lower light and any coloured strip for the speed that applies now.",
+      "Read the upper light for what to expect at the next main signal.",
+      "Then check whether the signal is a main signal, distant-only signal or repeater."
+    ]
+  },
+  "pages": [
+    {"id":"de.hl.hl1","slug":"hl-1","title":"Hl 1: proceed at line speed","visualRef":"assets/germany/hl/aspects/hl-sprite.svg#hl1","recognition":"One steady green upper light.","meaning":"Proceed at the permitted line speed and expect line speed at the next main signal.","action":"Proceed at the permitted speed."},
+    {"id":"de.hl.hl2","slug":"hl-2","title":"Hl 2: 100 km/h, then line speed","visualRef":"assets/germany/hl/aspects/hl-sprite.svg#hl2","recognition":"Steady green above, steady yellow below, with a green strip.","meaning":"Proceed at no more than 100 km/h and expect line speed at the next main signal.","action":"Reduce to 100 km/h by the signal and maintain it through the applicable area."},
+    {"id":"de.hl.hl7","slug":"hl-7","title":"Hl 7: expect 40 or 60 km/h","visualRef":"assets/germany/hl/aspects/hl-sprite.svg#hl7","recognition":"One flashing yellow upper light.","meaning":"Proceed at the permitted speed and expect 40 or 60 km/h at the next main signal.","action":"Begin braking for the restrictive speed that will be shown at the next signal."},
+    {"id":"de.hl.hl10","slug":"hl-10","title":"Hl 10: expect stop","visualRef":"assets/germany/hl/aspects/hl-sprite.svg#hl10","recognition":"One steady yellow upper light.","meaning":"Proceed and expect the next main signal to show stop.","action":"Acknowledge PZB when required and brake to stop before the next main signal."},
+    {"id":"de.hl.hp0","slug":"hp-0","title":"Hp 0: stop","visualRef":"assets/germany/hl/aspects/hp0.svg","recognition":"One steady red light.","meaning":"Stop before the signal.","action":"Stop and do not pass without authority."}
+  ],
+  "generationNotes": [
+    "The initial file contains representative pages and defines the stable page shape.",
+    "The remaining Hl records can be expanded from data/germany/systems/hl/aspects.json without inventing new content.",
+    "Route examples remain omitted until direct TSW observations are available."
+  ]
+}
