@@ -1,0 +1,13 @@
+{
+  "status":"in-progress",
+  "links":[
+    {"routeId":"tsw.de.leipzig-dresden","systems":["de.pzb90","de.lzb","de.sifa"],"evidenceStatus":"official-documentation","notes":["Official route material confirms LZB on the western high-speed section.","Included German rolling stock uses PZB and Sifa where applicable."]},
+    {"routeId":"tsw.de.frankfurt-fulda","systems":["de.pzb90","de.lzb","de.sifa","de.gnt"],"evidenceStatus":"official-documentation","notes":["Dovetail's gameplay guide includes LZB training and GNT/NeiTech information for the ICE-T."]},
+    {"routeId":"tsw.de.kassel-wurzburg","systems":["de.pzb90","de.lzb","de.sifa"],"evidenceStatus":"official-documentation","notes":["High-speed operation requires LZB-capable stock; exact service-by-service use remains to be recorded."]}
+  ],
+  "cautions":[
+    "A route supporting a system does not mean every train or service uses it.",
+    "Train-specific activation, displays and controls require separate rolling-stock records.",
+    "These links confirm system presence, not every transition point or in-game implementation detail."
+  ]
+}
