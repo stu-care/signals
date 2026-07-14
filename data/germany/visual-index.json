@@ -1,0 +1,60 @@
+{
+  "country": "DE",
+  "status": "in-progress",
+  "groups": [
+    {
+      "id": "de.visual.colour-light.single",
+      "title": "Single illuminated light",
+      "entries": [
+        {
+          "id": "de.visual.red-steady",
+          "recognition": "One steady red light",
+          "targets": ["de.ks.hp0"],
+          "thumbnail": "assets/germany/ks/aspects/hp0.svg",
+          "searchTerms": ["red", "stop", "single red"]
+        },
+        {
+          "id": "de.visual.green-steady",
+          "recognition": "One steady green light",
+          "targets": ["de.ks.ks1"],
+          "thumbnail": "assets/germany/ks/aspects/ks1.svg",
+          "searchTerms": ["green", "proceed", "single green"]
+        },
+        {
+          "id": "de.visual.green-flashing",
+          "recognition": "One flashing green light with a yellow numeral",
+          "targets": ["de.ks.ks1-flashing", "de.zs.zs3v"],
+          "thumbnail": "assets/germany/ks/aspects/ks1-flashing.svg",
+          "searchTerms": ["flashing green", "blinking green", "yellow number", "speed ahead"]
+        },
+        {
+          "id": "de.visual.yellow-steady",
+          "recognition": "One steady yellow light",
+          "targets": ["de.ks.ks2"],
+          "thumbnail": "assets/germany/ks/aspects/ks2.svg",
+          "searchTerms": ["yellow", "warning", "expect stop", "single yellow"]
+        }
+      ]
+    },
+    {
+      "id": "de.visual.white-supplementary",
+      "title": "White supplementary light",
+      "entries": [
+        {
+          "id": "de.visual.white-above",
+          "recognition": "White light above the main signal lamps",
+          "targets": ["de.ks.light.short-braking-distance"],
+          "thumbnail": "assets/germany/ks/components/supplementary-light.svg",
+          "searchTerms": ["white above", "short braking distance", "reduced braking distance"]
+        },
+        {
+          "id": "de.visual.white-below",
+          "recognition": "White light below the main signal lamps",
+          "targets": ["de.ks.light.distant-repeater"],
+          "thumbnail": "assets/germany/ks/components/supplementary-light.svg",
+          "searchTerms": ["white below", "repeater", "distant repeater", "vorsignalwiederholer"]
+        }
+      ]
+    }
+  ]
+}

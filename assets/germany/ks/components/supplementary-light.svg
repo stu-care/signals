@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" role="img" aria-labelledby="title desc">
+  <title id="title">Ks white supplementary light</title>
+  <desc id="desc">Reusable white light used to mark shortened braking distance or a distant-signal repeater according to placement.</desc>
+  <circle cx="40" cy="40" r="29" fill="#151515" stroke="#090909" stroke-width="6"/>
+  <circle id="lamp-white" cx="40" cy="40" r="20" fill="#f3f3ea"/>
+</svg>
