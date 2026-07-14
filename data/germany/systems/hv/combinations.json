@@ -1,0 +1,56 @@
+{
+  "system":"de.hv",
+  "status":"in-progress",
+  "rules":[
+    {
+      "id":"de.hv.rule.hp2-speed",
+      "baseAspect":"de.hv.hp2",
+      "meaning":"Proceed at reduced speed. The applicable speed may come from the H/V rule baseline, a displayed Zs 3, or another applicable operating instruction.",
+      "playerAction":[
+        "Do not assume the exact permitted speed from the green-over-yellow lamps alone.",
+        "Read any white Zs 3 numeral and multiply it by ten for km/h.",
+        "Where no Zs 3 is displayed, use the route and rule context represented by the simulator."
+      ],
+      "notes":["The website must keep the visual aspect and the numeric speed instruction as separate fields."],
+      "confidence":"high"
+    },
+    {
+      "id":"de.hv.combo.hp2-zs3",
+      "mainAspect":"de.hv.hp2",
+      "currentSpeedIndicator":"de.zs.zs3",
+      "recognition":"Green over yellow on the main head, accompanied by a white numeral.",
+      "meaningTemplate":"Proceed at {valueTimesTen} km/h.",
+      "playerActionTemplate":["Reach {valueTimesTen} km/h by the signal unless the applicable rule defines a different starting point."],
+      "supportedValues":[2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],
+      "routeEvidence":[],
+      "confidence":"high"
+    },
+    {
+      "id":"de.hv.combo.vr2-zs3v",
+      "distantAspect":"de.hv.vr2",
+      "announcedSpeedIndicator":"de.zs.zs3v",
+      "recognition":"Green and yellow distant lights accompanied by a yellow numeral.",
+      "meaningTemplate":"Expect {valueTimesTen} km/h at the next main signal or defined location.",
+      "playerActionTemplate":[
+        "Acknowledge PZB when the associated 1000 Hz influence is active.",
+        "Brake so that {valueTimesTen} km/h is reached at the required point."
+      ],
+      "supportedValues":[2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],
+      "routeEvidence":[],
+      "confidence":"high"
+    },
+    {
+      "id":"de.hv.combo.main-distant-with-speeds",
+      "assembly":"de.hv.assembly.combined.main-distant",
+      "optionalComponents":["de.zs.zs3","de.zs.zs3v"],
+      "readingOrder":[
+        "Hp aspect: may I pass this signal?",
+        "Zs 3: what speed applies from this signal or defined point?",
+        "Vr aspect: what should I expect at the next main signal?",
+        "Zs 3v: what speed is announced for that next location?"
+      ],
+      "routeEvidence":[],
+      "confidence":"high"
+    }
+  ]
+}
