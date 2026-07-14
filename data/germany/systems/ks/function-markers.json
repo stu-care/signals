@@ -1,0 +1,46 @@
+{
+  "system": "de.ks",
+  "status": "in-progress",
+  "markers": [
+    {
+      "id": "de.ks.marker.main-signal-mast-plate",
+      "title": "Main-signal mast plate",
+      "category": "signal-function-marker",
+      "recognition": "A mast plate attached below the signal head. The exact appearance varies, but it identifies the signal as having main-signal function.",
+      "meaning": "The signal can command a stop and must not be passed at Hp 0 without the appropriate authority or subsidiary indication.",
+      "playerAction": [
+        "Treat a red aspect as a stop command.",
+        "Use the mast plate and nearby indicators to distinguish a main signal from a distant-only signal or repeater."
+      ],
+      "compatibleFunctions": ["main", "multi-section"],
+      "svg": "assets/germany/ks/components/mast-plate-main.svg",
+      "routeEvidence": [],
+      "confidence": "medium",
+      "notes": [
+        "Recognition-grade artwork is intentionally generic until route-specific plate variants are observed.",
+        "The database should record the actual plate design per route observation rather than assuming one universal appearance."
+      ]
+    },
+    {
+      "id": "de.ne.ne2",
+      "designation": "Ne 2",
+      "title": "Distant signal board",
+      "category": "signal-function-marker",
+      "recognition": "A black-and-white chequered rectangular board, normally mounted with a signal that has distant-signal function.",
+      "meaning": "Identifies a distant signal or a signal carrying distant-signal information. It helps the player recognise that the displayed aspect announces conditions ahead rather than authorising passage as a main signal by itself.",
+      "playerAction": [
+        "Read the displayed distant information and prepare for the announced condition.",
+        "Do not treat the board alone as a stop command.",
+        "Combine it with the white repeater or shortened-distance light when present."
+      ],
+      "compatibleFunctions": ["distant", "multi-section", "repeater"],
+      "svg": "assets/germany/ne/ne2.svg",
+      "routeEvidence": [],
+      "confidence": "high",
+      "notes": [
+        "Exact proportions and mounting arrangements may vary.",
+        "A repeater should be identified from the complete assembly, including the lower white supplementary light, not from Ne 2 alone."
+      ]
+    }
+  ]
+}
