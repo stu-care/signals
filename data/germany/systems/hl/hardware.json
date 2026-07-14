@@ -1,0 +1,39 @@
+{
+  "system": "de.hl",
+  "status": "in-progress",
+  "assets": [
+    {
+      "id": "de.hl.head.standard-large",
+      "title": "Standard large Hl signal head",
+      "purpose": "Recognition-grade reusable head for main signals with combined distant function and speed strips.",
+      "headShape": {"type":"rounded-rectangle","width":1,"height":1.55},
+      "lampPositions": {
+        "upperGreen": {"x":0.36,"y":0.20,"colours":["green"]},
+        "upperYellow": {"x":0.64,"y":0.20,"colours":["yellow"]},
+        "redPrimary": {"x":0.36,"y":0.48,"colours":["red"]},
+        "redReserve": {"x":0.64,"y":0.48,"colours":["red"]},
+        "lowerYellow": {"x":0.50,"y":0.70,"colours":["yellow"]},
+        "stripUpper": {"x":0.50,"y":0.84,"colours":["green","yellow"],"shape":"horizontal-strip"},
+        "stripLower": {"x":0.50,"y":0.94,"colours":["green","yellow"],"shape":"horizontal-strip"}
+      },
+      "notes": [
+        "Unused apertures may be omitted or blanked on real installations.",
+        "If only one speed strip is needed it is commonly fitted in the lower strip position.",
+        "Exact WSSB and route-specific geometry remains to be captured from TSW evidence."
+      ],
+      "svg":"assets/germany/hl/components/standard-large-head.svg",
+      "confidence":"medium"
+    },
+    {
+      "id":"de.hl.head.distant-small",
+      "title":"Hl distant-only head",
+      "purpose":"A reduced head using the upper yellow and green lamps only, identified by Ne 2 when functioning solely as a distant signal.",
+      "lampPositions": {
+        "upperGreen":{"x":0.36,"y":0.40,"colours":["green"]},
+        "upperYellow":{"x":0.64,"y":0.40,"colours":["yellow"]}
+      },
+      "compatibleMarkers":["de.ne.ne2","de.hl.distant-repeater-board"],
+      "confidence":"high"
+    }
+  ]
+}
