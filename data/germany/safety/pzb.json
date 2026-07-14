@@ -1,0 +1,133 @@
+{
+  "id": "de.safety.pzb90",
+  "name": "PZB 90",
+  "status": "initial-player-guide",
+  "summary": "PZB is an intermittent train-protection system. Track magnets trigger acknowledgement requirements and speed-monitoring curves rather than continuously displaying an allowed speed.",
+  "controls": [
+    {
+      "id": "acknowledge",
+      "german": "PZB Wachsam",
+      "playerMeaning": "Confirm that you have seen a restrictive warning or monitored speed reduction.",
+      "useWhen": [
+        "Passing an active 1000 Hz magnet associated with a warning aspect or relevant speed reduction.",
+        "The in-cab 1000 Hz indication activates."
+      ],
+      "doNotUseAs": "It does not cancel the braking curve or grant permission to pass a stop signal."
+    },
+    {
+      "id": "release",
+      "german": "PZB Frei",
+      "playerMeaning": "Release from eligible 1000 Hz monitoring after the restrictive infrastructure has clearly been passed.",
+      "useWhen": [
+        "The system permits release and the next signal or restriction is visibly clear.",
+        "No active 500 Hz monitoring or other reason prevents release."
+      ],
+      "warning": "Releasing too early can cause an immediate penalty if a subsequent active magnet is encountered."
+    },
+    {
+      "id": "override",
+      "german": "PZB Befehl",
+      "playerMeaning": "Authorised override for passing a stop signal under a valid written or signaller's order.",
+      "useWhen": [
+        "Only when the game scenario or signaller has explicitly authorised passing the signal at danger."
+      ],
+      "warning": "This is not a normal acknowledgement control and must not be used merely to avoid an intervention."
+    }
+  ],
+  "trainTypes": [
+    {
+      "id": "O",
+      "label": "Upper",
+      "typicalUse": "Trains with high braking performance.",
+      "1000HzCurve": "165 to 85 km/h within 23 seconds",
+      "1000HzRestricted": "45 km/h",
+      "500HzCurve": "65 to 45 km/h within 153 metres",
+      "confidence": "medium"
+    },
+    {
+      "id": "M",
+      "label": "Medium",
+      "typicalUse": "Trains with medium braking performance.",
+      "1000HzCurve": "125 to 70 km/h within 29 seconds",
+      "1000HzRestricted": "45 km/h",
+      "500HzCurve": "50 to 35 km/h within 153 metres",
+      "confidence": "medium"
+    },
+    {
+      "id": "U",
+      "label": "Lower",
+      "typicalUse": "Trains with lower braking performance or operation in brake position G.",
+      "1000HzCurve": "105 to 55 km/h within 38 seconds",
+      "1000HzRestricted": "45 km/h",
+      "500HzCurve": "40 to 25 km/h within 153 metres",
+      "confidence": "medium"
+    }
+  ],
+  "magnetFrequencies": [
+    {
+      "frequency": 1000,
+      "purpose": "Warning and braking-curve supervision after a restrictive distant indication or relevant speed reduction.",
+      "playerSequence": [
+        "Acknowledge promptly when the indication activates.",
+        "Brake beneath the curve for the selected train type.",
+        "Expect monitoring to continue for distance and time even after passing the magnet."
+      ],
+      "commonTriggers": ["Vr 0", "Ks 2", "Hl stop warning", "sufficiently restrictive Lf announcement"]
+    },
+    {
+      "frequency": 500,
+      "purpose": "Stricter approach supervision close to a stop signal or severe restriction.",
+      "playerSequence": [
+        "Approach at a low and reducing speed.",
+        "Do not assume releasing the earlier 1000 Hz influence removes 500 Hz protection."
+      ]
+    },
+    {
+      "frequency": 2000,
+      "purpose": "Stop enforcement at a main signal or protected point.",
+      "playerSequence": [
+        "Stop before the signal unless explicitly authorised to pass.",
+        "Use PZB Befehl only with valid authority and follow the restricted passing procedure represented by the train and scenario."
+      ]
+    }
+  ],
+  "restrictedMode": {
+    "triggerSummary": "After a 1000 Hz influence, remaining below roughly 10 km/h for more than about 15 seconds can place PZB into restrictive monitoring.",
+    "playerMeaning": "This often happens after stopping between a warning signal and a main signal. Acceleration remains tightly limited even if the next signal clears.",
+    "normal1000HzLimit": "45 km/h",
+    "warning": "Exact indicators, release eligibility and implementation details vary between vehicles and TSW versions."
+  },
+  "interventions": [
+    {
+      "cause": "No acknowledgement after an active 1000 Hz influence",
+      "result": "Emergency or penalty brake application"
+    },
+    {
+      "cause": "Exceeding a monitored braking curve",
+      "result": "Emergency or penalty brake application"
+    },
+    {
+      "cause": "Passing an active 2000 Hz magnet without valid override",
+      "result": "Immediate emergency brake application"
+    },
+    {
+      "cause": "Incorrect early release followed by an active magnet",
+      "result": "Possible immediate intervention"
+    }
+  ],
+  "tswNotes": [
+    "Control names and cab indications differ between locomotives and multiple units.",
+    "Some tutorials simplify PZB operation; the website should describe the shared logic first and add train-specific notes separately.",
+    "The active magnet state matters. A visually restrictive signal does not by itself prove that the simulated magnet is active, and vice versa when game defects are present.",
+    "Resetting after an intervention is train-specific and should be documented on rolling-stock pages rather than treated as one universal sequence."
+  ],
+  "sources": [
+    {
+      "type": "technical-summary",
+      "title": "Punktförmige Zugbeeinflussung",
+      "url": "https://de.wikipedia.org/wiki/Punktf%C3%B6rmige_Zugbeeinflussung",
+      "retrieved": "2026-07-14",
+      "notes": "Initial monitoring values and operational summary. Replace or corroborate with public DB documentation where available."
+    }
+  ]
+}
