@@ -1,0 +1,69 @@
+{
+  "status": "in-progress",
+  "scope": "German and German-system cross-border routes compatible with Train Sim World 3 onwards",
+  "meaningOfStatuses": {
+    "confirmed": "Supported by first-party route or vehicle documentation",
+    "observed": "Recorded directly in Train Sim World with reproducible context",
+    "probable": "Expected from route and rolling stock but not yet evidenced for publication",
+    "unknown": "Not yet audited"
+  },
+  "routes": [
+    {
+      "routeId": "tsw.de.leipzig-dresden",
+      "linesideSystems": [
+        {"systemId":"de.hl","status":"confirmed","scope":"Dresden area"},
+        {"systemId":"de.ks","status":"confirmed","scope":"Dresden area"}
+      ],
+      "safetySystems": [
+        {"systemId":"de.safety.pzb90","status":"confirmed"},
+        {"systemId":"de.safety.lzb","status":"confirmed","scope":"western high-speed section"},
+        {"systemId":"de.safety.sifa","status":"confirmed","scope":"vehicle-dependent"}
+      ],
+      "nextChecks": ["Map Hl/Ks boundary", "Record exact LZB entry and exit", "Attach observed aspects and boards"]
+    },
+    {
+      "routeId": "tsw.de.frankfurt-fulda",
+      "linesideSystems": [{"systemId":"de.ks","status":"probable"}],
+      "safetySystems": [
+        {"systemId":"de.safety.pzb90","status":"confirmed"},
+        {"systemId":"de.safety.lzb","status":"confirmed"},
+        {"systemId":"de.safety.gnt","status":"confirmed","scope":"BR 411 and suitable services"},
+        {"systemId":"de.safety.sifa","status":"confirmed","scope":"vehicle-dependent"}
+      ],
+      "nextChecks": ["Confirm lineside family by section", "Map GNT-enabled sections", "Record BR 411 controls"]
+    },
+    {
+      "routeId": "tsw.de.kassel-wuerzburg",
+      "linesideSystems": [{"systemId":"de.ks","status":"probable"}],
+      "safetySystems": [
+        {"systemId":"de.safety.pzb90","status":"confirmed"},
+        {"systemId":"de.safety.lzb","status":"confirmed"},
+        {"systemId":"de.safety.sifa","status":"confirmed","scope":"vehicle-dependent"}
+      ],
+      "nextChecks": ["Map conventional and LZB sections", "Confirm signal family and tunnel installations", "Record ICE 3 transitions"]
+    },
+    {
+      "routeId": "tsw.de.koeln-aachen",
+      "linesideSystems": [],
+      "safetySystems": [
+        {"systemId":"de.safety.pzb90","status":"probable"},
+        {"systemId":"de.safety.lzb","status":"probable","scope":"high-speed section"},
+        {"systemId":"de.safety.sifa","status":"probable","scope":"vehicle-dependent"}
+      ],
+      "nextChecks": ["Attach official manual evidence", "Map LZB section", "Audit regional and S-Bahn layers"]
+    },
+    {
+      "routeId": "tsw.de.dresden-riesa",
+      "linesideSystems": [
+        {"systemId":"de.hl","status":"probable"},
+        {"systemId":"de.ks","status":"probable"}
+      ],
+      "safetySystems": [
+        {"systemId":"de.safety.pzb90","status":"probable"},
+        {"systemId":"de.safety.sifa","status":"probable","scope":"vehicle-dependent"}
+      ],
+      "nextChecks": ["Directly observe Dresden approaches", "Record Zs and Sh combinations", "Confirm any LZB use"]
+    }
+  ],
+  "unlistedRoutes": "Remain unknown until audited; absence from this matrix is not evidence that a system is absent."
+}
