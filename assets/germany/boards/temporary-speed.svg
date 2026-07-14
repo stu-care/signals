@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 180" role="img" aria-labelledby="title desc">
+  <title id="title">German temporary speed restriction boards</title>
+  <desc id="desc">Recognition-grade examples of Lf 1, Lf 2, Lf 3 and Lf 1/2.</desc>
+  <defs>
+    <style>
+      .outline{stroke:#111;stroke-width:5;stroke-linejoin:round}
+      .label{font-family:Arial,sans-serif;font-weight:700;text-anchor:middle;fill:#111}
+      .small{font-size:18px}.large{font-size:46px}
+    </style>
+  </defs>
+
+  <g id="lf1" transform="translate(15 12)">
+    <polygon points="55,145 8,20 102,20" fill="#f2cf22" class="outline"/>
+    <polygon points="55,132 20,30 90,30" fill="#f2cf22" stroke="#fff" stroke-width="7"/>
+    <text x="55" y="83" class="label large">6</text>
+    <text x="55" y="166" class="label small">Lf 1</text>
+  </g>
+
+  <g id="lf2" transform="translate(145 20)">
+    <rect x="5" y="8" width="95" height="125" rx="2" fill="#f2cf22" class="outline"/>
+    <rect x="15" y="18" width="75" height="105" fill="none" stroke="#fff" stroke-width="7"/>
+    <text x="52" y="90" class="label large">A</text>
+    <text x="52" y="158" class="label small">Lf 2</text>
+  </g>
+
+  <g id="lf3" transform="translate(275 20)">
+    <rect x="5" y="8" width="95" height="125" rx="2" fill="#fff" class="outline"/>
+    <text x="52" y="90" class="label large">E</text>
+    <text x="52" y="158" class="label small">Lf 3</text>
+  </g>
+
+  <g id="lf1-2" transform="translate(405 20)">
+    <rect x="5" y="8" width="95" height="125" rx="2" fill="#f2cf22" class="outline"/>
+    <rect x="15" y="18" width="75" height="105" fill="none" stroke="#fff" stroke-width="7"/>
+    <text x="52" y="90" class="label large">4</text>
+    <text x="52" y="158" class="label small">Lf 1/2</text>
+  </g>
+</svg>

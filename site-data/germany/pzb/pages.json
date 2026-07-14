@@ -1,0 +1,109 @@
+{
+  "system": "de.safety.pzb90",
+  "pages": [
+    {
+      "slug": "pzb-overview",
+      "title": "PZB 90: what it is",
+      "recognition": "Cab indicators labelled 55, 70 or 85, plus 1000 Hz, 500 Hz and Befehl indications; track magnets sit beside the right-hand rail in the direction of travel.",
+      "quickAnswer": "PZB checks that you acknowledge warnings and brake quickly enough. It does not continuously tell you the permitted speed.",
+      "playerAction": [
+        "Know which train type is selected.",
+        "Acknowledge active warnings promptly.",
+        "Brake below the relevant monitoring curve, not merely to the signal-board speed eventually required."
+      ],
+      "deeperExplanation": "PZB uses 1000 Hz, 500 Hz and 2000 Hz track magnets. The train remembers an influence and supervises speed afterwards, so passing the magnet is the beginning of the check rather than the end.",
+      "sourceRef": "data/germany/safety/pzb.json"
+    },
+    {
+      "slug": "pzb-wachsam",
+      "title": "PZB Wachsam (acknowledge)",
+      "recognition": "Usually a cab button or keyboard/controller command named PZB Wachsam, Acknowledge or Indusi acknowledge.",
+      "quickAnswer": "Press it after an active 1000 Hz warning, then brake beneath the curve.",
+      "playerAction": [
+        "Acknowledge promptly when 1000 Hz activates.",
+        "Immediately establish the required braking rate.",
+        "Do not treat acknowledgement as permission to maintain speed."
+      ],
+      "commonMistake": "Pressing Wachsam without braking. The acknowledgement prevents the missed-response intervention, but the speed curve remains active.",
+      "sourceRef": "data/germany/safety/pzb.json"
+    },
+    {
+      "slug": "pzb-frei",
+      "title": "PZB Frei (release)",
+      "recognition": "A cab button or command labelled PZB Frei or Release.",
+      "quickAnswer": "Release only when the system allows it and you can see that the restrictive reason has genuinely cleared.",
+      "playerAction": [
+        "Confirm the next signal or restriction is clear.",
+        "Do not release during active 500 Hz monitoring.",
+        "When uncertain, remain monitored rather than releasing early."
+      ],
+      "commonMistake": "Releasing merely because the cab button is available. A later active magnet can then cause an intervention.",
+      "sourceRef": "data/germany/safety/pzb.json"
+    },
+    {
+      "slug": "pzb-befehl",
+      "title": "PZB Befehl (override)",
+      "recognition": "A guarded or distinct cab control labelled Befehl, Override or Command.",
+      "quickAnswer": "Use it only when the signaller or scenario has authorised passing a stop signal.",
+      "playerAction": [
+        "Obtain explicit authority before moving.",
+        "Hold or operate Befehl as required by the vehicle implementation while passing the active 2000 Hz magnet.",
+        "Proceed cautiously and obey the scenario's restricted-speed instructions."
+      ],
+      "commonMistake": "Using Befehl as a general-purpose way to silence PZB or pass an inconvenient red signal.",
+      "sourceRef": "data/germany/safety/pzb.json"
+    },
+    {
+      "slug": "pzb-1000hz",
+      "title": "1000 Hz monitoring",
+      "recognition": "The 1000 Hz cab indicator illuminates after a restrictive warning or relevant speed reduction.",
+      "quickAnswer": "Acknowledge, then brake below the train-type curve.",
+      "playerAction": [
+        "Acknowledge immediately.",
+        "For type O, be at or below 85 km/h within 23 seconds.",
+        "For type M, be at or below 70 km/h within 29 seconds.",
+        "For type U, be at or below 55 km/h within 38 seconds."
+      ],
+      "caveat": "These are player-reference endpoints for the standard PZB 90 curves, not permission to delay all braking until the final second.",
+      "sourceRef": "data/germany/safety/pzb.json"
+    },
+    {
+      "slug": "pzb-500hz",
+      "title": "500 Hz monitoring",
+      "recognition": "The 500 Hz cab indication appears close to a stop signal or severe restriction.",
+      "quickAnswer": "You are now under a much tighter low-speed approach curve.",
+      "playerAction": [
+        "Continue braking smoothly towards the stop or protected point.",
+        "Avoid acceleration merely because a previous 1000 Hz indication has changed.",
+        "Expect restrictive monitoring after a stop."
+      ],
+      "sourceRef": "data/germany/safety/pzb.json"
+    },
+    {
+      "slug": "pzb-restrictive-mode",
+      "title": "Restrictive monitoring after stopping",
+      "recognition": "The train has stopped or crept below about 10 km/h after a 1000 Hz influence and the cab indications show a restrictive state.",
+      "quickAnswer": "PZB assumes you may still be approaching danger, so it limits acceleration tightly.",
+      "playerAction": [
+        "Do not accelerate as though the route were unrestricted.",
+        "Release only when eligible and the infrastructure ahead is clearly safe.",
+        "Expect additional restriction if a 500 Hz magnet is encountered."
+      ],
+      "sourceRef": "data/germany/safety/pzb.json"
+    },
+    {
+      "slug": "pzb-penalty-brake",
+      "title": "Recovering from a PZB intervention",
+      "recognition": "Emergency or penalty braking applies and PZB warning indicators remain active.",
+      "quickAnswer": "Let the train stop, secure the controls, then follow the locomotive-specific reset procedure.",
+      "playerAction": [
+        "Do not fight the intervention with traction.",
+        "Bring the power controller to off and apply the required brake state.",
+        "Use the train-specific reset sequence documented for that vehicle.",
+        "Resume only after the brakes release and the reason for the intervention is understood."
+      ],
+      "caveat": "TSW vehicles differ materially in reset controls and sequencing, so this page deliberately avoids a fake universal button recipe.",
+      "sourceRef": "data/germany/safety/pzb.json"
+    }
+  ]
+}
