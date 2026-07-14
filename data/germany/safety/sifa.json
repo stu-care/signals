@@ -1,0 +1,29 @@
+{
+  "id": "de.sifa",
+  "name": "Sicherheitsfahrschaltung (Sifa)",
+  "category": "driver-vigilance",
+  "status": "in-progress",
+  "summary": "Sifa checks that the driver remains responsive. It is separate from signalling and train protection.",
+  "playerModel": {
+    "coreRule": "Reset Sifa regularly and respond immediately to its warning. A missed response causes a brake intervention.",
+    "states": [
+      {"id":"monitoring","recognition":"No warning is active.","action":"Continue driving and operate the Sifa control as required by the vehicle."},
+      {"id":"visual-warning","recognition":"A Sifa warning lamp or message appears.","action":"Reset Sifa immediately."},
+      {"id":"audible-warning","recognition":"An audible warning sounds after the visual warning was not answered.","action":"Reset Sifa immediately before intervention."},
+      {"id":"intervention","recognition":"The train applies a penalty or emergency brake.","action":"Allow braking to complete as required, reset Sifa, and follow the locomotive-specific recovery procedure."}
+    ],
+    "importantDistinctions": [
+      "Sifa does not tell you whether a signal may be passed.",
+      "Sifa does not replace PZB, LZB or ETCS.",
+      "The pedal, button, release timing and reset behaviour differ between trains."
+    ]
+  },
+  "tswNotes": [
+    "Control bindings and cab controls vary between locomotives and multiple-units.",
+    "Some vehicles use an intermittent press-and-release rhythm while others are represented differently in TSW.",
+    "The universal guide therefore explains the warning sequence but leaves exact control timing to train-specific pages."
+  ],
+  "routeEvidence": [],
+  "confidence": "high",
+  "sources": []
+}
