@@ -1,0 +1,32 @@
+{
+  "system": "de.hv",
+  "status": "in-progress",
+  "variants": [
+    {
+      "id": "de.hv.distant.repeater",
+      "title": "H/V distant-signal repeater",
+      "purpose": "Repeats the indication of a distant signal where visibility or local conditions require another display.",
+      "playerAction": ["Treat the repeated Vr indication as confirmation of the warning already received.", "Do not assume that a fresh full braking distance begins at the repeater."],
+      "identification": {
+        "requiresObservation": true,
+        "notes": ["The exact supplementary marker and physical arrangement represented in each TSW route must be recorded from direct observation."]
+      },
+      "compatibleAspects": ["de.hv.vr0", "de.hv.vr1", "de.hv.vr2"],
+      "routeEvidence": [],
+      "confidence": "medium"
+    },
+    {
+      "id": "de.hv.distant.reduced-braking-distance",
+      "title": "H/V warning at shortened braking distance",
+      "purpose": "Indicates that the distance to the associated main signal is shorter than the normal braking distance.",
+      "playerAction": ["React promptly to the Vr indication.", "Expect less distance than normal to comply with the announced main-signal condition."],
+      "identification": {
+        "requiresObservation": true,
+        "notes": ["The route-specific board or supplementary-light implementation must be verified in TSW before artwork is finalised."]
+      },
+      "compatibleAspects": ["de.hv.vr0", "de.hv.vr1", "de.hv.vr2"],
+      "routeEvidence": [],
+      "confidence": "medium"
+    }
+  ]
+}

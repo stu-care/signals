@@ -1,0 +1,47 @@
+{
+  "system": "de.sh-ra",
+  "status": "in-progress",
+  "scope": "Player-facing light-signal indications commonly encountered during German shunting movements.",
+  "aspects": [
+    {
+      "id": "de.sh.sh0",
+      "designation": "Sh 0",
+      "title": "Stop for shunting movements",
+      "recognition": "Two red lights horizontally arranged on a light shunting signal or integrated signal assembly.",
+      "meaning": "Stop. Shunting movements must not pass the signal.",
+      "playerAction": ["Stop before the signal.", "Do not proceed until a valid shunting authority is displayed or given."],
+      "visual": {"lamps": [{"colour":"red","state":"steady","position":"left"},{"colour":"red","state":"steady","position":"right"}]},
+      "compatibleContexts": ["standalone-shunting-signal", "main-signal-subsidiary-display"],
+      "routeEvidence": [],
+      "confidence": "high"
+    },
+    {
+      "id": "de.sh.sh1",
+      "designation": "Sh 1",
+      "title": "Shunting permitted",
+      "recognition": "Two white lights rising diagonally from left to right.",
+      "meaning": "The shunting movement may pass the signal.",
+      "playerAction": ["Proceed at shunting speed.", "Remain prepared to stop short of vehicles, points or other obstructions.", "Remember that Sh 1 is not authority for a train movement beyond the limits of the shunting movement."],
+      "visual": {"lamps": [{"colour":"white","state":"steady","position":"lower-left"},{"colour":"white","state":"steady","position":"upper-right"}]},
+      "compatibleContexts": ["standalone-shunting-signal", "main-signal-subsidiary-display"],
+      "routeEvidence": [],
+      "confidence": "high"
+    },
+    {
+      "id": "de.ra.ra12",
+      "designation": "Ra 12",
+      "title": "Shunting permitted (former DR area)",
+      "recognition": "Two white lights rising diagonally from left to right, visually matching the modern Sh 1 light display.",
+      "meaning": "The shunting movement may pass the signal. The designation is associated with former Deutsche Reichsbahn practice.",
+      "playerAction": ["Proceed at shunting speed.", "Treat the operational authority as a shunting movement, not a normal train movement."],
+      "visual": {"lamps": [{"colour":"white","state":"steady","position":"lower-left"},{"colour":"white","state":"steady","position":"upper-right"}]},
+      "compatibleContexts": ["former-dr-infrastructure", "hl-associated-installation"],
+      "routeEvidence": [],
+      "confidence": "high"
+    }
+  ],
+  "notes": [
+    "Sh 1 and Ra 12 can look the same to a player; the site should explain the regional and rule-system context rather than duplicate the visual without explanation.",
+    "Mechanical Sh 0 boards and other shunting signals remain for a later slice."
+  ]
+}
