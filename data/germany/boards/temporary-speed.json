@@ -1,0 +1,76 @@
+{
+  "system": "de.lf.temporary",
+  "status": "initial",
+  "summary": "Temporary speed restrictions use a sequence of boards: advance warning, beginning and end. The displayed numeral is one tenth of the permitted speed in km/h.",
+  "signals": [
+    {
+      "id": "de.lf.lf1",
+      "designation": "Lf 1",
+      "name": "Temporary speed restriction announcement",
+      "recognition": "Yellow triangular board with a black numeral; normally points downwards, but may point upwards where space is restricted.",
+      "meaning": "A temporary speed restriction follows. The numeral multiplied by ten gives the permitted speed in km/h.",
+      "playerAction": [
+        "Read the numeral and begin braking in good time.",
+        "Acknowledge PZB if the associated 1000 Hz influence is active.",
+        "Reach the indicated speed by the start board."
+      ],
+      "numeralMultiplier": 10,
+      "compatibleProtection": ["PZB 1000 Hz", "PZB 500 Hz or speed-checking equipment depending on restriction"],
+      "svg": "assets/germany/boards/temporary-speed.svg#lf1",
+      "routeEvidence": [],
+      "confidence": "high"
+    },
+    {
+      "id": "de.lf.lf2",
+      "designation": "Lf 2",
+      "name": "Start of temporary speed restriction",
+      "recognition": "Rectangular yellow board carrying a black letter A.",
+      "meaning": "The temporary speed restriction begins here.",
+      "playerAction": [
+        "Do not exceed the announced speed when the front of the train reaches this board.",
+        "Maintain the restriction until the whole train has passed the end board."
+      ],
+      "svg": "assets/germany/boards/temporary-speed.svg#lf2",
+      "routeEvidence": [],
+      "confidence": "high"
+    },
+    {
+      "id": "de.lf.lf3",
+      "designation": "Lf 3",
+      "name": "End of temporary speed restriction",
+      "recognition": "Rectangular white board carrying a black letter E.",
+      "meaning": "The temporary speed restriction ends here.",
+      "playerAction": [
+        "Keep the restriction until the rear of the train has passed the board.",
+        "Then accelerate only if no other lower limit applies."
+      ],
+      "svg": "assets/germany/boards/temporary-speed.svg#lf3",
+      "routeEvidence": [],
+      "confidence": "high"
+    },
+    {
+      "id": "de.lf.lf1-2",
+      "designation": "Lf 1/2",
+      "name": "Combined temporary speed restriction start",
+      "recognition": "Rectangular yellow board with a black numeral.",
+      "meaning": "The displayed temporary restriction begins at the board. This form is associated with former Deutsche Reichsbahn practice and specific station or siding contexts.",
+      "playerAction": [
+        "Reduce to the displayed speed before reaching the board.",
+        "Treat route and scenario context as important because this is not the normal Lf 1 then Lf 2 sequence."
+      ],
+      "numeralMultiplier": 10,
+      "svg": "assets/germany/boards/temporary-speed.svg#lf1-2",
+      "routeEvidence": [],
+      "confidence": "medium"
+    }
+  ],
+  "sources": [
+    {
+      "type": "technical-summary",
+      "title": "Langsamfahrstelle",
+      "url": "https://de.wikipedia.org/wiki/Langsamfahrstelle",
+      "retrieved": "2026-07-14",
+      "notes": "Used for initial meanings and visual descriptions; official rule references still need to be attached."
+    }
+  ]
+}
