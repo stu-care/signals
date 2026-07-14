@@ -1,0 +1,65 @@
+{
+  "status": "in-progress",
+  "profiles": [
+    {
+      "id": "tsw.vehicle.db-br-401-ice-1",
+      "name": "DB BR 401 ICE 1",
+      "systems": [
+        {"systemId":"de.safety.sifa","availability":"expected","verification":"manual-needed"},
+        {"systemId":"de.safety.pzb90","availability":"expected","verification":"manual-needed"},
+        {"systemId":"de.safety.lzb","availability":"expected","verification":"manual-and-route-needed"}
+      ],
+      "playerChecklist": [
+        "Verify Sifa and PZB/LZB before departure.",
+        "Use cab supervision only when LZB is visibly active.",
+        "Follow the vehicle-specific LZB end and intervention recovery procedure."
+      ],
+      "confidence": "low"
+    },
+    {
+      "id": "tsw.vehicle.db-br-406-ice-3m",
+      "name": "DB BR 406 ICE 3M",
+      "systems": [
+        {"systemId":"de.safety.sifa","availability":"expected","verification":"manual-needed"},
+        {"systemId":"de.safety.pzb90","availability":"expected","verification":"manual-needed"},
+        {"systemId":"de.safety.lzb","availability":"expected","verification":"manual-and-route-needed"}
+      ],
+      "playerChecklist": [
+        "Check which national safety systems are selected for the route.",
+        "Do not assume controls or indications match the BR 403 exactly.",
+        "Confirm the active supervision system before relying on cab speed commands."
+      ],
+      "confidence": "low"
+    },
+    {
+      "id": "tsw.vehicle.db-br-442-talent-2",
+      "name": "DB BR 442 Talent 2",
+      "systems": [
+        {"systemId":"de.safety.sifa","availability":"expected","verification":"manual-needed"},
+        {"systemId":"de.safety.pzb90","availability":"expected","verification":"manual-needed"}
+      ],
+      "playerChecklist": [
+        "Enable and verify Sifa and PZB during cab setup.",
+        "Use the unit-specific PZB controls and indication panel.",
+        "Treat route and formation variants as separate validation targets."
+      ],
+      "confidence": "low"
+    },
+    {
+      "id": "tsw.vehicle.db-br-612",
+      "name": "DB BR 612",
+      "systems": [
+        {"systemId":"de.safety.sifa","availability":"expected","verification":"manual-needed"},
+        {"systemId":"de.safety.pzb90","availability":"expected","verification":"manual-needed"},
+        {"systemId":"de.safety.gnt","availability":"expected","verification":"manual-and-route-needed"}
+      ],
+      "playerChecklist": [
+        "Confirm whether GNT is enabled and available on the current route section.",
+        "Do not treat physical tilt alone as permission to exceed conventional speeds.",
+        "Continue to obey PZB and lineside signalling unless cab supervision explicitly applies."
+      ],
+      "confidence": "low"
+    }
+  ],
+  "publicationRule": "Profiles remain unpublished or visibly provisional until exact controls and at least one route use are evidenced."
+}
