@@ -1,0 +1,9 @@
+{
+  "system":"de.lzb",
+  "pages":[
+    {"id":"de.lzb.overview","slug":"germany/lzb","title":"LZB","recognition":"The cab shows a permitted speed plus target speed and distance information.","meaning":"Continuous cab signalling and speed supervision are active.","playerAction":["Follow the permitted speed shown in the cab.","Use target speed and target distance together to plan braking.","Do not wait for a lineside signal before responding to an LZB target."],"notes":["Cab layouts vary by train.","PZB normally remains relevant before entry and after leaving LZB."]},
+    {"id":"de.lzb.target","slug":"germany/lzb/target-speed-distance","title":"Target speed and distance","recognition":"A lower target speed is shown with a distance countdown.","meaning":"The train must reach the target speed by the target point.","playerAction":["Begin braking early enough to remain below the supervised curve.","Expect the permitted-speed indication to step down as the target approaches."]},
+    {"id":"de.lzb.end","slug":"germany/lzb/end-transition","title":"Leaving LZB","recognition":"An end-of-LZB indication or acknowledgement request appears.","meaning":"Continuous supervision is ending and driving returns to lineside signals and PZB.","playerAction":["Acknowledge when required by the vehicle.","Identify the next lineside signal before the transition completes.","Continue under PZB and normal signal rules."],"warning":"The exact acknowledgement control and timing are train-specific."},
+    {"id":"de.lzb.intervention","slug":"germany/lzb/intervention","title":"LZB brake intervention","recognition":"The train brakes after overspeed or failure to follow the supervised curve.","meaning":"LZB has enforced its movement or speed limit.","playerAction":["Allow the enforced braking to complete as required.","Use the train-specific recovery procedure.","Re-establish the current permitted speed and target before applying power."]}
+  ]
+}

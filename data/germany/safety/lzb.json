@@ -1,0 +1,33 @@
+{
+  "id": "de.lzb",
+  "name": "Linienzugbeeinflussung (LZB)",
+  "category": "continuous-train-control",
+  "status": "in-progress",
+  "summary": "LZB continuously supervises speed and movement authority using cab indications rather than relying only on lineside signals.",
+  "playerModel": {
+    "coreRule": "When LZB is active, drive to the permitted speed and target information shown in the cab. Lineside signals remain relevant for context and fallback operation, but the cab display is the primary driving reference.",
+    "inputs": [
+      {"id":"permitted-speed","label":"Permitted speed","meaning":"The maximum speed currently allowed by LZB.","playerAction":"Do not exceed it."},
+      {"id":"target-speed","label":"Target speed","meaning":"The speed that must be reached at the displayed target distance.","playerAction":"Brake early enough to meet the target."},
+      {"id":"target-distance","label":"Target distance","meaning":"Distance remaining to the next supervised speed reduction or stop target.","playerAction":"Use it with target speed to judge braking."},
+      {"id":"end-indication","label":"End of LZB","meaning":"LZB supervision is ending and control will return to normal lineside signalling and PZB.","playerAction":"Acknowledge the transition when the train requires it and resume driving by signals and PZB."}
+    ],
+    "states": [
+      {"id":"inactive","recognition":"No active LZB supervision indications.","action":"Drive by lineside signals and PZB."},
+      {"id":"active","recognition":"Permitted speed and target information are displayed.","action":"Follow the cab authority and braking target."},
+      {"id":"braking-curve","recognition":"Permitted speed reduces as the train approaches a target.","action":"Brake smoothly enough to remain below the supervised curve."},
+      {"id":"end-procedure","recognition":"An end-of-LZB indication appears.","action":"Acknowledge as required by the vehicle, verify the next lineside signal, and continue under PZB."},
+      {"id":"intervention","recognition":"The train applies a penalty or emergency brake after overspeed or failure to meet supervision.","action":"Allow the train to stop or slow as required, then use the locomotive-specific recovery procedure."}
+    ]
+  },
+  "tswNotes": [
+    "Cab display layout, acknowledgement controls and recovery steps vary by train.",
+    "The route must actually provide LZB infrastructure and the selected train must support it.",
+    "Some TSW services may transition between PZB and LZB during one journey."
+  ],
+  "routeEvidence": [],
+  "confidence": "medium",
+  "sources": [
+    {"type":"official-gameplay-guide","title":"Frankfurt–Fulda Gameplay Guide","notes":"Official Dovetail material confirms LZB training and use on the route."}
+  ]
+}
