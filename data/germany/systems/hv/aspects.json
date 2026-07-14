@@ -1,0 +1,82 @@
+{
+  "system": "de.hv",
+  "status": "in-progress",
+  "summary": "The H/V system separates main-signal authority (Hp) from advance warning at a distant signal (Vr).",
+  "mainAspects": [
+    {
+      "id": "de.hv.hp0",
+      "designation": "Hp 0",
+      "title": "Stop",
+      "recognition": "One red light, or on some combined station signals two red lights horizontally.",
+      "meaning": "Stop before the main signal.",
+      "playerAction": ["Stop before the signal.", "Do not pass without an appropriate authority or subsidiary indication."],
+      "visual": {"lights":[{"colour":"red","position":"upper-or-horizontal-pair","state":"steady"}]},
+      "pzb": {"acknowledge": false, "summary": "Passing an active 2000 Hz magnet without authority causes an emergency brake application."},
+      "routeEvidence": [],
+      "confidence": "high"
+    },
+    {
+      "id": "de.hv.hp1",
+      "designation": "Hp 1",
+      "title": "Proceed",
+      "recognition": "One steady green light.",
+      "meaning": "Proceed at the speed permitted by the timetable and any additional speed indication.",
+      "playerAction": ["Proceed at the permitted speed.", "Observe any Zs 3 speed indicator or other restriction."],
+      "visual": {"lights":[{"colour":"green","position":"upper","state":"steady"}]},
+      "pzb": {"acknowledge": false, "summary": "No acknowledgement is normally required for the plain proceed aspect."},
+      "routeEvidence": [],
+      "confidence": "high"
+    },
+    {
+      "id": "de.hv.hp2",
+      "designation": "Hp 2",
+      "title": "Proceed slowly",
+      "recognition": "Steady green above steady yellow.",
+      "meaning": "Proceed at reduced speed. Unless another speed is indicated, the H/V slow-speed rule applies from the signal through the relevant points area.",
+      "playerAction": ["Reduce to the applicable speed by the signal.", "Check for a Zs 3 indicator that replaces the default speed value."],
+      "visual": {"lights":[{"colour":"green","position":"upper","state":"steady"},{"colour":"yellow","position":"lower","state":"steady"}]},
+      "pzb": {"acknowledge": "conditional", "summary": "PZB response depends on the applicable speed indication and active magnet arrangement."},
+      "routeEvidence": [],
+      "confidence": "high"
+    }
+  ],
+  "distantAspects": [
+    {
+      "id": "de.hv.vr0",
+      "designation": "Vr 0",
+      "title": "Expect stop",
+      "recognition": "Two steady yellow lights rising from left to right.",
+      "meaning": "Expect the associated main signal to show stop.",
+      "playerAction": ["Acknowledge PZB when the 1000 Hz influence is active.", "Brake so you can stop before the associated main signal."],
+      "visual": {"lights":[{"colour":"yellow","position":"lower-left","state":"steady"},{"colour":"yellow","position":"upper-right","state":"steady"}]},
+      "routeEvidence": [],
+      "confidence": "high"
+    },
+    {
+      "id": "de.hv.vr1",
+      "designation": "Vr 1",
+      "title": "Expect proceed",
+      "recognition": "Two steady green lights rising from left to right.",
+      "meaning": "Expect the associated main signal to show proceed.",
+      "playerAction": ["Continue at the permitted speed unless another restriction applies."],
+      "visual": {"lights":[{"colour":"green","position":"lower-left","state":"steady"},{"colour":"green","position":"upper-right","state":"steady"}]},
+      "routeEvidence": [],
+      "confidence": "high"
+    },
+    {
+      "id": "de.hv.vr2",
+      "designation": "Vr 2",
+      "title": "Expect proceed slowly",
+      "recognition": "Green lower-left and yellow upper-right.",
+      "meaning": "Expect the associated main signal to show Hp 2 or another reduced-speed indication.",
+      "playerAction": ["Acknowledge PZB when required.", "Begin braking for the reduced speed at the main signal.", "Check any Zs 3v announcement for the exact speed."],
+      "visual": {"lights":[{"colour":"green","position":"lower-left","state":"steady"},{"colour":"yellow","position":"upper-right","state":"steady"}]},
+      "routeEvidence": [],
+      "confidence": "high"
+    }
+  ],
+  "sources": [
+    {"type":"legal","title":"Eisenbahn-Signalordnung","url":"https://www.gesetze-im-internet.de/eso_1959/","retrieved":"2026-07-14"},
+    {"type":"technical-summary","title":"H/V-Signalsystem","url":"https://de.wikipedia.org/wiki/H/V-Signalsystem","retrieved":"2026-07-14"}
+  ]
+}
