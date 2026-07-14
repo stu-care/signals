@@ -4,6 +4,17 @@ A player-facing reference for railway signals, aspects, boards and train-protect
 
 The first research area is Germany, covering official route content compatible with Train Sim World 3 onwards (including preserved collection routes that remain usable in later games).
 
+## Website
+
+The repository now includes a Vite-powered static website. The first vertical slice renders the German Hl aspect catalogue directly from `site-data/germany/hl/pages.json`.
+
+```bash
+npm install
+npm run dev
+```
+
+Create a production build with `npm run build`. Changes merged to `main` are built and deployed through `.github/workflows/deploy-pages.yml`.
+
 ## Principles
 
 - Explain what the player can see.
@@ -26,6 +37,8 @@ Routes are evidence and cross-references rather than the primary navigation stru
 
 ## Repository structure
 
+- `src/` contains the website application and styling.
+- `site-data/` contains website-ready records generated from canonical data.
 - `docs/research-scope.md` defines the agreed scope and evidence rules.
 - `docs/germany/route-matrix.md` tracks route-by-route research.
 - `data/germany/routes.json` is the machine-readable route inventory.
