@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/route.schema.json",
+  "title": "Train Sim World route research record",
+  "type": "object",
+  "required": ["id", "title", "countries", "researchStatus", "systems", "evidence"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9.-]+$" },
+    "title": { "type": "string", "minLength": 1 },
+    "countries": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "pattern": "^[A-Z]{2}$" },
+      "uniqueItems": true
+    },
+    "scopeNote": { "type": "string" },
+    "releaseVerification": {
+      "type": "string",
+      "enum": ["confirmed", "pending", "not-applicable"]
+    },
+    "researchStatus": {
+      "type": "string",
+      "enum": ["pending", "in-progress", "audited", "needs-recheck"]
+    },
+    "systems": {
+      "type": "object",
+      "required": ["lineside", "trainProtection", "vigilance", "associated"],
+      "properties": {
+        "lineside": { "$ref": "#/$defs/systemClaims" },
+        "trainProtection": { "$ref": "#/$defs/systemClaims" },
+        "vigilance": { "$ref": "#/$defs/systemClaims" },
+        "associated": { "$ref": "#/$defs/systemClaims" }
+      },
+      "additionalProperties": false
+    },
+    "routeSpecificBehaviour": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/discrepancy" }
+    },
+    "evidence": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/evidence" }
+    },
+    "notes": { "type": "array", "items": { "type": "string" } }
+  },
+  "$defs": {
+    "systemClaims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["system", "status"],
+        "properties": {
+          "system": { "type": "string" },
+          "status": {
+            "type": "string",
+            "enum": [
+              "confirmed-in-game",
+              "official-documentation",
+              "reliable-visual-evidence",
+              "probable-needs-verification",
+              "unknown"
+            ]
+          },
+          "evidenceIds": { "type": "array", "items": { "type": "string" } },
+          "notes": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["id", "kind", "title"],
+      "properties": {
+        "id": { "type": "string" },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "in-game-observation",
+            "official-tsw-documentation",
+            "authoritative-railway-source",
+            "video",
+            "photograph",
+            "community-report"
+          ]
+        },
+        "title": { "type": "string" },
+        "url": { "type": "string", "format": "uri" },
+        "gameVersion": { "type": "string" },
+        "observedAt": { "type": "string", "format": "date" },
+        "accessedAt": { "type": "string", "format": "date" },
+        "notes": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "discrepancy": {
+      "type": "object",
+      "required": ["classification", "summary", "status"],
+      "properties": {
+        "classification": {
+          "type": "string",
+          "enum": [
+            "intentional-simplification",
+            "likely-engine-limitation",
+            "repeatable-defect",
+            "unverified-report"
+          ]
+        },
+        "summary": { "type": "string" },
+        "status": {
+          "type": "string",
+          "enum": ["open", "resolved", "version-specific"]
+        },
+        "evidenceIds": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
