@@ -1,0 +1,58 @@
+{
+  "system": "de.hv",
+  "status": "in-progress",
+  "assets": [
+    {
+      "id": "de.hv.head.main.standard",
+      "kind": "signal-head",
+      "function": "main",
+      "description": "Recognition-grade H/V main-signal head capable of displaying Hp 0, Hp 1 and Hp 2.",
+      "lampSlots": [
+        {"id":"red-left","colour":"red","position":{"x":0.32,"y":0.28}},
+        {"id":"red-right","colour":"red","position":{"x":0.68,"y":0.28}},
+        {"id":"green","colour":"green","position":{"x":0.32,"y":0.68}},
+        {"id":"yellow","colour":"yellow","position":{"x":0.68,"y":0.68}}
+      ],
+      "compatibleAspects":["de.hv.hp0","de.hv.hp1","de.hv.hp2"],
+      "compatibleIndicators":["de.zs.zs3"],
+      "routeEvidence":[],
+      "confidence":"medium"
+    },
+    {
+      "id": "de.hv.head.distant.standard",
+      "kind": "signal-head",
+      "function": "distant",
+      "description": "Recognition-grade H/V distant-signal head capable of displaying Vr 0, Vr 1 and Vr 2.",
+      "lampSlots": [
+        {"id":"upper-left","position":{"x":0.32,"y":0.28}},
+        {"id":"upper-right","position":{"x":0.68,"y":0.28}},
+        {"id":"lower-left","position":{"x":0.32,"y":0.68}},
+        {"id":"lower-right","position":{"x":0.68,"y":0.68}}
+      ],
+      "compatibleAspects":["de.hv.vr0","de.hv.vr1","de.hv.vr2"],
+      "compatibleIndicators":["de.zs.zs3v"],
+      "routeEvidence":[],
+      "confidence":"medium"
+    },
+    {
+      "id": "de.hv.assembly.combined.main-distant",
+      "kind": "combined-assembly",
+      "functions": ["main","distant"],
+      "description": "A main signal and distant signal mounted together. The main aspect controls authority at this signal; the distant aspect announces the next main signal.",
+      "components":["de.hv.head.main.standard","de.hv.head.distant.standard"],
+      "layout":{"main":"upper","distant":"lower"},
+      "playerReadingOrder":[
+        "Read the main Hp aspect first to determine whether and how you may pass this signal.",
+        "Then read the Vr aspect to understand what to expect at the next main signal.",
+        "Apply any Zs 3 current-speed indication and Zs 3v announced-speed indication separately."
+      ],
+      "validExamples":[
+        {"mainAspect":"de.hv.hp1","distantAspect":"de.hv.vr0","summary":"Proceed here, expect stop at the next main signal."},
+        {"mainAspect":"de.hv.hp2","distantAspect":"de.hv.vr2","summary":"Proceed at restricted speed here, expect restricted speed at the next main signal."},
+        {"mainAspect":"de.hv.hp1","distantAspect":"de.hv.vr1","summary":"Proceed here, expect proceed at the next main signal."}
+      ],
+      "routeEvidence":[],
+      "confidence":"high"
+    }
+  ]
+}
