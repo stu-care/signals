@@ -1,0 +1,84 @@
+{
+  "system": "de.hv",
+  "status": "in-progress",
+  "readingOrder": [
+    "Read Hp first to determine whether you may pass and the movement authority from this signal.",
+    "Read any Zs 3 for the speed applying from this signal.",
+    "Read Vr for what to expect at the next main signal.",
+    "Read any Zs 3v for the speed expected at the next signal or defined location."
+  ],
+  "pages": [
+    {
+      "id": "page.de.hv.hp0",
+      "aspectId": "de.hv.hp0",
+      "slug": "germany/hv/hp0-stop",
+      "title": "Hp 0: Stop",
+      "recognise": "One red light on a main signal, or two red lights on some signal-head arrangements.",
+      "meaning": "Stop before the signal.",
+      "do": ["Stop before the signal.", "Do not pass without a valid subsidiary indication or other authority."],
+      "pzb": "An active 2000 Hz magnet at the signal will cause an emergency brake application if passed without the required authority.",
+      "visual": {"sprite": "assets/germany/hv/hv-sprite.svg#hp0"},
+      "routeEvidence": []
+    },
+    {
+      "id": "page.de.hv.hp1",
+      "aspectId": "de.hv.hp1",
+      "slug": "germany/hv/hp1-proceed",
+      "title": "Hp 1: Proceed",
+      "recognise": "One green light on the main-signal part.",
+      "meaning": "Proceed at the speed permitted by the route, timetable and any accompanying indicator.",
+      "do": ["Proceed.", "Obey any Zs 3 speed indication displayed with the signal."],
+      "pzb": "The plain proceed aspect normally needs no acknowledgement, although nearby signs or restrictions may independently require one.",
+      "visual": {"sprite": "assets/germany/hv/hv-sprite.svg#hp1"},
+      "routeEvidence": []
+    },
+    {
+      "id": "page.de.hv.hp2",
+      "aspectId": "de.hv.hp2",
+      "slug": "germany/hv/hp2-slow-proceed",
+      "title": "Hp 2: Proceed slowly",
+      "recognise": "Green over yellow on the main-signal part.",
+      "meaning": "Proceed at reduced speed. The exact permitted speed depends on the applicable rules and any Zs 3 indication.",
+      "do": ["Reduce to the applicable speed by the signal.", "Read any Zs 3 numeral rather than assuming a single universal speed."],
+      "pzb": "PZB response depends on the associated magnet and speed supervision arrangement.",
+      "visual": {"sprite": "assets/germany/hv/hv-sprite.svg#hp2"},
+      "routeEvidence": []
+    },
+    {
+      "id": "page.de.hv.vr0",
+      "aspectId": "de.hv.vr0",
+      "slug": "germany/hv/vr0-expect-stop",
+      "title": "Vr 0: Expect stop",
+      "recognise": "Two yellow lights diagonally arranged on the distant-signal part.",
+      "meaning": "Expect the next main signal to show stop.",
+      "do": ["Acknowledge PZB when the associated 1000 Hz influence is active.", "Brake so you can stop before the next main signal."],
+      "pzb": "Normally associated with a 1000 Hz influence when active.",
+      "visual": {"sprite": "assets/germany/hv/hv-sprite.svg#vr0"},
+      "routeEvidence": []
+    },
+    {
+      "id": "page.de.hv.vr1",
+      "aspectId": "de.hv.vr1",
+      "slug": "germany/hv/vr1-expect-proceed",
+      "title": "Vr 1: Expect proceed",
+      "recognise": "Two green lights diagonally arranged on the distant-signal part.",
+      "meaning": "Expect the next main signal to show proceed.",
+      "do": ["Continue at the permitted speed while observing other restrictions."],
+      "pzb": "Normally no acknowledgement is required for the plain clear warning.",
+      "visual": {"sprite": "assets/germany/hv/hv-sprite.svg#vr1"},
+      "routeEvidence": []
+    },
+    {
+      "id": "page.de.hv.vr2",
+      "aspectId": "de.hv.vr2",
+      "slug": "germany/hv/vr2-expect-slow-proceed",
+      "title": "Vr 2: Expect proceed slowly",
+      "recognise": "Green and yellow lights diagonally arranged on the distant-signal part.",
+      "meaning": "Expect the next main signal to permit passage at reduced speed.",
+      "do": ["Begin braking for the restrictive speed.", "Read any Zs 3v indication for the announced value."],
+      "pzb": "A restrictive warning may require acknowledgement when the associated 1000 Hz influence is active.",
+      "visual": {"sprite": "assets/germany/hv/hv-sprite.svg#vr2"},
+      "routeEvidence": []
+    }
+  ]
+}
