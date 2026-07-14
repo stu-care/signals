@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://signals.example/schemas/observation.schema.json",
+  "title": "Train Sim World signal observation",
+  "type": "object",
+  "required": ["id", "routeId", "location", "observedEntityIds", "gameContext", "evidence", "confidence"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9.-]+$" },
+    "routeId": { "type": "string" },
+    "location": {
+      "type": "object",
+      "required": ["description"],
+      "properties": {
+        "description": { "type": "string" },
+        "station": { "type": "string" },
+        "direction": { "type": "string" },
+        "track": { "type": "string" },
+        "kilometre": { "type": ["number", "null"] },
+        "coordinates": {
+          "type": ["object", "null"],
+          "properties": {
+            "latitude": { "type": "number" },
+            "longitude": { "type": "number" }
+          },
+          "required": ["latitude", "longitude"],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "observedEntityIds": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string" }
+    },
+    "displayedValues": {
+      "type": "object",
+      "additionalProperties": { "type": ["string", "number", "boolean", "null"] }
+    },
+    "gameContext": {
+      "type": "object",
+      "required": ["game", "mode"],
+      "properties": {
+        "game": { "type": "string" },
+        "version": { "type": ["string", "null"] },
+        "mode": { "type": "string" },
+        "service": { "type": ["string", "null"] },
+        "timetable": { "type": ["string", "null"] },
+        "rollingStock": { "type": ["string", "null"] },
+        "platform": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["kind"],
+        "properties": {
+          "kind": { "type": "string", "enum": ["screenshot", "video", "direct-observation", "official-documentation"] },
+          "url": { "type": ["string", "null"], "format": "uri" },
+          "timestamp": { "type": ["string", "null"] },
+          "file": { "type": ["string", "null"] },
+          "notes": { "type": ["string", "null"] }
+        },
+        "additionalProperties": false
+      }
+    },
+    "playerActionObserved": { "type": ["string", "null"] },
+    "tswDifference": { "type": ["string", "null"] },
+    "confidence": { "type": "string", "enum": ["high", "medium", "low"] },
+    "reviewStatus": { "type": "string", "enum": ["captured", "reviewed", "needs-recheck"] },
+    "notes": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": false
+}
