@@ -1,0 +1,43 @@
+{
+  "id": "tsw.de.example.ks-observation",
+  "routeId": "tsw.de.leipzig-dresden",
+  "location": {
+    "description": "Replace with a precise in-game location.",
+    "station": null,
+    "direction": "Replace with running direction.",
+    "track": null,
+    "kilometre": null,
+    "coordinates": null
+  },
+  "observedEntityIds": [
+    "de.ks.ks2",
+    "de.ne.ne2",
+    "de.ks.supplementary.repeater-light"
+  ],
+  "displayedValues": {},
+  "gameContext": {
+    "game": "Train Sim World 6",
+    "version": null,
+    "mode": "timetable",
+    "service": null,
+    "timetable": null,
+    "rollingStock": null,
+    "platform": null
+  },
+  "evidence": [
+    {
+      "kind": "screenshot",
+      "url": null,
+      "timestamp": null,
+      "file": null,
+      "notes": "Replace this example with direct evidence before marking the observation reviewed."
+    }
+  ],
+  "playerActionObserved": null,
+  "tswDifference": null,
+  "confidence": "low",
+  "reviewStatus": "captured",
+  "notes": [
+    "Template only. This is not evidence that the assembly occurs at any particular location."
+  ]
+}
