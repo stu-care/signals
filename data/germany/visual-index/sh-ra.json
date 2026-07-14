@@ -1,0 +1,30 @@
+{
+  "country": "DE",
+  "system": "de.sh-ra",
+  "entries": [
+    {
+      "id": "visual.de.sh.sh0",
+      "target": "de.sh.sh0",
+      "title": "Two red lights side by side",
+      "searchTerms": ["two red", "horizontal red", "shunting stop", "sh0"],
+      "visual": "assets/germany/sh-ra/light-shunting-sprite.svg#sh0",
+      "summary": "Stop for shunting movements."
+    },
+    {
+      "id": "visual.de.sh.sh1",
+      "target": "de.sh.sh1",
+      "title": "Two white lights rising to the right",
+      "searchTerms": ["two white diagonal", "white lights", "shunting permitted", "sh1"],
+      "visual": "assets/germany/sh-ra/light-shunting-sprite.svg#sh1-ra12",
+      "summary": "Shunting movement permitted."
+    },
+    {
+      "id": "visual.de.ra.ra12",
+      "target": "de.ra.ra12",
+      "title": "Two white lights rising to the right (former DR context)",
+      "searchTerms": ["two white diagonal", "ra12", "east germany", "former dr", "shunting permitted"],
+      "visual": "assets/germany/sh-ra/light-shunting-sprite.svg#sh1-ra12",
+      "summary": "Shunting movement permitted under the former DR designation."
+    }
+  ]
+}
