@@ -1,0 +1,37 @@
+{
+  "system": "de.hl",
+  "status": "in-progress",
+  "functions": [
+    {
+      "id": "de.hl.function.main",
+      "title": "Hl main signal or combined main/distant signal",
+      "recognition": "A full Hl head capable of displaying a red stop aspect and speed information for movement from the signal.",
+      "meaning": "The display can authorise or prohibit movement at this signal and may simultaneously announce the condition at the next main signal.",
+      "playerAction": ["Treat the lower part as the speed that applies from this signal.","Treat the upper part as advance information for the next main signal.","Stop when the red Hp 0 aspect is displayed."],
+      "compatibleAspects": ["de.hl.hl1","de.hl.hl2","de.hl.hl3a","de.hl.hl3b","de.hl.hl4","de.hl.hl5","de.hl.hl6a","de.hl.hl6b","de.hl.hl7","de.hl.hl8","de.hl.hl9a","de.hl.hl9b","de.hl.hl10","de.hl.hl11","de.hl.hl12a","de.hl.hl12b","de.hl.hp0"],
+      "routeEvidence": [],
+      "confidence": "high"
+    },
+    {
+      "id": "de.hl.function.distant-only",
+      "title": "Hl distant-only signal",
+      "recognition": "An Hl installation providing only advance information. It does not display a red stop aspect and does not impose a new movement authority at its own location.",
+      "meaning": "It announces the expected aspect or speed at the next main signal.",
+      "playerAction": ["Respond to the upper warning information and brake as required.","Do not interpret the signal as a stop point merely because it shows yellow."],
+      "compatibleNextIndications": ["line-speed","100","40-or-60","stop"],
+      "routeEvidence": [],
+      "confidence": "high"
+    },
+    {
+      "id": "de.hl.function.repeater",
+      "title": "Hl distant-signal repeater",
+      "recognition": "A repeated advance indication positioned to improve sighting. Exact identification equipment and head form must be verified per route.",
+      "meaning": "Repeats information already given about the next main signal; it does not create a fresh full braking distance.",
+      "playerAction": ["Continue any braking already begun for the announced restriction.","Do not reset your braking plan at the repeater."],
+      "routeEvidence": [],
+      "confidence": "medium",
+      "notes": ["Exact TSW artwork and identification markers remain an observation task."]
+    }
+  ],
+  "sources": [{"type":"authoritative-rule-reference","title":"DB InfraGO Ril 301.0103 (Hl signal rules)","availability":"Referenced through public technical summaries; exact current edition text should be checked where accessible."}]
+}

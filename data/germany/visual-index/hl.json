@@ -1,0 +1,32 @@
+{
+  "country": "DE",
+  "system": "de.hl",
+  "title": "Hl signals by appearance",
+  "sprite": "assets/germany/hl/aspects/hl-aspect-sprite.svg",
+  "readingGuide": {
+    "upper": "What to expect at the next main signal",
+    "lower": "The speed permitted from this signal",
+    "strip": "Green strip means 100 km/h; yellow strip means 60 km/h; no strip with the lower yellow means 40 km/h"
+  },
+  "entries": [
+    {"aspectId":"de.hl.hl1","spriteId":"hl1","searchTerms":["steady green","one green","line speed"]},
+    {"aspectId":"de.hl.hl2","spriteId":"hl2","searchTerms":["green over yellow","green strip","100 now"]},
+    {"aspectId":"de.hl.hl3a","spriteId":"hl3a","searchTerms":["green and lower yellow","40 now"]},
+    {"aspectId":"de.hl.hl3b","spriteId":"hl3b","searchTerms":["green and lower yellow","yellow strip","60 now"]},
+    {"aspectId":"de.hl.hl4","spriteId":"hl4","searchTerms":["flashing green","expect 100"]},
+    {"aspectId":"de.hl.hl5","spriteId":"hl5","searchTerms":["flashing green","lower yellow","green strip","100 now and next"]},
+    {"aspectId":"de.hl.hl6a","spriteId":"hl6a","searchTerms":["flashing green","lower yellow","40 now expect 100"]},
+    {"aspectId":"de.hl.hl6b","spriteId":"hl6b","searchTerms":["flashing green","lower yellow","yellow strip","60 now expect 100"]},
+    {"aspectId":"de.hl.hl7","spriteId":"hl7","searchTerms":["flashing yellow","expect 40 or 60"]},
+    {"aspectId":"de.hl.hl8","spriteId":"hl8","searchTerms":["flashing yellow","lower yellow","green strip","100 now"]},
+    {"aspectId":"de.hl.hl9a","spriteId":"hl9a","searchTerms":["flashing yellow","lower yellow","40 now"]},
+    {"aspectId":"de.hl.hl9b","spriteId":"hl9b","searchTerms":["flashing yellow","lower yellow","yellow strip","60 now"]},
+    {"aspectId":"de.hl.hl10","spriteId":"hl10","searchTerms":["steady yellow","expect stop"]},
+    {"aspectId":"de.hl.hl11","spriteId":"hl11","searchTerms":["steady yellow","lower yellow","green strip","100 now expect stop"]},
+    {"aspectId":"de.hl.hl12a","spriteId":"hl12a","searchTerms":["two yellow","40 now expect stop"]},
+    {"aspectId":"de.hl.hl12b","spriteId":"hl12b","searchTerms":["two yellow","yellow strip","60 now expect stop"]},
+    {"aspectId":"de.hl.hp0","spriteId":"hp0","searchTerms":["red","stop","Hp 0","Hl 13"]}
+  ],
+  "routeEvidence": [],
+  "status": "complete-visual-model-unverified-in-tsw"
+}
