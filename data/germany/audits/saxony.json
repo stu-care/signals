@@ -1,0 +1,131 @@
+{
+  "auditId": "tsw.de.saxony.initial",
+  "status": "in-progress",
+  "lastReviewed": "2026-07-14",
+  "routes": [
+    {
+      "routeId": "tsw.de.leipzig-dresden",
+      "release": {
+        "status": "confirmed",
+        "date": "2025-09-30",
+        "evidence": ["dtg-leipzig-dresden-gameplay-guide"]
+      },
+      "coverage": {
+        "lengthKm": 160,
+        "relationship": "Extends the earlier Dresden–Riesa route westwards to Leipzig and adds the Dresden–Coswig line and Friedrichstadt yard.",
+        "evidence": ["dtg-new-horizons-leipzig"]
+      },
+      "systems": {
+        "lineside": [
+          {
+            "id": "de.hl",
+            "status": "confirmed",
+            "scope": "Dresden area",
+            "evidence": ["dtg-new-horizons-leipzig"]
+          },
+          {
+            "id": "de.ks",
+            "status": "confirmed",
+            "scope": "Dresden area",
+            "evidence": ["dtg-new-horizons-leipzig"]
+          }
+        ],
+        "trainProtection": [
+          {
+            "id": "de.pzb",
+            "status": "confirmed",
+            "scope": "Supported by the route's included German rolling stock; exact infrastructure coverage still requires observation.",
+            "evidence": ["dtg-new-horizons-leipzig"]
+          },
+          {
+            "id": "de.lzb",
+            "status": "confirmed",
+            "scope": "Western high-speed section used by ICE services; precise start and end points require observation.",
+            "evidence": ["dtg-new-horizons-leipzig"]
+          },
+          {
+            "id": "de.gnt",
+            "status": "confirmed-train-feature",
+            "scope": "Available on the included DB BR 411 ICE-T, but Dovetail describes it as less relevant here than on Frankfurt–Fulda.",
+            "evidence": ["dtg-new-horizons-leipzig"]
+          }
+        ],
+        "vigilance": [
+          {
+            "id": "de.sifa",
+            "status": "confirmed",
+            "scope": "Included rolling stock",
+            "evidence": ["dtg-new-horizons-leipzig"]
+          }
+        ],
+        "associated": [
+          {
+            "id": "de.temporary-speed-restriction-signs",
+            "status": "confirmed-tsw-feature",
+            "scope": "Can appear when TSW 6 Random Events are enabled.",
+            "evidence": ["dtg-new-horizons-leipzig"]
+          }
+        ]
+      },
+      "playerRelevantNotes": [
+        "Players should be prepared to transition between Hl and Ks visual logic in the Dresden area.",
+        "LZB-equipped services may supervise speed on the western part of the route.",
+        "Random Events can introduce temporary speed restrictions and signal delays, so atypical restrictive aspects are player-relevant rather than purely decorative.",
+        "Generation 8 consoles have a reduced timetable, but the route infrastructure and core BR 442 driving remain in scope."
+      ],
+      "openQuestions": [
+        "Map the exact geographical boundary between Hl and Ks signalling.",
+        "Identify every displayed Hl and Ks aspect observable in timetable and scenario play.",
+        "Map LZB start and end boards and the exact supervised section.",
+        "Confirm which subsidiary indicators, speed indicators, shunting signals and boards are represented.",
+        "Determine whether Random Event temporary restrictions use the complete real-world Lf board sequence or a simplified subset."
+      ]
+    },
+    {
+      "routeId": "tsw.de.dresden-riesa",
+      "status": "linked-evidence-only",
+      "relationship": "The route is bundled as an entitlement with Leipzig–Dresden, and the newer route expands its geography.",
+      "confirmedFromCurrentPass": [],
+      "openQuestions": [
+        "Confirm whether the original route version has the same Hl/Ks boundary and aspect implementation as the TSW 6 expansion.",
+        "Check for signalling fixes or remaster changes between versions.",
+        "Catalogue the Riesa, Dresden Hbf, Meißen branch and avoiding-line signal inventories separately."
+      ],
+      "evidence": ["dtg-leipzig-dresden-gameplay-guide", "dtg-new-horizons-leipzig"]
+    },
+    {
+      "routeId": "tsw.de.dresden-chemnitz",
+      "status": "pending-primary-evidence",
+      "openQuestions": [
+        "Confirm the represented lineside systems and transition points.",
+        "Confirm PZB, Sifa and GNT operation for the DB BR 612.",
+        "Catalogue speed boards and tilting-train-specific infrastructure relevant to players."
+      ]
+    },
+    {
+      "routeId": "tsw.de.rapid-transit",
+      "status": "pending-manual-review",
+      "openQuestions": [
+        "Confirm the lineside system or systems across the Leipzig S-Bahn route.",
+        "Confirm PZB and Sifa implementation on the DB BR 1442.",
+        "Identify any tunnel, compact or S-Bahn-specific signal forms."
+      ]
+    }
+  ],
+  "evidence": {
+    "dtg-leipzig-dresden-gameplay-guide": {
+      "type": "official-gameplay-guide",
+      "publisher": "Dovetail Games",
+      "title": "Bahnstrecke Leipzig - Dresden Gameplay Guide",
+      "url": "https://support.dovetailgames.com/hc/en-us/articles/29546830934418-Bahnstrecke-Leipzig-Dresden-Gameplay-Guide",
+      "retrieved": "2026-07-14"
+    },
+    "dtg-new-horizons-leipzig": {
+      "type": "official-product-article",
+      "publisher": "Dovetail Games",
+      "title": "Train Sim World 6 – New Horizons to Leipzig",
+      "url": "https://live.dovetailgames.com/live/train-sim-world/articles/article/train-sim-world-6-leipzig-dresden",
+      "retrieved": "2026-07-14"
+    }
+  }
+}
