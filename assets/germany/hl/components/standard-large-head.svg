@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 360" role="img" aria-labelledby="title desc">
+  <title id="title">Recognition-grade large Hl signal head</title>
+  <desc id="desc">Reusable dark signal head with upper green and yellow lamps, two red lamps, lower yellow lamp and two speed strips.</desc>
+  <rect x="35" y="18" width="150" height="300" rx="22" fill="#202124" stroke="#111" stroke-width="7"/>
+  <g fill="#343434" stroke="#0b0b0b" stroke-width="5">
+    <circle id="upper-green" cx="82" cy="78" r="23"/>
+    <circle id="upper-yellow" cx="138" cy="78" r="23"/>
+    <circle id="red-primary" cx="82" cy="160" r="23"/>
+    <circle id="red-reserve" cx="138" cy="160" r="23"/>
+    <circle id="lower-yellow" cx="110" cy="230" r="23"/>
+  </g>
+  <rect id="strip-upper" x="63" y="270" width="94" height="15" rx="6" fill="#343434"/>
+  <rect id="strip-lower" x="63" y="296" width="94" height="15" rx="6" fill="#343434"/>
+  <rect x="101" y="318" width="18" height="38" rx="4" fill="#777"/>
+</svg>
