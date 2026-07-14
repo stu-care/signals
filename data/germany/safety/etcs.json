@@ -1,0 +1,46 @@
+{
+  "id": "de.safety.etcs",
+  "name": "European Train Control System (ETCS)",
+  "status": "in-progress",
+  "scope": "Player-facing overview for ETCS-equipped Train Sim World content. German route occurrence must be confirmed separately.",
+  "coreConcepts": {
+    "movementAuthority": "The distance and conditions under which the train is authorised to move.",
+    "permittedSpeed": "The maximum speed currently supervised by ETCS.",
+    "targetSpeed": "The speed required at the next supervised target.",
+    "targetDistance": "The remaining distance to that target.",
+    "brakingCurve": "ETCS supervises whether the train is braking sufficiently to meet the target."
+  },
+  "levels": [
+    {"id":"level-0","playerMeaning":"ETCS-equipped train running on infrastructure without ETCS supervision."},
+    {"id":"level-1","playerMeaning":"Trackside balises transmit movement and speed information, usually alongside lineside signalling."},
+    {"id":"level-2","playerMeaning":"Movement authority is normally transmitted by radio; the cab display becomes the primary source of supervised movement information."},
+    {"id":"ntc","playerMeaning":"The train is supervised by a national system such as PZB rather than ETCS."}
+  ],
+  "modes": [
+    {"id":"FS","name":"Full Supervision","playerAction":"Follow the permitted speed, target speed and target distance shown on the DMI."},
+    {"id":"OS","name":"On Sight","playerAction":"Proceed at the supervised speed while prepared to stop short of an obstruction."},
+    {"id":"SR","name":"Staff Responsible","playerAction":"Proceed only under the applicable authority and restrictive rules; ETCS does not provide full route supervision."},
+    {"id":"SH","name":"Shunting","playerAction":"Use only for authorised shunting movements and observe the mode-specific speed supervision."},
+    {"id":"TR","name":"Trip","playerAction":"Stop and complete the train-specific acknowledgement and recovery procedure."},
+    {"id":"PT","name":"Post Trip","playerAction":"Proceed only when authorised and after completing the required post-trip procedure."},
+    {"id":"SB","name":"Standby","playerAction":"The ETCS equipment is powered but not supervising normal movement."}
+  ],
+  "playerWorkflow": [
+    "Confirm the active ETCS level and mode before moving.",
+    "Treat the DMI permitted speed as the supervised maximum, not merely advice.",
+    "Watch target speed and target distance together and brake before the intervention curve is reached.",
+    "Acknowledge transitions and mode changes when the train requests it.",
+    "After a trip or intervention, use the train-specific recovery procedure rather than guessing a universal sequence."
+  ],
+  "tswNotes": [
+    "DMI layout, control labels and startup steps vary by vehicle.",
+    "A route may contain ETCS infrastructure without every included train using ETCS.",
+    "Do not infer active ETCS solely from a visible ETCS stop marker or balise group."
+  ],
+  "routeEvidence": [],
+  "confidence": "high-for-generic-operation-medium-for-tsw-coverage",
+  "sources": [
+    {"type":"official-specification","title":"ETCS Driver Machine Interface specification (ERA_ERTMS_015560)","publisher":"European Union Agency for Railways","url":"https://www.era.europa.eu/domains/infrastructure/european-rail-traffic-management-system-ertms_en"},
+    {"type":"official-handbook","title":"Generic ETCS Drivers Handbook","publisher":"European Union Agency for Railways","url":"https://www.era.europa.eu/system/files/2022-11/Generic%20ETCS%20Drivers%20Handbook%20-%20DE.docx"}
+  ]
+}
