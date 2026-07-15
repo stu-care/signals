@@ -34,12 +34,18 @@ export function CataloguePage() {
                       to={`/${country.code}/aspect/${family.id}/${variant.id}/${aspect.id}`}
                       className="flex h-full flex-col items-center rounded-xl border border-border bg-surface p-4 text-center transition hover:border-border-strong hover:bg-surface-2"
                     >
-                      <SignalRenderer
-                        geometry={variant.geometry}
-                        setting={aspect.lamps}
-                        arms={aspect.arms}
-                        width={90}
-                      />
+                      <div className="flex min-h-[92px] items-center justify-center">
+                        <SignalRenderer
+                          panels={variant.panels}
+                          state={{
+                            lamps: aspect.lamps,
+                            arms: aspect.arms,
+                            on: aspect.on,
+                            glyphs: aspect.glyphs,
+                          }}
+                          scale={1.05}
+                        />
+                      </div>
                       <span className="mt-3 text-sm font-semibold">{aspect.name}</span>
                       <span className="text-xs text-muted">{aspect.meaning}</span>
                     </Link>

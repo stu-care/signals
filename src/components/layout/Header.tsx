@@ -2,7 +2,6 @@ import { NavLink } from 'react-router-dom'
 import { useCurrentCountry } from '@/lib/useCurrentCountry'
 import { Search } from '@/components/Search'
 import { CountrySwitcher } from './CountrySwitcher'
-import { ThemeToggle } from './ThemeToggle'
 
 export function Header() {
   const country = useCurrentCountry()
@@ -37,7 +36,6 @@ export function Header() {
         <div className="ml-auto flex items-center gap-2">
           <Search />
           <CountrySwitcher />
-          <ThemeToggle />
         </div>
       </div>
     </header>
@@ -45,13 +43,12 @@ export function Header() {
 }
 
 function SignalMark() {
+  // Three iconographic dots — the Signal Dots mark.
   return (
-    <svg width="20" height="34" viewBox="0 0 20 34" aria-hidden="true">
-      <rect x="4" y="1" width="12" height="26" rx="4" fill="#0c1116" stroke="#39485a" />
-      <circle cx="10" cy="7" r="3.4" fill="var(--sig-green)" />
-      <circle cx="10" cy="15" r="3.4" fill="var(--sig-yellow)" opacity="0.35" />
-      <circle cx="10" cy="23" r="3.4" fill="var(--sig-red)" opacity="0.35" />
-      <rect x="8.5" y="27" width="3" height="7" fill="#2b3644" />
+    <svg width="14" height="34" viewBox="0 0 14 34" aria-hidden="true">
+      <circle cx="7" cy="7" r="5" fill="#e5372b" stroke="#a4160c" strokeWidth="1.4" />
+      <circle cx="7" cy="17" r="5" fill="#f1c015" stroke="#9c7d07" strokeWidth="1.4" />
+      <circle cx="7" cy="27" r="5" fill="#1fa85a" stroke="#0c6234" strokeWidth="1.4" />
     </svg>
   )
 }

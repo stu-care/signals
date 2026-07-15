@@ -1,442 +1,457 @@
-import { useId, type ReactNode } from 'react'
 import type {
+  ArmPanel,
   ArmPosition,
-  IndicatorSetting,
+  DotState,
+  FeatherPanel,
+  GlyphPanel,
   LampColour,
-  LampSetting,
-  LampSpec,
-  LampState,
-  SemaphoreArmSpec,
-  SignSpec,
-  SignalGeometry,
+  LampsPanel,
+  Panel,
+  PosLightPanel,
+  SignPanel,
 } from '@/data/types'
 
-interface SignalRendererProps {
-  geometry: SignalGeometry
-  setting?: LampSetting
+/** Signal-state input: which dots are lit, arm positions, lit aux panels, glyph text. */
+export interface SignalStateInput {
+  lamps?: Record<string, DotState>
   arms?: Record<string, ArmPosition>
-  indicators?: IndicatorSetting
-  /** Accessible label; if omitted, one is derived from the lit elements. */
+  on?: string[]
+  glyphs?: Record<string, string>
+}
+
+interface SignalRendererProps {
+  panels: Panel[]
+  state?: SignalStateInput
+  /** Multiplies every px size — the whole signal scales as one. */
+  scale?: number
+  /**
+   * Show aux panels (feather / poslight / empty glyph) even when inactive —
+   * used by the builder so they can be toggled. Off elsewhere so the catalogue
+   * and detail pages only draw what is actually lit.
+   */
+  showInactive?: boolean
   ariaLabel?: string
   className?: string
-  /** Pixel width; height derived from the viewBox aspect ratio. */
-  width?: number
 }
 
-const LAMP_VAR: Record<LampColour, string> = {
-  red: 'var(--sig-red)',
-  yellow: 'var(--sig-yellow)',
-  green: 'var(--sig-green)',
-  white: 'var(--sig-white)',
+/** Is a panel visible for the given state? (lamps/arms always; aux only if lit.) */
+function panelVisible(panel: Panel, state?: SignalStateInput, showInactive?: boolean): boolean {
+  if (showInactive) return true
+  if (panel.type === 'lamps' || panel.type === 'arm' || panel.type === 'sign') return true
+  if (panel.type === 'glyph') return (panel.text ?? state?.glyphs?.[panel.id] ?? '') !== ''
+  return state?.on?.includes(panel.id) ?? false
 }
 
-function lampState(setting: LampSetting | undefined, id: string): LampState {
-  return setting?.[id] ?? 'off'
+/** Dot fill + darker-shade ring, per the Signal Dots guide. */
+const LAMP: Record<LampColour, { on: string; ring: string }> = {
+  red: { on: '#e5372b', ring: '#a4160c' },
+  amber: { on: '#ef8b1b', ring: '#a5590a' },
+  yellow: { on: '#f1c015', ring: '#9c7d07' },
+  green: { on: '#1fa85a', ring: '#0c6234' },
+  white: { on: '#ffffff', ring: '#8a93ad' },
+  lunar: { on: '#e9f0ff', ring: '#8290bb' },
+  blue: { on: '#2f6fed', ring: '#14479f' },
 }
 
-function deriveLabel(
-  geometry: SignalGeometry,
-  setting?: LampSetting,
-  indicators?: IndicatorSetting,
-  arms?: Record<string, ArmPosition>,
-): string {
-  if (geometry.sign) return geometry.sign.label
+const MONO = "'IBM Plex Mono', monospace"
 
-  const lit = geometry.lamps
-    .map((l) => ({ l, s: lampState(setting, l.id) }))
-    .filter((x) => x.s !== 'off')
-  const parts = lit.map(
-    (x) => `${x.l.label.toLowerCase()}${x.s === 'flashing' ? ' (flashing)' : ''}`,
-  )
+/* ---- the atom ---------------------------------------------------- */
 
-  for (const arm of geometry.arms ?? []) {
-    const pos = arms?.[arm.id] ?? 'danger'
-    parts.push(`${arm.label.toLowerCase()} ${pos === 'clear' ? 'raised (clear)' : 'horizontal (danger)'}`)
+function Dot({ color, state, r }: { color: LampColour; state: DotState; r: number }) {
+  const c = LAMP[color]
+  const lit = state === 'on' || state === 'flash'
+  const light = color === 'white' || color === 'lunar'
+  const ringW = Math.max(1.3, r * 0.16)
+
+  let background = 'transparent'
+  let border = `${ringW}px solid #c2c6ce`
+  let boxShadow = 'none'
+  if (lit) {
+    border = `${ringW}px solid ${c.ring}`
+    background = light ? (color === 'white' ? '#eef1fb' : '#e2eaff') : c.on
+    boxShadow = 'inset 0 1.4px 0 rgba(255,255,255,.55)'
   }
-
-  const extras: string[] = []
-  if (indicators?.feather) {
-    const f = geometry.feathers?.find((x) => x.id === indicators.feather)
-    extras.push(f ? `with ${f.label.toLowerCase()}` : 'with a junction indicator')
-  }
-  if (indicators?.theatre) extras.push(`theatre route ${indicators.theatre}`)
-
-  if (parts.length === 0 && extras.length === 0) return 'Signal with no lamps lit'
-  const base = parts.length ? `Signal showing ${parts.join(' and ')}` : 'Signal'
-  return [base, ...extras].join(', ')
-}
-
-export function SignalRenderer({
-  geometry,
-  setting,
-  arms,
-  indicators,
-  ariaLabel,
-  className,
-  width = 180,
-}: SignalRendererProps) {
-  const uid = useId().replace(/:/g, '')
-  const glow = `glow-${uid}`
-  const { viewBox, post, backplates, lamps, feathers, theatre, arms: armSpecs, sign } =
-    geometry
-  const height = (width * viewBox.h) / viewBox.w
-  const label = ariaLabel ?? deriveLabel(geometry, setting, indicators, arms)
-
-  const activeFeather = feathers?.find((f) => f.id === indicators?.feather)
-
   return (
-    <svg
-      className={className}
-      width={width}
-      height={height}
-      viewBox={`0 0 ${viewBox.w} ${viewBox.h}`}
-      role="img"
-      aria-label={label}
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <defs>
-        <filter id={glow} x="-60%" y="-60%" width="220%" height="220%">
-          <feGaussianBlur stdDeviation="3.2" result="blur" />
-          <feMerge>
-            <feMergeNode in="blur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
-      </defs>
-
-      {/* Post */}
-      {post && (
-        <rect
-          x={post.x}
-          y={post.top}
-          width={post.width}
-          height={post.bottom - post.top}
-          fill="#2b3644"
-          rx={2}
-        />
-      )}
-
-      {/* Backing plates / heads */}
-      {backplates.map((p, i) => (
-        <rect
-          key={i}
-          x={p.x}
-          y={p.y}
-          width={p.w}
-          height={p.h}
-          rx={p.radius}
-          fill="#0c1116"
-          stroke="#39485a"
-          strokeWidth={2}
-        />
-      ))}
-
-      {/* Theatre route indicator box (structure faint; character when active) */}
-      {theatre && (
-        <g>
-          <rect
-            x={theatre.x}
-            y={theatre.y}
-            width={theatre.w}
-            height={theatre.h}
-            rx={4}
-            fill="#0c1116"
-            stroke="#39485a"
-            strokeWidth={2}
-          />
-          {indicators?.theatre && (
-            <text
-              x={theatre.x + theatre.w / 2}
-              y={theatre.y + theatre.h / 2}
-              textAnchor="middle"
-              dominantBaseline="central"
-              fontFamily="ui-monospace, monospace"
-              fontWeight="700"
-              fontSize={theatre.h * 0.72}
-              fill="var(--sig-white)"
-              style={{ filter: `url(#${glow})` }}
-            >
-              {indicators.theatre}
-            </text>
-          )}
-        </g>
-      )}
-
-      {/* Lamp housings + off-lenses first, so a lit lamp is never covered by a
-          later (possibly overlapping) lamp's dark base. */}
-      {lamps.map((lamp) => (
-        <LampBase key={`base-${lamp.id}`} lamp={lamp} />
-      ))}
-      {/* Lit lenses on top. */}
-      {lamps.map((lamp) => {
-        const s = lampState(setting, lamp.id)
-        return s === 'off' ? null : (
-          <LampLit key={`lit-${lamp.id}`} lamp={lamp} state={s} glowId={glow} />
-        )
-      })}
-
-      {/* Junction indicator (feather) — only drawn when lit */}
-      {activeFeather &&
-        Array.from({ length: activeFeather.lampCount }).map((_, i) => {
-          const theta = (activeFeather.angleDeg * Math.PI) / 180
-          const cx = activeFeather.originX + Math.cos(theta) * activeFeather.spacing * i
-          const cy = activeFeather.originY + Math.sin(theta) * activeFeather.spacing * i
-          return (
-            <circle
-              key={i}
-              cx={cx}
-              cy={cy}
-              r={activeFeather.r}
-              fill="var(--sig-white)"
-              style={{ filter: `url(#${glow})` }}
-            />
-          )
-        })}
-
-      {/* Semaphore / banner-repeater arms */}
-      {armSpecs?.map((arm) => (
-        <Arm key={arm.id} arm={arm} position={arms?.[arm.id] ?? 'danger'} glowId={glow} />
-      ))}
-
-      {/* Static lineside sign (speed boards) */}
-      {sign && <Sign sign={sign} />}
-    </svg>
-  )
-}
-
-function LampBase({ lamp }: { lamp: LampSpec }) {
-  const colour = LAMP_VAR[lamp.colour]
-  return (
-    <g>
-      {/* Recessed housing bezel — gives depth without encroaching on neighbours. */}
-      <circle
-        cx={lamp.x}
-        cy={lamp.y}
-        r={lamp.r + 2.5}
-        fill="#05080b"
-        stroke="#2c3745"
-        strokeWidth={1.5}
-      />
-      {/* Off-lens base: so a flashing lamp reveals this dark lens in its off
-          phase and genuinely appears to switch off. */}
-      <circle cx={lamp.x} cy={lamp.y} r={lamp.r} fill="#0a0e12" />
-      {/* Faint colour tint so an unlit lens is still identifiable at a glance. */}
-      <circle cx={lamp.x} cy={lamp.y} r={lamp.r * 0.92} fill={colour} opacity={0.1} />
-    </g>
-  )
-}
-
-function LampLit({
-  lamp,
-  state,
-  glowId,
-}: {
-  lamp: LampSpec
-  state: LampState
-  glowId: string
-}) {
-  const colour = LAMP_VAR[lamp.colour]
-  return (
-    <circle
-      cx={lamp.x}
-      cy={lamp.y}
-      r={lamp.r}
-      fill={colour}
-      className={state === 'flashing' ? 'signal-lamp-flash' : undefined}
-      style={{ filter: `url(#${glowId})` }}
+    <div
+      className={state === 'flash' ? 'signal-dot-flash' : undefined}
+      style={{ width: r * 2, height: r * 2, borderRadius: '50%', background, border, boxShadow }}
     />
   )
 }
 
-/** Night spectacle-light colour for a mechanical arm, or null (banner). */
-function armLightColour(
-  kind: SemaphoreArmSpec['kind'],
-  position: ArmPosition,
-): LampColour | null {
-  if (kind === 'banner') return null
-  if (position === 'clear') return 'green'
+function SoftRule({ scale }: { scale: number }) {
+  const mid = 'rgba(20,24,34,.22)'
+  return (
+    <div
+      style={{
+        width: '68%',
+        minWidth: 38 * scale,
+        height: 1,
+        margin: `${10 * scale}px auto`,
+        background: `linear-gradient(90deg,transparent,${mid} 22%,${mid} 78%,transparent)`,
+      }}
+    />
+  )
+}
+
+function Glyph({
+  text,
+  tone,
+  size,
+}: {
+  text: string
+  tone?: 'yellow'
+  size: number
+}) {
+  const yellow = tone === 'yellow'
+  const len = text.length || 1
+  const w = len > 1 ? size * (0.42 + 0.4 * len) : size
+  return (
+    <div
+      style={{
+        minWidth: size,
+        width: w,
+        height: size,
+        borderRadius: 5,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        border: `1.6px solid ${yellow ? '#c99a12' : '#20242a'}`,
+        color: yellow ? '#a8790a' : '#1c1f24',
+        fontFamily: MONO,
+        fontWeight: 600,
+        fontSize: size * 0.56,
+        lineHeight: 1,
+      }}
+    >
+      {text}
+    </div>
+  )
+}
+
+/* ---- panels ------------------------------------------------------ */
+
+function LampsPanelView({
+  panel,
+  state,
+  scale,
+}: {
+  panel: LampsPanel
+  state?: SignalStateInput
+  scale: number
+}) {
+  return (
+    <div style={{ position: 'relative', width: panel.w * scale, height: panel.h * scale }}>
+      {panel.lamps.map((l) => {
+        const st = state?.lamps?.[l.id] ?? 'off'
+        return (
+          <div
+            key={l.id}
+            style={{ position: 'absolute', left: (l.x - l.r) * scale, top: (l.y - l.r) * scale }}
+          >
+            <Dot color={l.color} state={st} r={l.r * scale} />
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+function PosLightView({
+  panel,
+  state,
+  scale,
+}: {
+  panel: PosLightPanel
+  state?: SignalStateInput
+  scale: number
+}) {
+  const on = state?.on?.includes(panel.id) ?? false
+  const R = (panel.r ?? 7) * scale
+  const box = R * 2 * 2.15
+  const ul = panel.dir === 'ul'
+  const lower = ul ? { right: 0, bottom: 0 } : { left: 0, bottom: 0 }
+  const upper = ul ? { left: 0, top: 0 } : { right: 0, top: 0 }
+  const s: DotState = on ? 'on' : 'off'
+  return (
+    <div style={{ position: 'relative', width: box, height: box }}>
+      <div style={{ position: 'absolute', ...lower }}>
+        <Dot color="white" state={s} r={R} />
+      </div>
+      <div style={{ position: 'absolute', ...upper }}>
+        <Dot color="white" state={s} r={R} />
+      </div>
+    </div>
+  )
+}
+
+function FeatherView({
+  panel,
+  state,
+  scale,
+}: {
+  panel: FeatherPanel
+  state?: SignalStateInput
+  scale: number
+}) {
+  const on = state?.on?.includes(panel.id) ?? false
+  const R = (panel.r ?? 5) * scale
+  const left = (panel.dir ?? 'ur').indexOf('l') >= 0
+  const n = 5
+  const step = R * 2 + 3 * scale
+  const W = step * (n - 1)
+  const Hh = step * (n - 1) * 0.72
+  const s: DotState = on ? 'on' : 'off'
+  return (
+    <div style={{ position: 'relative', width: W + R * 2, height: Hh + R * 2 }}>
+      {Array.from({ length: n }).map((_, i) => {
+        const dx = left ? W - i * step : i * step
+        const dy = Hh - i * step * 0.72
+        return (
+          <div key={i} style={{ position: 'absolute', left: dx, top: dy }}>
+            <Dot color="white" state={s} r={R} />
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+function GlyphView({
+  panel,
+  state,
+  scale,
+}: {
+  panel: GlyphPanel
+  state?: SignalStateInput
+  scale: number
+}) {
+  const text = panel.text ?? state?.glyphs?.[panel.id] ?? ''
+  return <Glyph text={text} tone={panel.tone} size={(panel.size ?? 26) * scale} />
+}
+
+/** Night-lamp colour for a mechanical arm. */
+function armLight(kind: ArmPanel['kind'], pos: ArmPosition): LampColour {
+  if (pos === 'clear') return 'green'
   return kind === 'stop' ? 'red' : 'yellow'
 }
 
-function Arm({
-  arm,
-  position,
-  glowId,
+function BannerView({
+  panel,
+  state,
+  scale,
 }: {
-  arm: SemaphoreArmSpec
-  position: ArmPosition
-  glowId: string
+  panel: ArmPanel
+  state?: SignalStateInput
+  scale: number
 }) {
-  const { pivotX, pivotY, length, thickness, kind } = arm
-  // 180deg = horizontal (danger/caution); 225deg raises the tip 45deg (upper quadrant clear).
-  const rot = position === 'clear' ? 225 : 180
-  const light = armLightColour(kind, position)
-  const half = thickness / 2
-
-  if (kind === 'banner') {
-    // Banner repeater: black bar across a white disc; horizontal = caution,
-    // inclined up = the signal it repeats is off (clear).
-    return (
-      <g>
-        <circle
-          cx={pivotX}
-          cy={pivotY}
-          r={length}
-          fill="#eef4fb"
-          stroke="#39485a"
-          strokeWidth={2}
-        />
-        <g transform={`translate(${pivotX} ${pivotY}) rotate(${position === 'clear' ? -45 : 0})`}>
-          <rect
-            x={-length * 0.82}
-            y={-half}
-            width={length * 1.64}
-            height={thickness}
-            rx={2}
-            fill="#0b0f14"
-          />
-        </g>
+  const pos = state?.arms?.[panel.id] ?? 'danger'
+  const R = 28
+  const c = R + 5
+  const rot = pos === 'clear' ? -45 : 0
+  return (
+    <svg
+      width={(R + 5) * 2 * scale}
+      height={(R + 5) * 2 * scale}
+      viewBox={`0 0 ${(R + 5) * 2} ${(R + 5) * 2}`}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <circle cx={c} cy={c} r={R} fill="#ffffff" stroke="#c2c6ce" strokeWidth={2} />
+      <g transform={`translate(${c} ${c}) rotate(${rot})`}>
+        <rect x={-R * 0.82} y={-4} width={R * 1.64} height={8} rx={2} fill="#1c1f24" />
       </g>
-    )
-  }
+    </svg>
+  )
+}
+
+function ArmView({
+  panel,
+  state,
+  scale,
+}: {
+  panel: ArmPanel
+  state?: SignalStateInput
+  scale: number
+}) {
+  if (panel.kind === 'banner') return <BannerView panel={panel} state={state} scale={scale} />
+  const pos = state?.arms?.[panel.id] ?? 'danger'
+  // 180deg = horizontal (danger/caution); 225deg raises the tip 45deg (clear).
+  const rot = pos === 'clear' ? 225 : 180
+  const light = LAMP[armLight(panel.kind, pos)]
+  const px = 76
+  const py = 40
+  const L = 54
+  const T = 12
+  const half = T / 2
 
   return (
-    <g>
-      <g transform={`translate(${pivotX} ${pivotY}) rotate(${rot})`}>
-        {kind === 'stop' ? (
+    <svg
+      width={100 * scale}
+      height={92 * scale}
+      viewBox="0 0 100 92"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <g transform={`translate(${px} ${py}) rotate(${rot})`}>
+        {panel.kind === 'stop' ? (
           <>
-            <rect
-              x={0}
-              y={-half}
-              width={length}
-              height={thickness}
-              rx={2}
-              fill="#d21f26"
-              stroke="#3a0a0d"
-              strokeWidth={1}
-            />
-            <rect x={length - 15} y={-half} width={5} height={thickness} fill="#ffffff" />
+            <rect x={0} y={-half} width={L} height={T} rx={3} fill="#e5372b" stroke="#a4160c" strokeWidth={1.5} />
+            <rect x={L - 15} y={-half} width={4} height={T} fill="#ffffff" />
           </>
         ) : (
           <>
-            {/* distant arm: fishtail (notched) end */}
             <polygon
-              points={`0,${-half} ${length},${-half} ${length - 9},0 ${length},${half} 0,${half}`}
-              fill="#f2b21c"
-              stroke="#4a3400"
-              strokeWidth={1}
+              points={`0,${-half} ${L},${-half} ${L - 9},0 ${L},${half} 0,${half}`}
+              fill="#f1c015"
+              stroke="#9c7d07"
+              strokeWidth={1.5}
             />
-            {/* black chevron */}
             <polyline
-              points={`${length - 24},${-half + 3} ${length - 13},0 ${length - 24},${half - 3}`}
+              points={`${L - 24},${-half + 3} ${L - 13},0 ${L - 24},${half - 3}`}
               fill="none"
-              stroke="#151515"
-              strokeWidth={3}
+              stroke="#1c1f24"
+              strokeWidth={2.5}
             />
           </>
         )}
       </g>
-
-      {/* Pivot boss */}
-      <circle cx={pivotX} cy={pivotY} r={4} fill="#1a2029" stroke="#39485a" strokeWidth={1} />
-
-      {/* Night spectacle light, coloured by state */}
-      {light && (
-        <circle
-          cx={pivotX}
-          cy={pivotY + length * 0.5}
-          r={7}
-          fill={LAMP_VAR[light]}
-          style={{ filter: `url(#${glowId})` }}
-        />
-      )}
-    </g>
+      {/* pivot boss */}
+      <circle cx={px} cy={py} r={3} fill="#1c1f24" />
+      {/* night lamp directly beneath the pivot */}
+      <circle cx={px} cy={py + 26} r={7} fill={light.on} stroke={light.ring} strokeWidth={1.6} />
+    </svg>
   )
 }
 
-const SIGN_INK = '#0b0f14'
-const SIGN_FACE = '#eef4fb'
+function SignView({ panel, scale }: { panel: SignPanel; scale: number }) {
+  const s = (panel.size ?? 30) * scale
+  const bw = Math.max(1.5, 2 * scale)
+  const num = (color: string, fs: number) =>
+    ({ fontFamily: MONO, fontWeight: 700, fontSize: fs, color, lineHeight: 1 }) as const
+  const plate = (w: number, h: number, bg: string, bc: string) =>
+    ({
+      display: 'flex',
+      flexDirection: 'column' as const,
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: w,
+      height: h,
+      background: bg,
+      border: `${bw}px solid ${bc}`,
+      borderRadius: 6 * scale,
+      boxSizing: 'border-box' as const,
+    })
 
-function Sign({ sign }: { sign: SignSpec }) {
-  const { x, y, w, h, kind, primary, secondary } = sign
-  const cx = x + w / 2
-
-  if (kind === 'psr-diff') {
+  if (panel.kind === 'psr-diff') {
     return (
-      <g>
-        <rect x={x} y={y} width={w} height={h} rx={6} fill={SIGN_FACE} stroke="#2c3745" strokeWidth={2} />
-        <line x1={x + 6} y1={y + h / 2} x2={x + w - 6} y2={y + h / 2} stroke={SIGN_INK} strokeWidth={2} />
-        <SignText x={cx} y={y + h * 0.28}>{primary}</SignText>
-        <SignText x={cx} y={y + h * 0.74}>{secondary}</SignText>
-      </g>
+      <div style={plate(s * 1.4, s * 1.95, '#ffffff', '#20242a')}>
+        <span style={num('#1c1f24', s * 0.62)}>{panel.primary}</span>
+        <div style={{ width: '78%', height: bw, background: '#20242a', margin: `${s * 0.12}px 0` }} />
+        <span style={num('#1c1f24', s * 0.62)}>{panel.secondary}</span>
+      </div>
     )
   }
-
-  if (kind === 'tsr-commence') {
-    // Illuminated speed indicator: white figures on black.
+  if (panel.kind === 'tsr-warn') {
+    const d = s * 0.22
     return (
-      <g>
-        <rect x={x} y={y} width={w} height={h} rx={6} fill="#0b0f14" stroke="#2c3745" strokeWidth={2} />
-        <SignText x={cx} y={y + h / 2} fill={SIGN_FACE}>{primary}</SignText>
-      </g>
+      <div style={{ ...plate(s * 1.7, s * 1.15, '#f1c015', '#9c7d07'), position: 'relative' }}>
+        <div style={{ position: 'absolute', width: d, height: d, borderRadius: '50%', background: '#fff', left: '25%', top: '24%' }} />
+        <div style={{ position: 'absolute', width: d, height: d, borderRadius: '50%', background: '#fff', right: '25%', bottom: '24%' }} />
+      </div>
     )
   }
-
-  if (kind === 'tsr-warn') {
-    // Warning indicator: rectangular board, yellow all over, with two white
-    // reflectorised spots (these replaced the earlier two flashing white lights).
-    const spotR = h * 0.13
+  if (panel.kind === 'tsr-commence') {
     return (
-      <g>
-        <rect x={x} y={y} width={w} height={h} rx={6} fill="#f2c21c" stroke="#4a3a00" strokeWidth={2} />
-        <circle cx={cx - w * 0.17} cy={y + h * 0.35} r={spotR} fill="#ffffff" />
-        <circle cx={cx + w * 0.17} cy={y + h * 0.65} r={spotR} fill="#ffffff" />
-      </g>
+      <div style={plate(s * 1.5, s * 1.15, '#1c1f24', '#20242a')}>
+        <span style={num('#ffffff', s * 0.72)}>{panel.primary}</span>
+      </div>
     )
   }
-
-  if (kind === 'tsr-terminate') {
-    // Termination indicator: white "T" on black.
+  if (panel.kind === 'tsr-terminate') {
     return (
-      <g>
-        <rect x={x} y={y} width={w} height={h} rx={6} fill="#0b0f14" stroke="#2c3745" strokeWidth={2} />
-        <SignText x={cx} y={y + h / 2} fill={SIGN_FACE}>T</SignText>
-      </g>
+      <div style={plate(s * 1.15, s * 1.15, '#1c1f24', '#20242a')}>
+        <span style={num('#ffffff', s * 0.72)}>T</span>
+      </div>
     )
   }
-
-  // psr: reflective white plate with black figures.
+  // psr
   return (
-    <g>
-      <rect x={x} y={y} width={w} height={h} rx={6} fill={SIGN_FACE} stroke="#2c3745" strokeWidth={2} />
-      <SignText x={cx} y={y + h / 2}>{primary}</SignText>
-    </g>
+    <div style={plate(s * 1.5, s * 1.15, '#ffffff', '#20242a')}>
+      <span style={num('#1c1f24', s * 0.72)}>{panel.primary}</span>
+    </div>
   )
 }
 
-function SignText({
-  x,
-  y,
-  fill = SIGN_INK,
-  children,
+function PanelView({
+  panel,
+  state,
+  scale,
 }: {
-  x: number
-  y: number
-  fill?: string
-  children: ReactNode
+  panel: Panel
+  state?: SignalStateInput
+  scale: number
 }) {
+  switch (panel.type) {
+    case 'lamps':
+      return <LampsPanelView panel={panel} state={state} scale={scale} />
+    case 'poslight':
+      return <PosLightView panel={panel} state={state} scale={scale} />
+    case 'feather':
+      return <FeatherView panel={panel} state={state} scale={scale} />
+    case 'glyph':
+      return <GlyphView panel={panel} state={state} scale={scale} />
+    case 'arm':
+      return <ArmView panel={panel} state={state} scale={scale} />
+    case 'sign':
+      return <SignView panel={panel} scale={scale} />
+  }
+}
+
+/* ---- accessible label -------------------------------------------- */
+
+function deriveLabel(panels: Panel[], state?: SignalStateInput): string {
+  const parts: string[] = []
+  for (const p of panels) {
+    if (p.type === 'lamps') {
+      for (const l of p.lamps) {
+        const s = state?.lamps?.[l.id] ?? 'off'
+        if (s !== 'off') parts.push(`${l.label.toLowerCase()}${s === 'flash' ? ' (flashing)' : ''}`)
+      }
+    } else if (p.type === 'arm') {
+      const pos = state?.arms?.[p.id] ?? 'danger'
+      parts.push(`${p.label.toLowerCase()} ${pos === 'clear' ? 'raised (clear)' : 'horizontal (danger)'}`)
+    } else if (p.type === 'poslight' || p.type === 'feather') {
+      if (state?.on?.includes(p.id)) parts.push(`${p.label.toLowerCase()} lit`)
+    } else if (p.type === 'glyph') {
+      const t = p.text ?? state?.glyphs?.[p.id]
+      if (t) parts.push(`${p.label.toLowerCase()} showing ${t}`)
+    }
+  }
+  if (parts.length === 0) return 'Signal with nothing lit'
+  return `Signal showing ${parts.join(', ')}`
+}
+
+export function SignalRenderer({
+  panels,
+  state,
+  scale = 1,
+  showInactive,
+  ariaLabel,
+  className,
+}: SignalRendererProps) {
+  const visible = panels.filter((p) => panelVisible(p, state, showInactive))
   return (
-    <text
-      x={x}
-      y={y}
-      textAnchor="middle"
-      dominantBaseline="central"
-      fontFamily="ui-sans-serif, system-ui, sans-serif"
-      fontWeight={800}
-      fontSize={26}
-      fill={fill}
+    <div
+      className={className}
+      role="img"
+      aria-label={ariaLabel ?? deriveLabel(panels, state)}
+      style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center' }}
     >
-      {children}
-    </text>
+      {visible.map((p, i) => (
+        <div key={p.id} style={{ display: 'contents' }}>
+          {i > 0 && <SoftRule scale={scale} />}
+          <PanelView panel={p} state={state} scale={scale} />
+        </div>
+      ))}
+    </div>
   )
 }

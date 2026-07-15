@@ -1,11 +1,10 @@
 @import 'tailwindcss';
 
 /*
-  Signals design system.
-  Dark theme first. The UI palette is deliberately restrained and near-neutral
-  so that SIGNAL COLOURS (red / yellow / green / lunar white) are the only
-  vivid, saturated things on screen — that is an identification aid, not just
-  decoration. See project scope: "let the signal colours be the only vivid thing".
+  Signals design system — "Iconographic Signal Dots".
+  Light theme only. IBM Plex Sans (text) + IBM Plex Mono (labels/kickers).
+  The UI chrome is quiet and near-neutral; signal DOT colours (handled in the
+  renderer) are the only saturated things on screen.
 */
 
 @theme inline {
@@ -13,65 +12,36 @@
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
   --color-border: var(--border);
-  --color-border-strong: var(--border-strong);
-  --color-text: var(--text);
+  --color-border-2: var(--border-2);
+  --color-ink: var(--ink);
   --color-muted: var(--muted);
   --color-faint: var(--faint);
   --color-accent: var(--accent);
-  --color-accent-contrast: var(--accent-contrast);
+  --color-accent-hover: var(--accent-hover);
 
-  /* Signal aspect colours (lens "lit" values). */
-  --color-signal-red: var(--sig-red);
-  --color-signal-yellow: var(--sig-yellow);
-  --color-signal-green: var(--sig-green);
-  --color-signal-white: var(--sig-white);
+  /* Signal dot fills (also defined in the renderer; exposed for badges/UI). */
+  --color-sig-red: #e5372b;
+  --color-sig-amber: #ef8b1b;
+  --color-sig-yellow: #f1c015;
+  --color-sig-green: #1fa85a;
+  --color-sig-blue: #2f6fed;
 
-  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
-    Roboto, Helvetica, Arial, sans-serif;
-  --font-mono: ui-monospace, 'SFMono-Regular', 'Menlo', 'Consolas', monospace;
+  --font-sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', Roboto,
+    sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
 }
 
-/* Dark theme (default). */
 :root {
-  --bg: #0b0f14;
-  --surface: #141b24;
-  --surface-2: #1c2531;
-  --border: #26313f;
-  --border-strong: #35455a;
-  --text: #e7ecf2;
-  --muted: #9fb0c0;
-  --faint: #6b7a8b;
-  --accent: #4aa3ff;
-  --accent-contrast: #04121f;
-
-  /* Lit lens colours — pure and bright so they read as illuminated. */
-  --sig-red: #ff2b24;
-  --sig-yellow: #ffc21c;
-  --sig-green: #1fc457;
-  --sig-white: #eef4fb;
-
-  color-scheme: dark;
-}
-
-/* Light theme (opt-in via .light on <html>). */
-.light {
-  --bg: #f4f6f9;
-  --surface: #ffffff;
-  --surface-2: #eef1f6;
-  --border: #d7dee7;
-  --border-strong: #b7c2d0;
-  --text: #16202b;
-  --muted: #4c5a6a;
-  --faint: #6b7a8b;
-  --accent: #0a6ed1;
-  --accent-contrast: #ffffff;
-
-  /* Slightly deepened so lit lamps still read against a light page. */
-  --sig-red: #e01810;
-  --sig-yellow: #e0a400;
-  --sig-green: #12a044;
-  --sig-white: #5b6b7d;
-
+  --bg: #ffffff;
+  --surface: #fbfbfc;
+  --surface-2: #f3f4f6;
+  --border: #e2e4e8;
+  --border-2: #e6e7ea;
+  --ink: #1c1f24;
+  --muted: #4d525b;
+  --faint: #9aa0aa;
+  --accent: #2f6fed;
+  --accent-hover: #1b4fc0;
   color-scheme: light;
 }
 
@@ -84,7 +54,7 @@ body,
 body {
   margin: 0;
   background-color: var(--bg);
-  color: var(--text);
+  color: var(--ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -97,26 +67,23 @@ body {
   border-radius: 4px;
 }
 
-/* Flashing signal lamps. The lit lens sits over a dark "off" lens, so animating
-   it fully to opacity 0 makes the lamp genuinely go dark and back — a real
-   on/off flash at ~1 Hz. steps() gives a crisp switch rather than a fade.
-   Under prefers-reduced-motion (below) the animation is neutralised and the
-   lamp simply stays lit; the UI shows a "FLASHING" badge instead. */
-@keyframes signal-lamp-flash {
+/* Flashing dot: pulses its fill on and off (per the Signal Dots guide).
+   steps() gives a crisp switch; ~1.15s period. Reduced-motion neutralises it
+   and the UI shows a "flashing" badge instead. */
+@keyframes signal-dot-flash {
   0%,
-  50% {
+  46% {
     opacity: 1;
   }
-  50.01%,
+  50%,
   100% {
-    opacity: 0;
+    opacity: 0.12;
   }
 }
-.signal-lamp-flash {
-  animation: signal-lamp-flash 1s steps(1, end) infinite;
+.signal-dot-flash {
+  animation: signal-dot-flash 1.15s steps(1, end) infinite;
 }
 
-/* Respect reduced-motion globally; flashing aspects also honour this. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

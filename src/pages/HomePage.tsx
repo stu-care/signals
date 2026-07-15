@@ -44,12 +44,8 @@ export function HomePage() {
           </div>
         </div>
         {featured && (
-          <div className="flex justify-center rounded-2xl border border-border bg-surface p-6">
-            <SignalRenderer
-              geometry={featured.geometry}
-              setting={{ green: 'steady' }}
-              width={150}
-            />
+          <div className="flex justify-center rounded-2xl border border-border bg-surface p-8">
+            <SignalRenderer panels={featured.panels} state={{ lamps: { green: 'on' } }} scale={1.8} />
           </div>
         )}
       </section>

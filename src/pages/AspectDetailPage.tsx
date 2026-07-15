@@ -27,13 +27,20 @@ export function AspectDetailPage() {
   const builderHref = `${base}/build?${encodeBuilder({
     familyId: family.id,
     variantId: variant.id,
-    setting: aspect.lamps,
+    lamps: aspect.lamps ?? {},
     arms: aspect.arms ?? {},
-    indicators: {},
+    on: aspect.on ?? [],
+    glyphs: aspect.glyphs ?? {},
   }).toString()}`
 
   const shownOn = variantsShowingConcept(country.code, aspect.concept)
-  const anyFlashing = Object.values(aspect.lamps).includes('flashing')
+  const anyFlashing = Object.values(aspect.lamps ?? {}).includes('flash')
+  const aspectState = {
+    lamps: aspect.lamps,
+    arms: aspect.arms,
+    on: aspect.on,
+    glyphs: aspect.glyphs,
+  }
 
   return (
     <article className="mx-auto max-w-3xl">
@@ -47,12 +54,7 @@ export function AspectDetailPage() {
 
       <div className="mt-4 grid gap-6 sm:grid-cols-[160px_1fr] sm:items-center">
         <div className="flex justify-center rounded-2xl border border-border bg-surface p-4">
-          <SignalRenderer
-            geometry={variant.geometry}
-            setting={aspect.lamps}
-            arms={aspect.arms}
-            width={120}
-          />
+          <SignalRenderer panels={variant.panels} state={aspectState} scale={1.5} />
         </div>
         <div>
           <div className="flex flex-wrap items-center gap-2">

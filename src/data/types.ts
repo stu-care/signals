@@ -1,183 +1,170 @@
 /**
- * Core typed data model for Signals.
+ * Data model for the "Iconographic Signal Dots" system.
  *
- * Everything is country-namespaced from day one (UK ships first; Germany then
- * USA are planned). Signal geometry is expressed as EDITABLE NUMBERS — never
- * AI-drawn path data — so lamp positions and plate shapes can be tuned by hand
- * or via the in-app calibration tool and fed straight back into these files.
+ * A signal is a vertical stack of PANELS separated by soft rules. The primary
+ * panel is a free canvas of DOTS (one dot = one lamp: colour + position + size),
+ * which is exactly what the signal editor produces. Auxiliary panel types cover
+ * position-lights, feathers, bordered glyphs (theatre routes / speed figures)
+ * and mechanical arms (semaphores).
+ *
+ * Everything is country-namespaced (UK ships first; Germany then USA planned).
  */
 
 export type CountryCode = 'uk' | 'de' | 'us'
 
 export interface Country {
   code: CountryCode
-  /** Display name, e.g. "United Kingdom". */
   name: string
-  /** Short label for the switcher, e.g. "UK". */
   short: string
-  /** Adjective, e.g. "British". */
   adjective: string
   flag: string
   status: 'live' | 'coming-soon'
 }
 
 /* ------------------------------------------------------------------ *
- * Geometry — parametric primitives, positioned by editable numbers.
+ * Dots.
  * ------------------------------------------------------------------ */
 
-export type LampColour = 'red' | 'yellow' | 'green' | 'white'
+export type LampColour =
+  | 'red'
+  | 'amber'
+  | 'yellow'
+  | 'green'
+  | 'white'
+  | 'lunar'
+  | 'blue'
 
-/** How a lamp is currently showing. Default (absent) = off. */
-export type LampState = 'off' | 'steady' | 'flashing'
+/** A dot is off (hollow ring), on (solid fill + ring), or flashing (pulsing). */
+export type DotState = 'off' | 'on' | 'flash'
 
-/** A physical lamp/lens on a signal, positioned by number. */
-export interface LampSpec {
-  /** Stable id — also the external-SVG hook (#lamp-<id>) and builder toggle key. */
+/** A lamp/lens on a free-canvas panel. Colour, position and size are structural. */
+export interface LampSlot {
+  /** Stable id — the aspect state key, builder toggle key and editor handle. */
   id: string
+  color: LampColour
+  /** Centre within the panel canvas (px). */
   x: number
   y: number
-  /** Lens radius. */
-  r: number
-  colour: LampColour
-  /** Always-on text label (identification never relies on colour alone). */
-  label: string
-  /** Optional short position hint, e.g. "top", "centre". */
-  position?: string
-}
-
-/** Black backing plate / signal head — a rounded rectangle. */
-export interface PlateSpec {
-  x: number
-  y: number
-  w: number
-  h: number
-  radius: number
-}
-
-/** Vertical post the head is mounted on. */
-export interface PostSpec {
-  x: number
-  width: number
-  top: number
-  bottom: number
-}
-
-/**
- * Junction indicator ("feather") — a row of white lights at an angle.
- * UK positions 1–6 correspond to different angles; store the angle directly.
- */
-export interface FeatherSpec {
-  id: string
-  originX: number
-  originY: number
-  /** Angle in degrees, 0 = pointing right, negative = upward. */
-  angleDeg: number
-  lampCount: number
-  spacing: number
+  /** Dot radius (px). */
   r: number
   label: string
-}
-
-/** Theatre-type route indicator: a box that shows an alphanumeric character. */
-export interface TheatreSpec {
-  id: string
-  x: number
-  y: number
-  w: number
-  h: number
-  label: string
-}
-
-/** Position of a pivoting arm (semaphore / banner repeater). */
-export type ArmPosition = 'danger' | 'clear'
-
-/**
- * A pivoting arm. `stop` = red arm with a white stripe and a square end;
- * `distant` = yellow arm with a black chevron and a fishtail end; `banner` =
- * a black bar across a white disc (banner repeater). Danger/caution sits
- * horizontal; clear rises to ~45deg (upper-quadrant).
- */
-export interface SemaphoreArmSpec {
-  id: string
-  pivotX: number
-  pivotY: number
-  length: number
-  thickness: number
-  kind: 'stop' | 'distant' | 'banner'
-  label: string
-}
-
-/** A static lineside sign (speed boards etc.) — no aspect, just an appearance. */
-export interface SignSpec {
-  id: string
-  kind: 'psr' | 'psr-diff' | 'tsr-warn' | 'tsr-commence' | 'tsr-terminate'
-  x: number
-  y: number
-  w: number
-  h: number
-  /** Main number/character, e.g. "40". */
-  primary?: string
-  /** Secondary number for differential boards (e.g. freight speed). */
-  secondary?: string
-  label: string
-}
-
-export interface SignalGeometry {
-  viewBox: { w: number; h: number }
-  post?: PostSpec
-  /** One or more backing plates (heads stacked vertically, subsidiary, etc.). */
-  backplates: PlateSpec[]
-  lamps: LampSpec[]
-  feathers?: FeatherSpec[]
-  theatre?: TheatreSpec
-  arms?: SemaphoreArmSpec[]
-  sign?: SignSpec
 }
 
 /* ------------------------------------------------------------------ *
- * Aspects, variants, families.
+ * Panels.
  * ------------------------------------------------------------------ */
 
-/** The lit/flashing state of each lamp for a given aspect (default off). */
-export type LampSetting = Record<string, LampState>
-
-/** Optional indicator states shown alongside an aspect. */
-export interface IndicatorSetting {
-  /** Active feather id, if a junction indicator is lit. */
-  feather?: string
-  /** Character shown in the theatre box, if lit. */
-  theatre?: string
+/** Free canvas of dots — the main signal head, GPL clusters, German Ks, etc. */
+export interface LampsPanel {
+  type: 'lamps'
+  id: string
+  w: number
+  h: number
+  lamps: LampSlot[]
 }
+
+/** Position-light subsidiary: two white dots on a diagonal. Lit per aspect. */
+export interface PosLightPanel {
+  type: 'poslight'
+  id: string
+  /** Diagonal direction: up-right (default) or up-left. */
+  dir?: 'ur' | 'ul'
+  r?: number
+  label: string
+}
+
+/** UK junction indicator (feather): a short diagonal run of white dots. */
+export interface FeatherPanel {
+  type: 'feather'
+  id: string
+  dir?: 'ur' | 'ul'
+  r?: number
+  label: string
+}
+
+/** A bordered mono glyph — theatre route indicator or German Zs speed figure. */
+export interface GlyphPanel {
+  type: 'glyph'
+  id: string
+  /** Yellow border/ink (e.g. Zs3v); default ink. */
+  tone?: 'yellow'
+  size?: number
+  label: string
+  /** Fixed text for a static sign; otherwise the character comes per-aspect. */
+  text?: string
+}
+
+export type ArmKind = 'stop' | 'distant' | 'banner'
+
+/**
+ * A flat mechanical indicator with a position per aspect. `stop`/`distant` are
+ * semaphore arms (with a night lamp beneath the pivot); `banner` is a banner
+ * repeater (a black bar on a white disc, no lamp).
+ */
+export interface ArmPanel {
+  type: 'arm'
+  id: string
+  kind: ArmKind
+  label: string
+}
+
+export type SignKind =
+  | 'psr'
+  | 'psr-diff'
+  | 'tsr-warn'
+  | 'tsr-commence'
+  | 'tsr-terminate'
+
+/** A static lineside sign (speed boards) — flat plate, no aspect state. */
+export interface SignPanel {
+  type: 'sign'
+  id: string
+  kind: SignKind
+  primary?: string
+  secondary?: string
+  size?: number
+  label: string
+}
+
+export type Panel =
+  | LampsPanel
+  | PosLightPanel
+  | FeatherPanel
+  | GlyphPanel
+  | ArmPanel
+  | SignPanel
+
+/* ------------------------------------------------------------------ *
+ * Aspects.
+ * ------------------------------------------------------------------ */
+
+export type ArmPosition = 'danger' | 'clear'
 
 export interface Aspect {
   id: string
-  /** e.g. "Double yellow". */
   name: string
-  /** Official short meaning, e.g. "Preliminary caution". */
   meaning: string
-  /**
-   * Shared concept id so the same idea links across variants/countries
-   * (e.g. a "caution" concept shown differently on 3- vs 4-aspect).
-   */
+  /** Shared concept id so the same idea cross-links across variants/countries. */
   concept: string
-  /** Which lamps are lit and how. Lamps not listed are off. */
-  lamps: LampSetting
-  /** Arm positions for mechanical signals. Arms not listed default to danger. */
+
+  /* State (all optional; unset elements take their default). */
+  /** Dot state by lamp-slot id (default off). */
+  lamps?: Record<string, DotState>
+  /** Arm position by arm-panel id (default danger). */
   arms?: Record<string, ArmPosition>
+  /** ids of feather / poslight panels that are lit. */
+  on?: string[]
+  /** Glyph-panel id -> character shown. */
+  glyphs?: Record<string, string>
 
   /* Content template (game-first spine; real-world note only on divergence). */
   whatItMeans: string
   whatYouDo: string
   sequenceNote?: string
-  /** How safety systems (AWS/TPWS/DRA) react to this aspect. */
   safetyInteraction?: string
-  /** Identification pitfalls / look-alikes. */
   lookAlikes?: string
-  /** "In Train Sim World" controls note (default binding caveat). */
   controls?: string
-  /** Shown only where the game diverges from real-world signalling. */
   realWorldNote?: string
-  /** Related aspect concepts for "compare with" links. */
   related?: string[]
 }
 
@@ -186,16 +173,15 @@ export interface SignalVariant {
   name: string
   shortName?: string
   blurb: string
-  geometry: SignalGeometry
+  /** The signal structure — panels rendered top to bottom. */
+  panels: Panel[]
   aspects: Aspect[]
 }
 
 export interface SignalFamily {
   id: string
   name: string
-  /** One-line description for the catalogue and nav. */
   blurb: string
-  /** Longer intro for the family page. */
   intro: string
   variants: SignalVariant[]
 }
@@ -206,7 +192,6 @@ export interface SignalFamily {
 
 export interface SafetySystem {
   id: string
-  /** e.g. "AWS". */
   abbr: string
   name: string
   blurb: string

@@ -22,8 +22,8 @@ export default defineConfig({
         short_name: 'Signals',
         description:
           'Interactive reference for railway signals and safety systems as represented in Train Sim World. Fan-made, not real-world training.',
-        theme_color: '#0b0f14',
-        background_color: '#0b0f14',
+        theme_color: '#ffffff',
+        background_color: '#ffffff',
         display: 'standalone',
         start_url: '/',
         icons: [

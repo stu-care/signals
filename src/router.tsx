@@ -2,7 +2,6 @@ import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { RootLayout } from '@/components/layout/RootLayout'
 import { HomePage } from '@/pages/HomePage'
 import { BuilderPage } from '@/pages/BuilderPage'
-import { CalibratePage } from '@/pages/CalibratePage'
 import { CataloguePage } from '@/pages/CataloguePage'
 import { AspectDetailPage } from '@/pages/AspectDetailPage'
 import { SafetySystemsPage } from '@/pages/SafetySystemsPage'
@@ -20,7 +19,6 @@ export const router = createBrowserRouter([
       { path: '/sources', element: <SourcesPage /> },
       { path: '/:country', element: <HomePage /> },
       { path: '/:country/build', element: <BuilderPage /> },
-      { path: '/:country/calibrate', element: <CalibratePage /> },
       { path: '/:country/catalogue', element: <CataloguePage /> },
       {
         path: '/:country/aspect/:familyId/:variantId/:aspectId',
