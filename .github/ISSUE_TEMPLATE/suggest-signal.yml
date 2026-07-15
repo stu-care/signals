@@ -1,0 +1,41 @@
+name: "➕ Suggest a signal"
+description: A signal, aspect, or indicator you've seen in-game that Signals doesn't cover yet.
+title: "[Signal]: "
+labels: ["new-signal"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Seen something in *Train Sim World* that isn't in Signals yet? Tell us about it.
+  - type: input
+    id: signal
+    attributes:
+      label: What is the signal / indicator?
+      placeholder: "e.g. Position-light subsidiary (call-on) under a main signal"
+    validations:
+      required: true
+  - type: dropdown
+    id: country
+    attributes:
+      label: Country
+      options:
+        - United Kingdom
+        - Germany (planned)
+        - United States (planned)
+        - Other / not sure
+    validations:
+      required: true
+  - type: input
+    id: route
+    attributes:
+      label: Which route did you see it on?
+      placeholder: "e.g. Northern Trans-Pennine"
+    validations:
+      required: false
+  - type: textarea
+    id: aspects
+    attributes:
+      label: What does it show, and what does each indication mean?
+      placeholder: Describe the aspects / positions and what the driver should do.
+    validations:
+      required: false

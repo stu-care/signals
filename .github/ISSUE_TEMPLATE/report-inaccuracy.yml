@@ -1,0 +1,46 @@
+name: "🚦 Report an inaccuracy"
+description: Something in Signals is wrong or misleading compared to the game (or real practice).
+title: "[Inaccuracy]: "
+labels: ["inaccuracy"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping keep Signals accurate! Signals is a fan-made reference for *Train Sim World* — not real-world training — but we still want it right. Please tell us what's wrong and, if you can, where the correct information comes from.
+  - type: input
+    id: where
+    attributes:
+      label: Where is the mistake?
+      description: The signal, aspect, or page (a URL is ideal).
+      placeholder: "e.g. /uk/aspect/colour-light/colour-light-4/double-yellow"
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: What does it currently say?
+      placeholder: Quote or describe the current wording / picture.
+    validations:
+      required: true
+  - type: textarea
+    id: correct
+    attributes:
+      label: What should it say?
+      placeholder: Describe the correct meaning, colour, arrangement, etc.
+    validations:
+      required: true
+  - type: input
+    id: route
+    attributes:
+      label: Where did you see it in-game?
+      description: Route / location, and a screenshot if you have one.
+      placeholder: "e.g. Great Western Express, approaching Reading"
+    validations:
+      required: false
+  - type: input
+    id: source
+    attributes:
+      label: Source (optional)
+      description: A link or reference supporting the correction.
+    validations:
+      required: false

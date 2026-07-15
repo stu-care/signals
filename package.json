@@ -1,0 +1,39 @@
+{
+  "name": "signals",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Interactive reference for railway signals and safety systems as represented in Train Sim World. Fan-made, not real-world training.",
+  "license": "MIT",
+  "homepage": "https://signals.stu.care",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stu-care/signals.git"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc -b --noEmit",
+    "icons": "node scripts/generate-icons.mjs",
+    "lint": "eslint .",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "react-router-dom": "^7.18.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.2",
+    "@types/node": "^26.1.1",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.3",
+    "tailwindcss": "^4.3.2",
+    "typescript": "^7.0.2",
+    "vite": "^8.1.4",
+    "vite-plugin-pwa": "^1.3.0",
+    "vitest": "^4.1.10"
+  }
+}

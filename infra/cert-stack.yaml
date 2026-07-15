@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  Signals — ACM certificate. MUST be deployed in us-east-1 because CloudFront
+  only accepts viewer certificates from that region. DNS validation records are
+  created automatically in the given Route 53 hosted zone.
+
+Parameters:
+  DomainName:
+    Type: String
+    Default: signals.stu.care
+  HostedZoneId:
+    Type: String
+    Description: Route 53 hosted zone ID for the domain.
+
+Resources:
+  Certificate:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: !Ref DomainName
+      ValidationMethod: DNS
+      DomainValidationOptions:
+        - DomainName: !Ref DomainName
+          HostedZoneId: !Ref HostedZoneId
+
+Outputs:
+  CertificateArn:
+    Description: ARN of the issued certificate (pass to the app stack).
+    Value: !Ref Certificate

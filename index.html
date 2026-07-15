@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#0b0f14" />
+    <script>
+      // Set the theme class synchronously, before first paint, so a returning
+      // light-theme user never sees a dark flash. Mirrors src/lib/theme.ts
+      // (same 'signals.theme' key, dark default).
+      (function () {
+        try {
+          var t = localStorage.getItem('signals.theme') === 'light' ? 'light' : 'dark'
+          document.documentElement.classList.add(t)
+        } catch (e) {
+          document.documentElement.classList.add('dark')
+        }
+      })()
+    </script>
+    <meta
+      name="description"
+      content="Interactive reference for railway signals and safety systems as represented in Train Sim World. Fan-made — not real-world training."
+    />
+    <title>Signals — railway signalling reference for Train Sim World</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
