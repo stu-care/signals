@@ -3,6 +3,7 @@
   "name": "Banner repeaters",
   "blurb": "A black bar on a white disc that pre-warns you of a signal you can’t see yet.",
   "intro": "A banner repeater gives you an early read of a signal whose own sighting is poor — hidden by a curve, a bridge or a long platform. It repeats only whether that signal is “off” (a proceed aspect) or at danger. You still obey the actual signal when you reach it; the banner just lets you plan ahead.",
+  "order": 4,
   "variants": [
     {
       "id": "banner",

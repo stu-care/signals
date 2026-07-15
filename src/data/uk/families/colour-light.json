@@ -3,6 +3,7 @@
   "name": "Colour-light signals",
   "blurb": "The standard modern signal: coloured lamps (red, yellow, double yellow, green).",
   "intro": "Colour-light Multiple Aspect Signalling (MAS) is what you will see on most modern main lines in Train Sim World. A signal shows one aspect at a time using coloured lamps. The number of lamps (two, three or four) sets how many messages it can give — and how much warning you get before a red.",
+  "order": 1,
   "variants": [
     {
       "id": "colour-light-4",

@@ -1,5 +1,5 @@
 import type { Plugin } from 'vite'
-import { readFile, writeFile, readdir } from 'node:fs/promises'
+import { readFile, writeFile, readdir, mkdir } from 'node:fs/promises'
 import path from 'node:path'
 
 /**
@@ -31,9 +31,14 @@ export function editorPlugin(): Plugin {
           const id = url.searchParams.get('id') ?? ''
           if (!ID_RE.test(country)) return send(res, 400, { error: 'bad country' })
 
-          // GET /families — list family ids for a country.
+          // GET /families — list family ids for a country (empty if none yet).
           if (url.pathname.startsWith('/families') && req.method === 'GET') {
-            const files = await readdir(familiesDir(country))
+            let files: string[] = []
+            try {
+              files = await readdir(familiesDir(country))
+            } catch {
+              files = []
+            }
             const ids = files.filter((f) => f.endsWith('.json')).map((f) => f.slice(0, -5))
             return send(res, 200, { ids })
           }
@@ -56,6 +61,7 @@ export function editorPlugin(): Plugin {
               const raw = Buffer.concat(chunks).toString('utf8')
               const parsed = JSON.parse(raw) // validate it is JSON
               if (parsed?.id !== id) return send(res, 400, { error: 'id mismatch' })
+              await mkdir(familiesDir(country), { recursive: true })
               await writeFile(file, JSON.stringify(parsed, null, 2) + '\n', 'utf8')
               return send(res, 200, { ok: true })
             }

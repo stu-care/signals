@@ -3,6 +3,7 @@
   "name": "Ground position-light signals",
   "blurb": "Small ground signals for shunting: two reds = stop, two whites at 45° = proceed.",
   "intro": "A ground position-light signal (GPL) controls shunting and low-speed movements. It sits at ground level and shows its message by the position and colour of two lit lights: horizontal red for stop, or a 45° pair of white lights for proceed. You meet these in yards, sidings and around station throats in Train Sim World.",
+  "order": 3,
   "variants": [
     {
       "id": "gpl",
@@ -14,39 +15,39 @@
           "type": "lamps",
           "id": "gpl",
           "w": 90,
-          "h": 84,
+          "h": 90,
           "lamps": [
             {
               "id": "red-left",
-              "x": 44,
-              "y": 64,
+              "x": 25,
+              "y": 65,
               "r": 10,
               "color": "red",
               "label": "Red (left)"
             },
             {
               "id": "red-right",
-              "x": 72,
-              "y": 64,
+              "x": 65,
+              "y": 65,
               "r": 10,
               "color": "red",
               "label": "Red (right)"
             },
             {
               "id": "white-lower",
-              "x": 44,
-              "y": 64,
+              "x": 65,
+              "y": 65,
               "r": 10,
               "color": "white",
               "label": "White (lower)"
             },
             {
               "id": "white-upper",
-              "x": 18,
-              "y": 40,
+              "x": 35,
+              "y": 35,
               "r": 10,
               "color": "white",
-              "label": "White (upper left)"
+              "label": "White (upper)"
             }
           ]
         }

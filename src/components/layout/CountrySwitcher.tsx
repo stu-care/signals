@@ -1,14 +1,16 @@
 import { useNavigate } from 'react-router-dom'
 import { COUNTRIES } from '@/data/countries'
+import { liveCountryCodes } from '@/data'
 import { useCurrentCountry } from '@/lib/useCurrentCountry'
 
 /**
- * Country switcher — visible from day one (project decision). UK is live;
- * Germany and USA appear as disabled "Coming soon" options.
+ * Country switcher — visible from day one (project decision). A country is
+ * enabled once it has data on disk; the rest show as "coming soon".
  */
 export function CountrySwitcher() {
   const current = useCurrentCountry()
   const navigate = useNavigate()
+  const live = new Set(liveCountryCodes())
 
   return (
     <label className="flex items-center gap-2 text-sm">
@@ -20,9 +22,9 @@ export function CountrySwitcher() {
         aria-label="Choose country"
       >
         {COUNTRIES.map((c) => (
-          <option key={c.code} value={c.code} disabled={c.status !== 'live'}>
+          <option key={c.code} value={c.code} disabled={!live.has(c.code)}>
             {c.name}
-            {c.status !== 'live' ? ' — coming soon' : ''}
+            {live.has(c.code) ? '' : ' — coming soon'}
           </option>
         ))}
       </select>

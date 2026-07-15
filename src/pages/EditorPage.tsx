@@ -15,8 +15,7 @@ import type {
 import { SignalRenderer } from '@/components/signal/SignalRenderer'
 import { ArrowRightIcon, ChevronDownIcon, ChevronUpIcon, CloseIcon } from '@/components/icons'
 import { listFamilies, loadFamily, saveFamily } from '@/lib/editor-api'
-
-const COUNTRY = 'uk'
+import { COUNTRIES } from '@/data/countries'
 const COLORS: LampColour[] = ['red', 'amber', 'yellow', 'green', 'white', 'lunar', 'blue']
 const DOT_FILL: Record<LampColour, string> = {
   red: '#e5372b', amber: '#ef8b1b', yellow: '#f1c015', green: '#1fa85a',
@@ -43,6 +42,7 @@ export function EditorPage() {
 }
 
 function Editor() {
+  const [country, setCountry] = useState('uk')
   const [ids, setIds] = useState<string[]>([])
   const [familyId, setFamilyId] = useState<string | null>(null)
   const [family, setFamily] = useState<SignalFamily | null>(null)
@@ -51,15 +51,22 @@ function Editor() {
   const [selPanel, setSelPanel] = useState<string | null>(null)
   const [selDot, setSelDot] = useState<string | null>(null)
   const [selAspect, setSelAspect] = useState(0)
+  const [showMeta, setShowMeta] = useState(false)
   const [status, setStatus] = useState('')
+  const [newId, setNewId] = useState('')
+  const [newName, setNewName] = useState('')
+
+  const refresh = (c: string) => listFamilies(c).then(setIds).catch((e) => setStatus(String(e)))
+  useEffect(() => {
+    refresh(country)
+  }, [country])
 
   useEffect(() => {
-    listFamilies(COUNTRY).then(setIds).catch((e) => setStatus(String(e)))
-  }, [])
-
-  useEffect(() => {
-    if (!familyId) return
-    loadFamily(COUNTRY, familyId)
+    if (!familyId) {
+      setFamily(null)
+      return
+    }
+    loadFamily(country, familyId)
       .then((f) => {
         setFamily(f)
         setVi(0)
@@ -69,25 +76,66 @@ function Editor() {
         setStatus('')
       })
       .catch((e) => setStatus(String(e)))
-  }, [familyId])
+  }, [familyId, country])
 
-  if (!family) {
+  // ---- chooser (no family selected) ----
+  if (!familyId) {
+    const createFamily = async () => {
+      const id = newId.trim().toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/(^-|-$)/g, '')
+      if (!id) return setStatus('enter an id (letters, numbers, hyphens)')
+      const fam: SignalFamily = {
+        id,
+        name: newName.trim() || id,
+        blurb: '',
+        intro: '',
+        order: 100,
+        variants: [{ id: 'main', name: 'Main', blurb: '', panels: [], aspects: [] }],
+      }
+      try {
+        await saveFamily(country, fam)
+        setNewId('')
+        setNewName('')
+        await refresh(country)
+        setFamilyId(id)
+      } catch (e) {
+        setStatus(String(e))
+      }
+    }
     return (
       <div>
-        <Header status={status} />
-        <p className="mt-4 text-muted">Choose a family to edit:</p>
-        <div className="mt-3 flex flex-wrap gap-2">
+        <Header status={status}>
+          <select value={country} onChange={(e) => { setCountry(e.target.value); setFamilyId(null) }} className={select()}>
+            {COUNTRIES.map((c) => <option key={c.code} value={c.code}>{c.name}</option>)}
+          </select>
+        </Header>
+        <p className="mt-6 font-mono text-xs font-semibold uppercase tracking-widest text-muted">
+          Families in {country}
+        </p>
+        <div className="mt-2 flex flex-wrap gap-2">
+          {ids.length === 0 && <span className="text-sm text-muted">none yet</span>}
           {ids.map((id) => (
-            <button key={id} onClick={() => setFamilyId(id)} className={chip(false)}>
-              {id}
-            </button>
+            <button key={id} onClick={() => setFamilyId(id)} className={chip(false)}>{id}</button>
           ))}
+        </div>
+        <div className="mt-6 max-w-md border border-border bg-surface p-4">
+          <p className={label()}>New family</p>
+          <div className="mt-2 space-y-2 text-sm">
+            <TextRow label="id" value={newId} onChange={setNewId} />
+            <TextRow label="name" value={newName} onChange={setNewName} />
+            <button onClick={createFamily} className="mt-1 w-full bg-accent px-3 py-2 text-sm font-semibold text-white hover:bg-accent-hover">
+              Create in {country}
+            </button>
+          </div>
         </div>
       </div>
     )
   }
 
-  const variant = family.variants[vi]
+  if (!family) {
+    return <div><Header status={status || 'loading…'} /></div>
+  }
+
+  const variant = (family.variants[vi] ?? family.variants[0])!
   const mutate = (fn: (f: SignalFamily) => void) => {
     const next = clone(family)
     fn(next)
@@ -96,10 +144,21 @@ function Editor() {
   }
   const mutVariant = (fn: (v: SignalVariant) => void) => mutate((f) => fn(f.variants[vi]))
 
+  const addVariant = () => {
+    const nv = { id: uid('variant'), name: 'New variant', blurb: '', panels: [], aspects: [] }
+    const idx = family.variants.length
+    mutate((f) => f.variants.push(nv))
+    setVi(idx)
+    setSelPanel(null)
+    setSelDot(null)
+    setSelAspect(0)
+  }
+
   const save = async () => {
     setStatus('saving…')
     try {
-      await saveFamily(COUNTRY, family)
+      await saveFamily(country, family)
+      await refresh(country)
       setStatus('saved — reload the app to see it live')
     } catch (e) {
       setStatus(String(e))
@@ -115,16 +174,37 @@ function Editor() {
     <div>
       <Header status={status}>
         <button onClick={() => setFamilyId(null)} className={`inline-flex items-center gap-1 ${chip(false)}`}><ArrowRightIcon className="size-3.5 rotate-180" />families</button>
-        <select value={familyId ?? ''} onChange={(e) => setFamilyId(e.target.value)} className={select()}>
-          {ids.map((id) => <option key={id} value={id}>{id}</option>)}
-        </select>
+        <span className="font-mono text-xs text-faint">{country}</span>
         <select value={vi} onChange={(e) => { setVi(+e.target.value); setSelPanel(family.variants[+e.target.value].panels[0]?.id ?? null); setSelDot(null); setSelAspect(0) }} className={select()}>
           {family.variants.map((v, i) => <option key={v.id} value={i}>{v.shortName ?? v.name}</option>)}
         </select>
-        <button onClick={save} className="rounded-none bg-accent px-4 py-1.5 text-sm font-semibold text-white hover:bg-accent-hover">
+        <button onClick={addVariant} className={chip(false)}>+ variant</button>
+        <button onClick={() => setShowMeta((m) => !m)} className={chip(showMeta)}>Settings</button>
+        <button onClick={save} className="bg-accent px-4 py-1.5 text-sm font-semibold text-white hover:bg-accent-hover">
           Save to disk
         </button>
       </Header>
+
+      {showMeta && variant && (
+        <div className="mt-4 grid gap-3 border border-border bg-surface p-4 text-sm sm:grid-cols-2">
+          <div className="space-y-2">
+            <p className={label()}>Family</p>
+            <TextRow label="name" value={family.name} onChange={(s) => mutate((f) => { f.name = s })} />
+            <TextRow label="blurb" value={family.blurb} onChange={(s) => mutate((f) => { f.blurb = s })} />
+            <TextRow label="intro" value={family.intro} onChange={(s) => mutate((f) => { f.intro = s })} />
+            <NumRow label="order" value={family.order ?? 100} onChange={(n) => mutate((f) => { f.order = n })} />
+          </div>
+          <div className="space-y-2">
+            <p className={label()}>Variant</p>
+            <TextRow label="name" value={variant.name} onChange={(s) => mutVariant((v) => { v.name = s })} />
+            <TextRow label="short" value={variant.shortName ?? ''} onChange={(s) => mutVariant((v) => { v.shortName = s || undefined })} />
+            <TextRow label="blurb" value={variant.blurb} onChange={(s) => mutVariant((v) => { v.blurb = s })} />
+            {family.variants.length > 1 && (
+              <button onClick={() => { mutate((f) => f.variants.splice(vi, 1)); setVi(0) }} className="text-xs text-sig-red">Delete variant</button>
+            )}
+          </div>
+        </div>
+      )}
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[300px_1fr]">
         {/* Preview */}

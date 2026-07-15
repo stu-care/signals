@@ -3,6 +3,7 @@
   "name": "Speed boards",
   "blurb": "Reflective boards giving the permitted speed — permanent limits and temporary restrictions.",
   "intro": "Speed boards tell you the maximum speed for the line ahead. Permanent Speed Restriction (PSR) boards mark a lasting limit; Temporary and Emergency Speed Restriction (TSR/ESR) boards mark a limit imposed for engineering work or a fault, warned in advance and later cancelled. Speeds are in miles per hour.",
+  "order": 5,
   "variants": [
     {
       "id": "psr",

@@ -182,6 +182,8 @@ export interface SignalFamily {
   name: string
   blurb: string
   intro: string
+  /** Display order within a country (lower first); defaults high if unset. */
+  order?: number
   variants: SignalVariant[]
 }
 

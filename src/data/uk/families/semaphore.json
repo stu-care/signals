@@ -3,6 +3,7 @@
   "name": "Semaphore signals",
   "blurb": "Mechanical arms. A red stop arm, or a yellow fishtail distant arm — read the arm by day, the lamp by night.",
   "intro": "Semaphore signals are the older mechanical type you meet on absolute-block routes in Train Sim World. A moving arm gives the indication: a red square-ended arm is a stop signal; a yellow fishtail arm is a distant. By day you read the arm; by night a coloured lamp beneath the pivot shows the same message. Almost all GB semaphores are upper-quadrant — the arm rises to clear.",
+  "order": 2,
   "variants": [
     {
       "id": "semaphore-stop",

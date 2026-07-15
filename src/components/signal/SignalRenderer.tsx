@@ -140,19 +140,23 @@ function LampsPanelView({
   state?: SignalStateInput
   scale: number
 }) {
+  // Draw off dots first, then lit (on/flash) dots, so where two lamps share a
+  // position (e.g. a GPL red and white in the same place) the LIT one is always
+  // on top. sort() is stable, so relative order within each group is preserved.
+  const ordered = panel.lamps
+    .map((l) => ({ l, st: state?.lamps?.[l.id] ?? 'off' }))
+    .sort((a, b) => (a.st === 'off' ? 0 : 1) - (b.st === 'off' ? 0 : 1))
+
   return (
     <div style={{ position: 'relative', width: panel.w * scale, height: panel.h * scale }}>
-      {panel.lamps.map((l) => {
-        const st = state?.lamps?.[l.id] ?? 'off'
-        return (
-          <div
-            key={l.id}
-            style={{ position: 'absolute', left: (l.x - l.r) * scale, top: (l.y - l.r) * scale }}
-          >
-            <Dot color={l.color} state={st} r={l.r * scale} />
-          </div>
-        )
-      })}
+      {ordered.map(({ l, st }) => (
+        <div
+          key={l.id}
+          style={{ position: 'absolute', left: (l.x - l.r) * scale, top: (l.y - l.r) * scale }}
+        >
+          <Dot color={l.color} state={st} r={l.r * scale} />
+        </div>
+      ))}
     </div>
   )
 }
