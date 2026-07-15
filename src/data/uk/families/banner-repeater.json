@@ -1,0 +1,55 @@
+{
+  "id": "banner-repeater",
+  "name": "Banner repeaters",
+  "blurb": "A black bar on a white disc that pre-warns you of a signal you can’t see yet.",
+  "intro": "A banner repeater gives you an early read of a signal whose own sighting is poor — hidden by a curve, a bridge or a long platform. It repeats only whether that signal is “off” (a proceed aspect) or at danger. You still obey the actual signal when you reach it; the banner just lets you plan ahead.",
+  "variants": [
+    {
+      "id": "banner",
+      "name": "Banner repeater",
+      "shortName": "Banner",
+      "blurb": "Horizontal bar = signal ahead at danger; inclined bar = signal ahead is off.",
+      "panels": [
+        {
+          "type": "arm",
+          "id": "banner",
+          "kind": "banner",
+          "label": "Banner bar"
+        }
+      ],
+      "aspects": [
+        {
+          "id": "on",
+          "name": "Horizontal bar",
+          "meaning": "Signal ahead is at danger",
+          "concept": "banner-on",
+          "arms": {
+            "banner": "danger"
+          },
+          "whatItMeans": "The bar is horizontal. The signal being repeated is at danger (“on”) — be prepared to find it not off. (A single yellow counts as a proceed aspect and would instead give the inclined bar.)",
+          "whatYouDo": "Control your speed so you can stop at the signal ahead, which is showing a red.",
+          "lookAlikes": "A banner repeater is a black bar on a white disc, not a coloured signal. It never authorises you to pass anything — obey the real signal it repeats.",
+          "controls": "Be ready to brake for the signal ahead.",
+          "related": [
+            "banner-off"
+          ]
+        },
+        {
+          "id": "off",
+          "name": "Inclined bar",
+          "meaning": "Signal ahead is off",
+          "concept": "banner-off",
+          "arms": {
+            "banner": "clear"
+          },
+          "whatItMeans": "The bar is inclined up to the right. The signal being repeated is “off” — it is showing a proceed aspect (green, or a single/double yellow), so it is not at danger.",
+          "whatYouDo": "Continue, but still read the actual signal when it comes into view.",
+          "controls": "Proceed, watching for the signal ahead.",
+          "related": [
+            "banner-on"
+          ]
+        }
+      ]
+    }
+  ]
+}

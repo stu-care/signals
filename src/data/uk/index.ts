@@ -1,22 +1,26 @@
-import type { CountryData } from '../types'
+import type { CountryData, SafetySystem, SignalFamily } from '../types'
 import { getCountry } from '../countries'
-import { colourLightFamily } from './colour-light'
-import { semaphoreFamily } from './semaphore'
-import { groundSignalFamily } from './ground-signals'
-import { bannerRepeaterFamily } from './banner-repeater'
-import { speedFamily } from './speed'
-import { ukSafetySystems } from './safety'
+import colourLight from './families/colour-light.json'
+import semaphore from './families/semaphore.json'
+import groundPositionLight from './families/ground-position-light.json'
+import bannerRepeater from './families/banner-repeater.json'
+import speedIndications from './families/speed-indications.json'
+import safety from './safety.json'
 
-const uk = getCountry('uk')!
+/**
+ * Signal data lives in JSON (so the editor can round-trip it); these thin
+ * imports type it. The family order here is the display order.
+ */
+const families = [
+  colourLight,
+  semaphore,
+  groundPositionLight,
+  bannerRepeater,
+  speedIndications,
+] as unknown as SignalFamily[]
 
 export const ukData: CountryData = {
-  country: uk,
-  families: [
-    colourLightFamily,
-    semaphoreFamily,
-    groundSignalFamily,
-    bannerRepeaterFamily,
-    speedFamily,
-  ],
-  safetySystems: ukSafetySystems,
+  country: getCountry('uk')!,
+  families,
+  safetySystems: safety as unknown as SafetySystem[],
 }

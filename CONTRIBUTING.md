@@ -18,19 +18,29 @@ Missing a signal or indicator you've seen in-game? **[Open a "Suggest a signal" 
 
 ## How the data model works
 
-All content is typed data — no CMS, no database. To add or change a signal you edit files under [`src/data`](src/data):
+Signal content is **JSON data** — no CMS, no database:
 
-- **`src/data/types.ts`** — the shape of everything (`SignalFamily` → `SignalVariant` → `Aspect`, plus geometry primitives: lamps, arms, feathers, theatre boxes, signs).
-- **`src/data/uk/*.ts`** — one file per signal family. Each `SignalVariant` has a `geometry` (drawn from plain numbers) and a list of `aspects`.
-- **`src/data/uk/index.ts`** — registers the families for the UK.
+- **`src/data/types.ts`** — the shape of everything: a `SignalFamily` has `SignalVariant`s, each a stack of **panels** (`lamps`, `arm`, `feather`, `poslight`, `glyph`, `sign`) plus a list of `aspects`.
+- **`src/data/uk/families/*.json`** — one JSON file per signal family (the source of truth).
+- **`src/data/uk/index.ts`** — thin typed loader that imports the JSON.
 
-### Geometry is numbers, not artwork
+### The signal editor (easiest way)
 
-Signals are drawn by [`SignalRenderer`](src/components/signal/SignalRenderer.tsx) from the numbers in each variant's `geometry` — lamp `{x, y, r, colour}`, plate `{x, y, w, h, radius}`, arm `{pivotX, pivotY, length, thickness, kind}`, etc. To adjust a signal, change the numbers; you never hand-write SVG paths. Lamp/arm ids are also the builder's toggle keys and the URL-state keys, so keep them stable and descriptive.
+Run the app locally and open **`/editor`**:
+
+```bash
+npm run dev      # then visit http://localhost:5173/editor
+```
+
+The editor lets you build a signal by dropping **dots** (one dot = one lamp: colour, size, position) onto a panel canvas, stack panels into a signal, define each **aspect** (which dots are on/flashing, arm positions, etc.) and edit its information, then **Save to disk** — it writes straight back to the JSON via a dev-only backend (`vite-editor-plugin.ts`). The editor is not part of the production build.
+
+### The Signal Dots system
+
+Signals are drawn by [`SignalRenderer`](src/components/signal/SignalRenderer.tsx) as flat iconographic dots: off is a hollow ring, on is a solid fill + a darker colour ring, flashing pulses. A signal is a stack of panels separated by soft rules. Lamp/arm/panel ids are also the builder's toggle keys and the URL-state keys, so keep them stable and descriptive.
 
 ### Aspects
 
-Each aspect declares which `lamps` are lit (and whether `steady`/`flashing`) and/or which `arms` are `clear`, plus the content template: `whatItMeans`, `whatYouDo`, `sequenceNote`, `safetyInteraction`, `lookAlikes`, `controls`, and an optional `realWorldNote`. Aspects that share a `concept` cross-link across variants.
+Each aspect declares which `lamps` are lit (`on`/`flash`), which `arms` are `clear`, which aux panels are `on`, and any `glyphs`, plus the content template: `whatItMeans`, `whatYouDo`, `sequenceNote`, `safetyInteraction`, `lookAlikes`, `controls`, and an optional `realWorldNote`. Aspects that share a `concept` cross-link across variants.
 
 ## Development
 

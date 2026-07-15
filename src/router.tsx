@@ -8,6 +8,7 @@ import { SafetySystemsPage } from '@/pages/SafetySystemsPage'
 import { SafetySystemPage } from '@/pages/SafetySystemPage'
 import { AboutPage } from '@/pages/AboutPage'
 import { SourcesPage } from '@/pages/SourcesPage'
+import { EditorPage } from '@/pages/EditorPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 
 export const router = createBrowserRouter([
@@ -17,6 +18,7 @@ export const router = createBrowserRouter([
       { path: '/', element: <Navigate to="/uk" replace /> },
       { path: '/about', element: <AboutPage /> },
       { path: '/sources', element: <SourcesPage /> },
+      { path: '/editor', element: <EditorPage /> },
       { path: '/:country', element: <HomePage /> },
       { path: '/:country/build', element: <BuilderPage /> },
       { path: '/:country/catalogue', element: <CataloguePage /> },

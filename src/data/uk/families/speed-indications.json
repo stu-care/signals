@@ -1,0 +1,165 @@
+{
+  "id": "speed-indications",
+  "name": "Speed boards",
+  "blurb": "Reflective boards giving the permitted speed — permanent limits and temporary restrictions.",
+  "intro": "Speed boards tell you the maximum speed for the line ahead. Permanent Speed Restriction (PSR) boards mark a lasting limit; Temporary and Emergency Speed Restriction (TSR/ESR) boards mark a limit imposed for engineering work or a fault, warned in advance and later cancelled. Speeds are in miles per hour.",
+  "variants": [
+    {
+      "id": "psr",
+      "name": "Permissible speed indicator (PSR)",
+      "shortName": "PSR",
+      "blurb": "White reflective board with black figures — the permanent line-speed limit.",
+      "panels": [
+        {
+          "type": "sign",
+          "id": "psr",
+          "kind": "psr",
+          "primary": "40",
+          "size": 34,
+          "label": "Permissible speed indicator showing 40"
+        }
+      ],
+      "aspects": [
+        {
+          "id": "psr",
+          "name": "Permissible speed",
+          "meaning": "Maximum permitted speed",
+          "concept": "psr",
+          "whatItMeans": "The figure is the maximum speed (mph) permitted from this board onwards, until the next speed board. Here, 40 mph.",
+          "whatYouDo": "Be at or below the shown speed by the time the front of your train reaches the board.",
+          "lookAlikes": "A single white board with black figures is a permanent limit. Two figures stacked is a differential board; a yellow board with two white spots warns of a temporary restriction.",
+          "controls": "Brake in good time so you are at the limit by the board.",
+          "realWorldNote": "Some PSR boards are preceded by a warning indicator with an AWS magnet where the reduction is large. The game models the boards; the exact warning arrangements vary by route.",
+          "related": [
+            "psr-diff"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "psr-differential",
+      "name": "Differential speed board",
+      "shortName": "Differential",
+      "blurb": "Two figures: a higher limit for some trains, a lower one for others.",
+      "panels": [
+        {
+          "type": "sign",
+          "id": "diff",
+          "kind": "psr-diff",
+          "primary": "60",
+          "secondary": "90",
+          "size": 30,
+          "label": "Differential speed board showing 60 over 90"
+        }
+      ],
+      "aspects": [
+        {
+          "id": "psr-diff",
+          "name": "Differential speed",
+          "meaning": "Two limits by train type",
+          "concept": "psr-diff",
+          "whatItMeans": "Two limits apply depending on the type of train. The figure BELOW the line is the higher speed and applies to passenger trains, parcels and light locomotives; the figure ABOVE the line is the lower speed and applies to other traffic such as freight. Here, 90 mph for passenger trains or 60 mph for freight.",
+          "whatYouDo": "Obey the figure that applies to the train you are driving. If you are unsure which applies, use the lower (slower) speed.",
+          "controls": "Brake to the applicable limit by the board.",
+          "realWorldNote": "Which figure applies is set by the train’s classification and route rules. In Train Sim World, follow the limit indicated for your service.",
+          "related": [
+            "psr"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tsr-warning",
+      "name": "TSR warning indicator",
+      "shortName": "TSR warning",
+      "blurb": "Yellow board with two white spots — warns a temporary restriction is coming.",
+      "panels": [
+        {
+          "type": "sign",
+          "id": "tsrwarn",
+          "kind": "tsr-warn",
+          "size": 34,
+          "label": "Temporary speed restriction warning indicator"
+        }
+      ],
+      "aspects": [
+        {
+          "id": "tsr-warn",
+          "name": "TSR warning",
+          "meaning": "Restriction ahead — be ready to slow",
+          "concept": "tsr-warn",
+          "whatItMeans": "A yellow board with two white spots, fitted with an AWS magnet: a temporary speed restriction is coming up, so you get an in-cab warning before the speed indicator.",
+          "whatYouDo": "Begin braking so you are at the temporary limit by the commencement (speed) board.",
+          "safetyInteraction": "The AWS magnet at the warning board sounds the horn — acknowledge it, then brake for the restriction.",
+          "controls": "Acknowledge AWS (default: Q) and brake for the restriction.",
+          "realWorldNote": "Exact warning-board distances are set by the engineering instructions for each restriction; this is a representative depiction.",
+          "related": [
+            "tsr-commence",
+            "tsr-terminate"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tsr-commencement",
+      "name": "TSR speed indicator",
+      "shortName": "TSR speed",
+      "blurb": "The temporary speed itself — reduce to this figure by the board.",
+      "panels": [
+        {
+          "type": "sign",
+          "id": "tsrspeed",
+          "kind": "tsr-commence",
+          "primary": "20",
+          "size": 34,
+          "label": "Temporary speed restriction indicator showing 20"
+        }
+      ],
+      "aspects": [
+        {
+          "id": "tsr-commence",
+          "name": "TSR speed",
+          "meaning": "Temporary maximum speed",
+          "concept": "tsr-commence",
+          "whatItMeans": "The temporary maximum speed (mph) begins here and applies until the termination board. Here, 20 mph.",
+          "whatYouDo": "Be at or below this speed by the board, and hold it until the restriction ends.",
+          "controls": "Hold the temporary limit until you pass the termination board.",
+          "related": [
+            "tsr-warn",
+            "tsr-terminate"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tsr-termination",
+      "name": "TSR termination indicator",
+      "shortName": "TSR ends",
+      "blurb": "Marks the end of a temporary restriction — resume line speed once clear.",
+      "panels": [
+        {
+          "type": "sign",
+          "id": "tsrend",
+          "kind": "tsr-terminate",
+          "size": 34,
+          "label": "Temporary speed restriction termination indicator"
+        }
+      ],
+      "aspects": [
+        {
+          "id": "tsr-terminate",
+          "name": "TSR ends",
+          "meaning": "Restriction ends",
+          "concept": "tsr-terminate",
+          "whatItMeans": "The temporary restriction ends here. Once the whole of your train has passed this board, you may return to the permanent line speed.",
+          "whatYouDo": "Wait until your entire train is clear of the restriction, then accelerate back to line speed.",
+          "controls": "Power up to line speed once the rear of the train has passed.",
+          "related": [
+            "tsr-warn",
+            "tsr-commence"
+          ]
+        }
+      ]
+    }
+  ]
+}
