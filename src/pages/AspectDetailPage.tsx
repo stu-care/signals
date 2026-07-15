@@ -45,7 +45,7 @@ export function AspectDetailPage() {
   return (
     <article className="mx-auto max-w-3xl">
       <nav className="text-sm text-muted">
-        <Link to={`${base}/catalogue`} className="hover:text-text">
+        <Link to={`${base}/catalogue`} className="hover:text-ink">
           Catalogue
         </Link>
         <span className="px-1.5">/</span>
@@ -53,7 +53,7 @@ export function AspectDetailPage() {
       </nav>
 
       <div className="mt-4 grid gap-6 sm:grid-cols-[160px_1fr] sm:items-center">
-        <div className="flex justify-center rounded-2xl border border-border bg-surface p-4">
+        <div className="flex justify-center rounded-none border border-border bg-surface p-4">
           <SignalRenderer panels={variant.panels} state={aspectState} scale={1.5} />
         </div>
         <div>
@@ -65,7 +65,7 @@ export function AspectDetailPage() {
           <p className="mt-3 text-muted">{aspect.whatItMeans}</p>
           <Link
             to={builderHref}
-            className="mt-4 inline-block rounded-lg border border-border-strong px-4 py-2 text-sm font-semibold transition hover:bg-surface-2"
+            className="mt-4 inline-block rounded-none border border-border px-4 py-2 text-sm font-semibold transition hover:bg-surface-2"
           >
             Open in the builder →
           </Link>
@@ -116,7 +116,7 @@ export function AspectDetailPage() {
                 <li key={concept}>
                   <Link
                     to={`${base}/aspect/${e.family.id}/${e.variant.id}/${e.aspect.id}`}
-                    className="rounded-full border border-border bg-surface-2 px-3 py-1.5 text-sm hover:border-border-strong"
+                    className="rounded-none border border-border bg-surface-2 px-3 py-1.5 text-sm hover:border-faint"
                   >
                     {e.aspect.name} — {e.aspect.meaning}
                   </Link>

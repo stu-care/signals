@@ -35,7 +35,7 @@ export function RootLayout() {
       <div className="flex min-h-full flex-col" inert={!accepted}>
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-40 focus:rounded-lg focus:bg-accent focus:px-3 focus:py-2 focus:text-accent-contrast"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-40 focus:rounded-none focus:bg-accent focus:px-3 focus:py-2 focus:text-white"
         >
           Skip to content
         </a>

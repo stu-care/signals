@@ -5,7 +5,7 @@
  */
 export function FlashingBadge() {
   return (
-    <span className="rounded bg-signal-yellow/20 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-signal-yellow">
+    <span className="rounded-none bg-sig-yellow/20 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-sig-yellow">
       Flashing
     </span>
   )

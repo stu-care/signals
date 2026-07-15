@@ -13,6 +13,7 @@ import type {
   SignalVariant,
 } from '@/data/types'
 import { SignalRenderer } from '@/components/signal/SignalRenderer'
+import { ArrowRightIcon, ChevronDownIcon, ChevronUpIcon, CloseIcon } from '@/components/icons'
 import { listFamilies, loadFamily, saveFamily } from '@/lib/editor-api'
 
 const COUNTRY = 'uk'
@@ -99,7 +100,7 @@ function Editor() {
     setStatus('saving…')
     try {
       await saveFamily(COUNTRY, family)
-      setStatus('saved ✓ (reload the app to see it live)')
+      setStatus('saved — reload the app to see it live')
     } catch (e) {
       setStatus(String(e))
     }
@@ -113,14 +114,14 @@ function Editor() {
   return (
     <div>
       <Header status={status}>
-        <button onClick={() => setFamilyId(null)} className={chip(false)}>← families</button>
+        <button onClick={() => setFamilyId(null)} className={`inline-flex items-center gap-1 ${chip(false)}`}><ArrowRightIcon className="size-3.5 rotate-180" />families</button>
         <select value={familyId ?? ''} onChange={(e) => setFamilyId(e.target.value)} className={select()}>
           {ids.map((id) => <option key={id} value={id}>{id}</option>)}
         </select>
         <select value={vi} onChange={(e) => { setVi(+e.target.value); setSelPanel(family.variants[+e.target.value].panels[0]?.id ?? null); setSelDot(null); setSelAspect(0) }} className={select()}>
           {family.variants.map((v, i) => <option key={v.id} value={i}>{v.shortName ?? v.name}</option>)}
         </select>
-        <button onClick={save} className="rounded-lg bg-accent px-4 py-1.5 text-sm font-semibold text-white hover:bg-accent-hover">
+        <button onClick={save} className="rounded-none bg-accent px-4 py-1.5 text-sm font-semibold text-white hover:bg-accent-hover">
           Save to disk
         </button>
       </Header>
@@ -128,7 +129,7 @@ function Editor() {
       <div className="mt-6 grid gap-6 lg:grid-cols-[300px_1fr]">
         {/* Preview */}
         <div>
-          <div className="flex min-h-[220px] items-center justify-center rounded-2xl border border-border bg-surface p-6">
+          <div className="flex min-h-[220px] items-center justify-center rounded-none border border-border bg-surface p-6">
             <SignalRenderer panels={variant.panels} state={aspectState} scale={1.8} showInactive={tab === 'structure'} />
           </div>
           <div className="mt-3 flex gap-2">
@@ -192,25 +193,25 @@ function StructureEditor({
 
   return (
     <div className="space-y-4">
-      <div className="rounded-xl border border-border bg-surface p-4">
+      <div className="rounded-none border border-border bg-surface p-4">
         <div className="flex items-center justify-between">
           <p className={label()}>Panels (top → bottom)</p>
           <div className="flex flex-wrap gap-1">
             {(['lamps', 'arm', 'feather', 'poslight', 'glyph', 'sign'] as const).map((t) => (
-              <button key={t} onClick={() => addPanel(t)} className="rounded border border-border px-2 py-1 text-xs hover:border-accent">+ {t}</button>
+              <button key={t} onClick={() => addPanel(t)} className="rounded-none border border-border px-2 py-1 text-xs hover:border-accent">+ {t}</button>
             ))}
           </div>
         </div>
         <ul className="mt-3 space-y-1">
           {variant.panels.map((p, i) => (
-            <li key={p.id} className={`flex items-center justify-between rounded-lg border px-3 py-1.5 text-sm ${p.id === selPanel ? 'border-accent bg-accent/5' : 'border-border'}`}>
+            <li key={p.id} className={`flex items-center justify-between rounded-none border px-3 py-1.5 text-sm ${p.id === selPanel ? 'border-accent bg-accent/5' : 'border-border'}`}>
               <button onClick={() => { setSelPanel(p.id); setSelDot(null) }} className="flex-1 text-left">
                 {p.type}{'label' in p && p.label ? ` · ${p.label}` : ''}
               </button>
               <span className="flex gap-1">
-                <button onClick={() => mutVariant((v) => { if (i > 0) [v.panels[i - 1], v.panels[i]] = [v.panels[i], v.panels[i - 1]] })} className="px-1 text-faint hover:text-ink">↑</button>
-                <button onClick={() => mutVariant((v) => { if (i < v.panels.length - 1) [v.panels[i + 1], v.panels[i]] = [v.panels[i], v.panels[i + 1]] })} className="px-1 text-faint hover:text-ink">↓</button>
-                <button onClick={() => { mutVariant((v) => v.panels.splice(i, 1)); if (p.id === selPanel) setSelPanel(null) }} className="px-1 text-sig-red">✕</button>
+                <button aria-label="Move panel up" onClick={() => mutVariant((v) => { if (i > 0) [v.panels[i - 1], v.panels[i]] = [v.panels[i], v.panels[i - 1]] })} className="p-1 text-faint hover:text-ink"><ChevronUpIcon className="size-3.5" /></button>
+                <button aria-label="Move panel down" onClick={() => mutVariant((v) => { if (i < v.panels.length - 1) [v.panels[i + 1], v.panels[i]] = [v.panels[i], v.panels[i + 1]] })} className="p-1 text-faint hover:text-ink"><ChevronDownIcon className="size-3.5" /></button>
+                <button aria-label="Delete panel" onClick={() => { mutVariant((v) => v.panels.splice(i, 1)); if (p.id === selPanel) setSelPanel(null) }} className="p-1 text-sig-red"><CloseIcon className="size-3.5" /></button>
               </span>
             </li>
           ))}
@@ -247,12 +248,12 @@ function LampsEditor({
   const dot = panel.lamps.find((l) => l.id === selDot) ?? null
 
   return (
-    <div className="rounded-xl border border-border bg-surface p-4">
+    <div className="rounded-none border border-border bg-surface p-4">
       <div className="flex items-center justify-between">
         <p className={label()}>Dots — drag to position</p>
         <button
           onClick={() => { const id = uid('dot'); editPanel((p) => p.lamps.push({ id, color: 'red', x: Math.round(p.w / 2), y: Math.round(p.h / 2), r: 11, label: 'Dot' })); setSelDot(id) }}
-          className="rounded border border-border px-2 py-1 text-xs hover:border-accent"
+          className="rounded-none border border-border px-2 py-1 text-xs hover:border-accent"
         >
           + dot
         </button>
@@ -261,7 +262,7 @@ function LampsEditor({
       <div className="mt-3 flex gap-4">
         <div
           ref={canvasRef}
-          className="relative shrink-0 rounded-lg border border-dashed border-border bg-white"
+          className="relative shrink-0 rounded-none border border-dashed border-border bg-white"
           style={{ width: panel.w * CANVAS_SCALE, height: panel.h * CANVAS_SCALE }}
           onPointerMove={(e) => { if (drag) { const c = toCoords(e); editPanel((p) => { const l = p.lamps.find((x) => x.id === drag); if (l) { l.x = Math.max(0, Math.min(p.w, c.x)); l.y = Math.max(0, Math.min(p.h, c.y)) } }) } }}
           onPointerUp={() => setDrag(null)}
@@ -313,7 +314,7 @@ function LampsEditor({
 function PanelPropsEditor({ panel, mutVariant }: { panel: Panel; mutVariant: (fn: (v: SignalVariant) => void) => void }) {
   const edit = (fn: (p: Panel) => void) => mutVariant((v) => { const p = v.panels.find((x) => x.id === panel.id); if (p) fn(p) })
   return (
-    <div className="space-y-2 rounded-xl border border-border bg-surface p-4 text-sm">
+    <div className="space-y-2 rounded-none border border-border bg-surface p-4 text-sm">
       <p className={label()}>{panel.type} properties</p>
       {'label' in panel && <TextRow label="label" value={panel.label} onChange={(s) => edit((p) => { if ('label' in p) p.label = s })} />}
       {panel.type === 'arm' && (
@@ -362,12 +363,12 @@ function AspectEditor({
 
   return (
     <div className="space-y-4">
-      <div className="rounded-xl border border-border bg-surface p-4">
+      <div className="rounded-none border border-border bg-surface p-4">
         <div className="flex items-center justify-between">
           <p className={label()}>Aspects</p>
           <button
             onClick={() => { mutVariant((v) => v.aspects.push({ id: uid('aspect'), name: 'New aspect', meaning: '', concept: uid('concept'), whatItMeans: '', whatYouDo: '' })); setSelAspect(variant.aspects.length) }}
-            className="rounded border border-border px-2 py-1 text-xs hover:border-accent"
+            className="rounded-none border border-border px-2 py-1 text-xs hover:border-accent"
           >
             + aspect
           </button>
@@ -381,13 +382,13 @@ function AspectEditor({
 
       {aspect && (
         <>
-          <div className="rounded-xl border border-border bg-surface p-4">
+          <div className="rounded-none border border-border bg-surface p-4">
             <p className={label()}>State for “{aspect.name}”</p>
             <div className="mt-2 space-y-1.5 text-sm">
               {lamps.map((l) => {
                 const s = aspect.lamps?.[l.id] ?? 'off'
                 return (
-                  <button key={l.id} onClick={() => editAspect((a) => { a.lamps = { ...a.lamps, [l.id]: CYCLE[s] }; if (a.lamps[l.id] === 'off') delete a.lamps[l.id] })} className="flex w-full items-center justify-between rounded border border-border px-3 py-1.5">
+                  <button key={l.id} onClick={() => editAspect((a) => { a.lamps = { ...a.lamps, [l.id]: CYCLE[s] }; if (a.lamps[l.id] === 'off') delete a.lamps[l.id] })} className="flex w-full items-center justify-between rounded-none border border-border px-3 py-1.5">
                     <span className="flex items-center gap-2"><span className="inline-block size-3 rounded-full" style={{ background: s === 'off' ? 'transparent' : DOT_FILL[l.color], boxShadow: `inset 0 0 0 2px ${DOT_FILL[l.color]}` }} />{l.label}</span>
                     <span className="font-mono text-xs">{s}</span>
                   </button>
@@ -396,7 +397,7 @@ function AspectEditor({
               {arms.map((p) => {
                 const pos = aspect.arms?.[p.id] ?? 'danger'
                 return (
-                  <button key={p.id} onClick={() => editAspect((a) => { a.arms = { ...a.arms, [p.id]: pos === 'clear' ? 'danger' : 'clear' } })} className="flex w-full items-center justify-between rounded border border-border px-3 py-1.5">
+                  <button key={p.id} onClick={() => editAspect((a) => { a.arms = { ...a.arms, [p.id]: pos === 'clear' ? 'danger' : 'clear' } })} className="flex w-full items-center justify-between rounded-none border border-border px-3 py-1.5">
                     <span>{p.label}</span><span className="font-mono text-xs">{pos}</span>
                   </button>
                 )
@@ -404,22 +405,22 @@ function AspectEditor({
               {aux.map((p) => {
                 const on = aspect.on?.includes(p.id) ?? false
                 return (
-                  <button key={p.id} onClick={() => editAspect((a) => { const set = new Set(a.on ?? []); on ? set.delete(p.id) : set.add(p.id); a.on = [...set] })} className="flex w-full items-center justify-between rounded border border-border px-3 py-1.5">
+                  <button key={p.id} onClick={() => editAspect((a) => { const set = new Set(a.on ?? []); on ? set.delete(p.id) : set.add(p.id); a.on = [...set] })} className="flex w-full items-center justify-between rounded-none border border-border px-3 py-1.5">
                     <span>{p.label}</span><span className="font-mono text-xs">{on ? 'on' : 'off'}</span>
                   </button>
                 )
               })}
               {glyphs.map((p) => (
-                <label key={p.id} className="flex items-center justify-between gap-2 rounded border border-border px-3 py-1.5">
+                <label key={p.id} className="flex items-center justify-between gap-2 rounded-none border border-border px-3 py-1.5">
                   <span>{p.label}</span>
-                  <input value={aspect.glyphs?.[p.id] ?? ''} onChange={(e) => editAspect((a) => { a.glyphs = { ...a.glyphs, [p.id]: e.target.value } })} className="w-16 rounded border border-border px-2 py-0.5 text-center font-mono" />
+                  <input value={aspect.glyphs?.[p.id] ?? ''} onChange={(e) => editAspect((a) => { a.glyphs = { ...a.glyphs, [p.id]: e.target.value } })} className="w-16 rounded-none border border-border px-2 py-0.5 text-center font-mono" />
                 </label>
               ))}
             </div>
             <button onClick={() => { mutVariant((v) => v.aspects.splice(selAspect, 1)); setSelAspect(0) }} className="mt-3 text-xs text-sig-red">Delete aspect</button>
           </div>
 
-          <div className="space-y-2 rounded-xl border border-border bg-surface p-4 text-sm">
+          <div className="space-y-2 rounded-none border border-border bg-surface p-4 text-sm">
             <p className={label()}>Information</p>
             {ASPECT_TEXT.map((k) => (
               <label key={k} className="block">
@@ -428,7 +429,7 @@ function AspectEditor({
                   rows={k === 'whatItMeans' || k === 'whatYouDo' ? 2 : 1}
                   value={(aspect[k] as string) ?? ''}
                   onChange={(e) => editAspect((a) => { (a as unknown as Record<string, unknown>)[k] = e.target.value })}
-                  className="mt-0.5 w-full resize-y rounded border border-border px-2 py-1"
+                  className="mt-0.5 w-full resize-y rounded-none border border-border px-2 py-1"
                 />
               </label>
             ))}
@@ -453,15 +454,15 @@ function Header({ status, children }: { status: string; children?: React.ReactNo
   )
 }
 const label = () => 'font-mono text-xs font-semibold uppercase tracking-widest text-muted'
-const select = () => 'rounded-lg border border-border bg-white px-2 py-1 text-sm'
-const chip = (active: boolean) => `rounded-full border px-3 py-1 text-sm ${active ? 'border-accent bg-accent text-white' : 'border-border bg-white text-muted hover:border-accent'}`
-const tabBtn = (active: boolean) => `flex-1 rounded-lg border px-3 py-1.5 text-sm font-medium ${active ? 'border-accent bg-accent text-white' : 'border-border'}`
+const select = () => 'rounded-none border border-border bg-white px-2 py-1 text-sm'
+const chip = (active: boolean) => `rounded-none border px-3 py-1 text-sm ${active ? 'border-accent bg-accent text-white' : 'border-border bg-white text-muted hover:border-accent'}`
+const tabBtn = (active: boolean) => `flex-1 rounded-none border px-3 py-1.5 text-sm font-medium ${active ? 'border-accent bg-accent text-white' : 'border-border'}`
 
 function NumRow({ label: l, value, onChange }: { label: string; value: number; onChange: (n: number) => void }) {
   return (
     <label className="flex items-center justify-between gap-2">
       <span>{l}</span>
-      <input type="number" value={value} onChange={(e) => onChange(Math.round(+e.target.value))} className="w-20 rounded border border-border px-2 py-0.5 text-right font-mono" />
+      <input type="number" value={value} onChange={(e) => onChange(Math.round(+e.target.value))} className="w-20 rounded-none border border-border px-2 py-0.5 text-right font-mono" />
     </label>
   )
 }
@@ -469,7 +470,7 @@ function TextRow({ label: l, value, onChange }: { label: string; value: string; 
   return (
     <label className="flex items-center justify-between gap-2">
       <span>{l}</span>
-      <input value={value} onChange={(e) => onChange(e.target.value)} className="w-40 rounded border border-border px-2 py-0.5 font-mono text-xs" />
+      <input value={value} onChange={(e) => onChange(e.target.value)} className="w-40 rounded-none border border-border px-2 py-0.5 font-mono text-xs" />
     </label>
   )
 }

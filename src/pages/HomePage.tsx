@@ -17,8 +17,8 @@ export function HomePage() {
     <div>
       <section className="grid items-center gap-8 md:grid-cols-[1.4fr_1fr]">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-widest text-accent">
-            {country.flag} {country.adjective} signalling · Train Sim World
+          <p className="font-mono text-xs font-semibold uppercase tracking-widest text-accent">
+            {country.adjective} signalling · Train Sim World
           </p>
           <h1 className="mt-2 text-3xl font-bold leading-tight sm:text-4xl">
             See a signal in-game and know exactly what it means.
@@ -31,20 +31,20 @@ export function HomePage() {
           <div className="mt-6 flex flex-wrap gap-3">
             <Link
               to={`${base}/build`}
-              className="rounded-xl bg-accent px-5 py-3 font-semibold text-accent-contrast transition hover:brightness-110"
+              className="rounded-none bg-accent px-5 py-3 font-semibold text-white transition hover:brightness-110"
             >
               Identify a signal →
             </Link>
             <Link
               to={`${base}/catalogue`}
-              className="rounded-xl border border-border-strong px-5 py-3 font-semibold transition hover:bg-surface-2"
+              className="rounded-none border border-border px-5 py-3 font-semibold transition hover:bg-surface-2"
             >
               Browse the catalogue
             </Link>
           </div>
         </div>
         {featured && (
-          <div className="flex justify-center rounded-2xl border border-border bg-surface p-8">
+          <div className="flex justify-center rounded-none border border-border bg-surface p-8">
             <SignalRenderer panels={featured.panels} state={{ lamps: { green: 'on' } }} scale={1.8} />
           </div>
         )}
@@ -75,7 +75,7 @@ function EntryCard({ to, title, body }: { to: string; title: string; body: strin
   return (
     <Link
       to={to}
-      className="group rounded-2xl border border-border bg-surface p-5 transition hover:border-border-strong hover:bg-surface-2"
+      className="group rounded-none border border-border bg-surface p-5 transition hover:border-faint hover:bg-surface-2"
     >
       <h2 className="text-lg font-semibold">
         {title}

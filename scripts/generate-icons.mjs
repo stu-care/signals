@@ -17,11 +17,11 @@ const hex = (h) => [
   parseInt(h.slice(3, 5), 16),
   parseInt(h.slice(5, 7), 16),
 ]
-const BG = hex('#0b0f14')
-const HEAD = hex('#0c1116')
-const GREEN = hex('#1fc457')
-const YELLOW_DIM = hex('#584618')
-const RED_DIM = hex('#581917')
+const WHITE = hex('#ffffff')
+const RED = hex('#e5372b')
+const RED_RING = hex('#a4160c')
+const GREEN = hex('#1fa85a')
+const GREEN_RING = hex('#0c6234')
 
 function render(size) {
   const buf = Buffer.alloc(size * size * 3)
@@ -43,11 +43,15 @@ function render(size) {
         if ((x - cx) ** 2 + (y - cy) ** 2 <= rad * rad) put(x, y, c)
   }
 
-  fillRect(0, 0, size, size, BG)
-  fillRect(176 * s, 84 * s, 336 * s, 428 * s, HEAD)
-  disc(256 * s, 164 * s, 54 * s, GREEN)
-  disc(256 * s, 256 * s, 54 * s, YELLOW_DIM)
-  disc(256 * s, 348 * s, 54 * s, RED_DIM)
+  // Two dots — a minimal signal (red over green) on white, with rings.
+  fillRect(0, 0, size, size, WHITE)
+  const cx = 256 * s
+  const r = 94 * s
+  const ringW = 16 * s
+  disc(cx, 168 * s, r, RED_RING)
+  disc(cx, 168 * s, r - ringW, RED)
+  disc(cx, 344 * s, r, GREEN_RING)
+  disc(cx, 344 * s, r - ringW, GREEN)
   return buf
 }
 

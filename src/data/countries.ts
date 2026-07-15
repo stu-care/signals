@@ -11,7 +11,6 @@ export const COUNTRIES: Country[] = [
     name: 'United Kingdom',
     short: 'UK',
     adjective: 'British',
-    flag: '🇬🇧',
     status: 'live',
   },
   {
@@ -19,7 +18,6 @@ export const COUNTRIES: Country[] = [
     name: 'Germany',
     short: 'DE',
     adjective: 'German',
-    flag: '🇩🇪',
     status: 'coming-soon',
   },
   {
@@ -27,7 +25,6 @@ export const COUNTRIES: Country[] = [
     name: 'United States',
     short: 'US',
     adjective: 'American',
-    flag: '🇺🇸',
     status: 'coming-soon',
   },
 ]

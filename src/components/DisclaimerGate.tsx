@@ -36,7 +36,7 @@ export function DisclaimerGate({ onAccept }: { onAccept: () => void }) {
       aria-labelledby="disclaimer-title"
       onKeyDown={onKeyDown}
     >
-      <div className="max-w-lg rounded-2xl border border-border-strong bg-surface p-6 shadow-2xl sm:p-8">
+      <div className="max-w-lg rounded-none border border-border bg-surface p-6 shadow-2xl sm:p-8">
         <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-accent">
           Please read
         </p>
@@ -45,13 +45,13 @@ export function DisclaimerGate({ onAccept }: { onAccept: () => void }) {
         </h1>
         <div className="mt-4 space-y-3 text-sm leading-relaxed text-muted">
           <p>
-            <strong className="text-text">Signals</strong> explains railway signals and
+            <strong className="text-ink">Signals</strong> explains railway signals and
             safety systems as they are represented in the video game{' '}
             <em>Train Sim World</em>. It exists to help players understand what they see
             in-game.
           </p>
           <p>
-            It is <strong className="text-text">not</strong> a training resource for real
+            It is <strong className="text-ink">not</strong> a training resource for real
             railway signalling, and must never be used to operate, work on, or make
             decisions about real trains or infrastructure. Real signalling is governed by
             official rules and formal training. Details here are simplified and may differ
@@ -63,7 +63,7 @@ export function DisclaimerGate({ onAccept }: { onAccept: () => void }) {
           ref={buttonRef}
           type="button"
           onClick={accept}
-          className="mt-6 w-full rounded-xl bg-accent px-4 py-3 font-semibold text-accent-contrast transition hover:brightness-110 focus-visible:brightness-110"
+          className="mt-6 w-full rounded-none bg-accent px-4 py-3 font-semibold text-white transition hover:brightness-110 focus-visible:brightness-110"
         >
           I understand — enter Signals
         </button>

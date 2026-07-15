@@ -112,7 +112,7 @@ function Glyph({
         minWidth: size,
         width: w,
         height: size,
-        borderRadius: 5,
+        borderRadius: 2,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -337,7 +337,7 @@ function SignView({ panel, scale }: { panel: SignPanel; scale: number }) {
       height: h,
       background: bg,
       border: `${bw}px solid ${bc}`,
-      borderRadius: 6 * scale,
+      borderRadius: 2 * scale,
       boxSizing: 'border-box' as const,
     })
 

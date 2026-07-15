@@ -16,12 +16,12 @@ export function CountrySwitcher() {
       <select
         value={current.code}
         onChange={(e) => navigate(`/${e.target.value}`)}
-        className="rounded-lg border border-border bg-surface-2 px-2 py-1.5 text-text"
+        className="rounded-none border border-border bg-surface-2 px-2 py-1.5 text-ink"
         aria-label="Choose country"
       >
         {COUNTRIES.map((c) => (
           <option key={c.code} value={c.code} disabled={c.status !== 'live'}>
-            {c.flag} {c.name}
+            {c.name}
             {c.status !== 'live' ? ' — coming soon' : ''}
           </option>
         ))}

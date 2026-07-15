@@ -16,12 +16,12 @@ export function SafetySystemPage() {
   return (
     <article className="mx-auto max-w-3xl">
       <nav className="text-sm text-muted">
-        <Link to={`${base}/safety`} className="hover:text-text">
+        <Link to={`${base}/safety`} className="hover:text-ink">
           Safety systems
         </Link>
       </nav>
       <div className="mt-3 flex items-baseline gap-3">
-        <span className="rounded bg-surface-2 px-2 py-1 font-mono text-sm font-bold text-accent">
+        <span className="rounded-none bg-surface-2 px-2 py-1 font-mono text-sm font-bold text-accent">
           {system.abbr}
         </span>
         <h1 className="text-3xl font-bold">{system.name}</h1>

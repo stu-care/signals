@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useCurrentCountry } from '@/lib/useCurrentCountry'
 import { buildSearchIndex, search, type SearchKind } from '@/lib/search'
+import { SearchIcon } from '@/components/icons'
 
 const KIND_LABEL: Record<SearchKind, string> = {
   aspect: 'Aspect',
@@ -83,11 +84,11 @@ export function Search() {
         ref={triggerRef}
         type="button"
         onClick={() => setOpen(true)}
-        className="rounded-lg border border-border bg-surface-2 px-2.5 py-1.5 text-sm text-muted transition hover:text-text"
+        className="flex items-center justify-center border border-border bg-surface-2 p-2 text-muted transition hover:border-faint hover:text-ink"
         aria-label="Search"
         title="Search ( / )"
       >
-        <span aria-hidden>🔍</span>
+        <SearchIcon className="size-4" />
       </button>
 
       {open && (
@@ -96,7 +97,7 @@ export function Search() {
           onClick={() => setOpen(false)}
         >
           <div
-            className="w-full max-w-lg overflow-hidden rounded-2xl border border-border-strong bg-surface shadow-2xl"
+            className="w-full max-w-lg overflow-hidden rounded-none border border-border bg-surface shadow-2xl"
             role="dialog"
             aria-modal="true"
             aria-label="Search Signals"
@@ -139,7 +140,7 @@ export function Search() {
                           {r.subtitle}
                         </span>
                       </span>
-                      <span className="shrink-0 rounded bg-bg px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-faint">
+                      <span className="shrink-0 rounded-none bg-bg px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-faint">
                         {KIND_LABEL[r.kind]}
                       </span>
                     </button>

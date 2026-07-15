@@ -16,7 +16,7 @@ export function Field({
   return (
     <section
       className={[
-        'mt-6 rounded-xl p-4',
+        'mt-6 rounded-none p-4',
         highlight
           ? 'border border-accent/40 bg-accent/5'
           : 'border border-border bg-surface',

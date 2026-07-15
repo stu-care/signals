@@ -20,10 +20,10 @@ export function SafetySystemsPage() {
           <li key={s.id}>
             <Link
               to={`/${country.code}/safety/${s.id}`}
-              className="block h-full rounded-2xl border border-border bg-surface p-5 transition hover:border-border-strong hover:bg-surface-2"
+              className="block h-full rounded-none border border-border bg-surface p-5 transition hover:border-faint hover:bg-surface-2"
             >
               <div className="flex items-baseline gap-2">
-                <span className="rounded bg-surface-2 px-2 py-0.5 font-mono text-sm font-bold text-accent">
+                <span className="rounded-none bg-surface-2 px-2 py-0.5 font-mono text-sm font-bold text-accent">
                   {s.abbr}
                 </span>
                 <h2 className="text-lg font-semibold">{s.name}</h2>

@@ -136,7 +136,7 @@ export function BuilderPage() {
       </div>
 
       <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,340px)_1fr]">
-        <div className="rounded-2xl border border-border bg-surface p-6">
+        <div className="rounded-none border border-border bg-surface p-6">
           <div className="flex min-h-[220px] items-center justify-center py-4">
             <SignalRenderer panels={variant.panels} state={signalState} scale={1.9} showInactive />
           </div>
@@ -149,7 +149,7 @@ export function BuilderPage() {
                   key={lamp.id}
                   type="button"
                   onClick={() => cycleLamp(lamp.id)}
-                  className="flex w-full items-center justify-between rounded-lg border border-border bg-white px-3 py-2 text-left text-sm transition hover:border-accent"
+                  className="flex w-full items-center justify-between rounded-none border border-border bg-white px-3 py-2 text-left text-sm transition hover:border-accent"
                   aria-pressed={s !== 'off'}
                 >
                   <span className="flex items-center gap-2">
@@ -176,13 +176,13 @@ export function BuilderPage() {
                   key={arm.id}
                   type="button"
                   onClick={() => toggleArm(arm.id)}
-                  className="flex w-full items-center justify-between rounded-lg border border-border bg-white px-3 py-2 text-left text-sm transition hover:border-accent"
+                  className="flex w-full items-center justify-between rounded-none border border-border bg-white px-3 py-2 text-left text-sm transition hover:border-accent"
                   aria-pressed={pos === 'clear'}
                 >
                   <span>{arm.label}</span>
                   <span
                     className={[
-                      'rounded px-2 py-0.5 text-xs font-semibold',
+                      'rounded-none px-2 py-0.5 text-xs font-semibold',
                       pos === 'clear' ? 'bg-sig-green/15 text-sig-green' : 'bg-sig-red/15 text-sig-red',
                     ].join(' ')}
                   >
@@ -200,7 +200,7 @@ export function BuilderPage() {
                   key={p.id}
                   type="button"
                   onClick={() => toggleAux(p.id)}
-                  className="flex w-full items-center justify-between rounded-lg border border-border bg-white px-3 py-2 text-left text-sm transition hover:border-accent"
+                  className="flex w-full items-center justify-between rounded-none border border-border bg-white px-3 py-2 text-left text-sm transition hover:border-accent"
                   aria-pressed={state.on.includes(p.id)}
                 >
                   <span>{'label' in p ? p.label : p.id}</span>
@@ -210,14 +210,14 @@ export function BuilderPage() {
               {glyphs.map((p) => (
                 <label
                   key={p.id}
-                  className="flex items-center justify-between gap-3 rounded-lg border border-border bg-white px-3 py-2 text-sm"
+                  className="flex items-center justify-between gap-3 rounded-none border border-border bg-white px-3 py-2 text-sm"
                 >
                   <span>{p.label}</span>
                   <input
                     value={state.glyphs[p.id] ?? ''}
                     onChange={(e) => setGlyph(p.id, e.target.value.slice(0, 3).toUpperCase())}
                     placeholder="—"
-                    className="w-16 rounded border border-border bg-surface px-2 py-1 text-center font-mono"
+                    className="w-16 rounded-none border border-border bg-surface px-2 py-1 text-center font-mono"
                     aria-label={p.label}
                   />
                 </label>
@@ -229,21 +229,21 @@ export function BuilderPage() {
             <button
               type="button"
               onClick={clearAll}
-              className="flex-1 rounded-lg border border-border px-3 py-2 text-sm transition hover:bg-surface-2"
+              className="flex-1 rounded-none border border-border px-3 py-2 text-sm transition hover:bg-surface-2"
             >
               Clear
             </button>
             <button
               type="button"
               onClick={share}
-              className="flex-1 rounded-lg border border-border px-3 py-2 text-sm transition hover:bg-surface-2"
+              className="flex-1 rounded-none border border-border px-3 py-2 text-sm transition hover:bg-surface-2"
             >
-              {copied ? 'Link copied ✓' : 'Share this'}
+              {copied ? 'Link copied' : 'Share this'}
             </button>
           </div>
         </div>
 
-        <div className="rounded-2xl border border-border bg-surface p-6" aria-live="polite">
+        <div className="rounded-none border border-border bg-surface p-6" aria-live="polite">
           <p className="font-mono text-xs font-semibold uppercase tracking-widest text-accent">
             Interpretation
           </p>
@@ -264,7 +264,7 @@ export function BuilderPage() {
               </div>
               <p className="mt-1 text-lg text-accent">{result.aspect.meaning}</p>
               <p className="mt-4">{result.aspect.whatItMeans}</p>
-              <div className="mt-4 rounded-xl border border-border bg-surface-2 p-4">
+              <div className="mt-4 rounded-none border border-border bg-surface-2 p-4">
                 <p className="font-mono text-xs font-semibold uppercase tracking-widest text-muted">
                   What you do
                 </p>
@@ -323,7 +323,7 @@ function Chip({ active, onClick, children }: { active: boolean; onClick: () => v
       onClick={onClick}
       aria-pressed={active}
       className={[
-        'rounded-full border px-3 py-1.5 text-sm font-medium transition',
+        'rounded-none border px-3 py-1.5 text-sm font-medium transition',
         active ? 'border-accent bg-accent text-white' : 'border-border bg-white text-muted hover:border-accent',
       ].join(' ')}
     >
@@ -337,7 +337,7 @@ function StateBadge({ state }: { state: DotState }) {
   return (
     <span
       className={[
-        'rounded px-2 py-0.5 text-xs font-semibold',
+        'rounded-none px-2 py-0.5 text-xs font-semibold',
         state === 'off' ? 'bg-surface-2 text-muted' : 'bg-accent/12 text-accent',
       ].join(' ')}
     >

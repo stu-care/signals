@@ -32,7 +32,7 @@ export function CataloguePage() {
                   <li key={aspect.id}>
                     <Link
                       to={`/${country.code}/aspect/${family.id}/${variant.id}/${aspect.id}`}
-                      className="flex h-full flex-col items-center rounded-xl border border-border bg-surface p-4 text-center transition hover:border-border-strong hover:bg-surface-2"
+                      className="flex h-full flex-col items-center rounded-none border border-border bg-surface p-4 text-center transition hover:border-faint hover:bg-surface-2"
                     >
                       <div className="flex min-h-[92px] items-center justify-center">
                         <SignalRenderer

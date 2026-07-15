@@ -17,7 +17,6 @@ export interface Country {
   name: string
   short: string
   adjective: string
-  flag: string
   status: 'live' | 'coming-soon'
 }
 
