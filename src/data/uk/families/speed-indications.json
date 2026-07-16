@@ -1,22 +1,22 @@
 {
   "id": "speed-indications",
   "name": "Speed boards",
-  "blurb": "Reflective boards giving the permitted speed — permanent limits and temporary restrictions.",
-  "intro": "Speed boards tell you the maximum speed for the line ahead. Permanent Speed Restriction (PSR) boards mark a lasting limit; Temporary and Emergency Speed Restriction (TSR/ESR) boards mark a limit imposed for engineering work or a fault, warned in advance and later cancelled. Speeds are in miles per hour.",
+  "blurb": "Lineside indicators giving the permitted speed — permanent limits, their warnings, and temporary restrictions.",
+  "intro": "Speed boards tell you the maximum speed for the line ahead. Permissible speed indicators mark a lasting limit, sometimes with an advance warning indicator and a route arrow where different speeds apply to diverging routes. Temporary and Emergency Speed Restriction (TSR/ESR) boards mark a limit imposed for engineering work or a fault, warned in advance and later cancelled. Speeds are in miles per hour. The exact styling of lineside signs varies by route and era; these are representative depictions of what you meet in Train Sim World.",
   "order": 5,
   "variants": [
     {
       "id": "psr",
-      "name": "Permissible speed indicator (PSR)",
-      "shortName": "PSR",
-      "blurb": "White reflective board with black figures — the permanent line-speed limit.",
+      "name": "Permissible speed indicator",
+      "shortName": "Permissible",
+      "blurb": "Red ring with a black figure — the permitted line speed from here on.",
       "panels": [
         {
           "type": "sign",
           "id": "psr",
           "kind": "psr",
           "primary": "40",
-          "size": 34,
+          "size": 32,
           "label": "Permissible speed indicator showing 40"
         }
       ],
@@ -26,22 +26,23 @@
           "name": "Permissible speed",
           "meaning": "Maximum permitted speed",
           "concept": "psr",
-          "whatItMeans": "The figure is the maximum speed (mph) permitted from this board onwards, until the next speed board. Here, 40 mph.",
+          "whatItMeans": "The figure is the maximum speed (mph) permitted from this indicator onwards, until the next speed board. Here, 40 mph.",
           "whatYouDo": "Be at or below the shown speed by the time the front of your train reaches the board.",
-          "lookAlikes": "A single white board with black figures is a permanent limit. Two figures stacked is a differential board; a yellow board with two white spots warns of a temporary restriction.",
+          "lookAlikes": "A single figure in a red ring is a plain permissible limit. Two figures split by a line is a differential; a white downward triangle with a yellow border is an advance warning; a yellow-green board with two white spots warns of a temporary restriction.",
           "controls": "Brake in good time so you are at the limit by the board.",
-          "realWorldNote": "Some PSR boards are preceded by a warning indicator with an AWS magnet where the reduction is large. The game models the boards; the exact warning arrangements vary by route.",
+          "realWorldNote": "Lineside permissible speed indicators come in more than one style on the real railway (including plain white boards with black figures). The figure is what matters — it is the permitted line speed.",
           "related": [
-            "psr-diff"
+            "psr-diff",
+            "psr-warn"
           ]
         }
       ]
     },
     {
       "id": "psr-differential",
-      "name": "Differential speed board",
+      "name": "Differential speed indicator",
       "shortName": "Differential",
-      "blurb": "Two figures: a higher limit for some trains, a lower one for others.",
+      "blurb": "Two figures split by a line: a higher limit for some trains, a lower one for others.",
       "panels": [
         {
           "type": "sign",
@@ -49,8 +50,8 @@
           "kind": "psr-diff",
           "primary": "60",
           "secondary": "90",
-          "size": 30,
-          "label": "Differential speed board showing 60 over 90"
+          "size": 32,
+          "label": "Differential speed indicator showing 60 over 90"
         }
       ],
       "aspects": [
@@ -59,7 +60,7 @@
           "name": "Differential speed",
           "meaning": "Two limits by train type",
           "concept": "psr-diff",
-          "whatItMeans": "Two limits apply depending on the type of train. The figure BELOW the line is the higher speed and applies to passenger trains, parcels and light locomotives; the figure ABOVE the line is the lower speed and applies to other traffic such as freight. Here, 90 mph for passenger trains or 60 mph for freight.",
+          "whatItMeans": "Two limits apply depending on the type of train, split by a horizontal line. The figure BELOW the line is the higher speed and applies to passenger trains, parcels and light locomotives; the figure ABOVE the line is the lower speed and applies to other traffic such as freight. Here, 90 mph for passenger trains or 60 mph for freight.",
           "whatYouDo": "Obey the figure that applies to the train you are driving. If you are unsure which applies, use the lower (slower) speed.",
           "controls": "Brake to the applicable limit by the board.",
           "realWorldNote": "Which figure applies is set by the train’s classification and route rules. In Train Sim World, follow the limit indicated for your service.",
@@ -70,11 +71,132 @@
       ]
     },
     {
+      "id": "psr-warning",
+      "name": "Permissible speed warning indicator",
+      "shortName": "Warning",
+      "blurb": "White downward triangle with a yellow border and black figure — advance warning of a lower permissible speed.",
+      "panels": [
+        {
+          "type": "sign",
+          "id": "psrwarn",
+          "kind": "psr-warn",
+          "primary": "40",
+          "size": 34,
+          "label": "Permissible speed warning indicator showing 40"
+        }
+      ],
+      "aspects": [
+        {
+          "id": "psr-warn",
+          "name": "Speed warning",
+          "meaning": "Lower speed ahead — begin slowing",
+          "concept": "psr-warn",
+          "whatItMeans": "A white downward-pointing triangle with a yellow border and a black figure, fitted with an AWS magnet: a lower permissible speed is coming up. The figure is the speed you must be down to by the permissible speed indicator ahead. Here, 40 mph.",
+          "whatYouDo": "Acknowledge the AWS warning and brake so you are at the shown speed by the time you reach the permissible speed indicator.",
+          "safetyInteraction": "The AWS magnet at the warning indicator sounds the horn — acknowledge it, then brake for the reduction.",
+          "controls": "Acknowledge AWS (default: Q) and brake for the lower speed.",
+          "realWorldNote": "Warning indicators are provided where a speed reduction is large enough to need advance warning; not every permissible speed indicator has one.",
+          "related": [
+            "psr",
+            "psr-warn-diverge"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "psr-diverging",
+      "name": "Diverging-route speed indicator",
+      "shortName": "Diverging",
+      "blurb": "A red-bordered arrow panel above the permissible speed — the speed applies to the route that way.",
+      "panels": [
+        {
+          "type": "sign",
+          "id": "divarrow",
+          "kind": "psr-diverge",
+          "arrow": "left",
+          "size": 30,
+          "label": "Diverging-route arrow pointing left"
+        },
+        {
+          "type": "sign",
+          "id": "divspeed",
+          "kind": "psr",
+          "primary": "25",
+          "size": 30,
+          "label": "Permissible speed 25"
+        }
+      ],
+      "aspects": [
+        {
+          "id": "psr-diverge",
+          "name": "Diverging-route speed",
+          "meaning": "Speed for the diverging route",
+          "concept": "psr-diverge",
+          "whatItMeans": "A shallow arrow panel sits above the speed indicator, matching its style (red border, black arrow, white ground). The arrow shows that the permissible speed below applies to the route diverging that way. Here, 25 mph for the left-hand route.",
+          "whatYouDo": "If you are routed the way the arrow points, obey the speed shown below; otherwise keep to the main permissible speed.",
+          "controls": "Read the junction indicator (feather) to confirm your route, then hold the matching speed.",
+          "realWorldNote": "Route-differential speed indicators appear at junctions where the diverging line has a lower limit. The arrow direction matches the diverging route.",
+          "related": [
+            "psr",
+            "psr-warn-diverge"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "psr-warning-diverging",
+      "name": "Diverging-route warning indicator",
+      "shortName": "Diverging warning",
+      "blurb": "A yellow-bordered arrow panel above the speed warning — advance warning for the diverging route.",
+      "panels": [
+        {
+          "type": "sign",
+          "id": "warndivarrow",
+          "kind": "psr-warn-diverge",
+          "arrow": "right",
+          "size": 30,
+          "label": "Diverging-route warning arrow pointing left"
+        },
+        {
+          "type": "sign",
+          "id": "warndivspeed",
+          "kind": "psr-warn",
+          "primary": "25",
+          "size": 30,
+          "label": "Speed warning 25"
+        }
+      ],
+      "aspects": [
+        {
+          "id": "psr-warn-diverge",
+          "name": "Diverging-route warning",
+          "meaning": "Lower speed ahead on the diverging route",
+          "concept": "psr-warn-diverge",
+          "whatItMeans": "The warning version: a shallow arrow panel above the warning indicator, matching its style (yellow border, black arrow, white ground). It warns in advance of the speed for the route that diverges in the direction of the arrow. Here, 25 mph for the left-hand route ahead.",
+          "whatYouDo": "If you are being routed that way, acknowledge any AWS warning and begin braking so you are at the shown speed by the diverging-route speed indicator.",
+          "safetyInteraction": "Where AWS is fitted, the horn sounds at the warning indicator — acknowledge it, then brake.",
+          "controls": "Acknowledge AWS (default: Q) if it sounds, and brake for the diverging-route speed.",
+          "related": [
+            "psr-diverge",
+            "psr-warn"
+          ]
+        }
+      ]
+    },
+    {
       "id": "tsr-warning",
       "name": "TSR warning indicator",
       "shortName": "TSR warning",
-      "blurb": "Yellow board with two white spots — warns a temporary restriction is coming.",
+      "blurb": "Yellow-green board with two white spots — warns a temporary restriction is coming.",
       "panels": [
+        {
+          "type": "sign",
+          "id": "sign-lfut8",
+          "kind": "tsr-commence",
+          "primary": "40",
+          "size": 34,
+          "label": "Sign"
+        },
         {
           "type": "sign",
           "id": "tsrwarn",
@@ -89,7 +211,7 @@
           "name": "TSR warning",
           "meaning": "Restriction ahead — be ready to slow",
           "concept": "tsr-warn",
-          "whatItMeans": "A yellow board with two white spots, fitted with an AWS magnet: a temporary speed restriction is coming up, so you get an in-cab warning before the speed indicator.",
+          "whatItMeans": "A yellow-green board with two white spots side by side, fitted with an AWS magnet: a temporary speed restriction is coming up, so you get an in-cab warning before the speed indicator.",
           "whatYouDo": "Begin braking so you are at the temporary limit by the commencement (speed) board.",
           "safetyInteraction": "The AWS magnet at the warning board sounds the horn — acknowledge it, then brake for the restriction.",
           "controls": "Acknowledge AWS (default: Q) and brake for the restriction.",
@@ -105,7 +227,7 @@
       "id": "tsr-commencement",
       "name": "TSR speed indicator",
       "shortName": "TSR speed",
-      "blurb": "The temporary speed itself — reduce to this figure by the board.",
+      "blurb": "The temporary speed itself — a black figure on a yellow-green board.",
       "panels": [
         {
           "type": "sign",
@@ -136,7 +258,7 @@
       "id": "tsr-termination",
       "name": "TSR termination indicator",
       "shortName": "TSR ends",
-      "blurb": "Marks the end of a temporary restriction — resume line speed once clear.",
+      "blurb": "Marks the end of a temporary restriction — a black “T” on a yellow-green board.",
       "panels": [
         {
           "type": "sign",

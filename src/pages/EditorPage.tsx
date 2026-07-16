@@ -5,6 +5,7 @@ import type {
   DotState,
   FeatherPanel,
   GlyphPanel,
+  JunctionPanel,
   LampColour,
   LampsPanel,
   Panel,
@@ -13,6 +14,7 @@ import type {
   SignalVariant,
 } from '@/data/types'
 import { SignalRenderer } from '@/components/signal/SignalRenderer'
+import { roundedPolyPath } from '@/lib/shape'
 import { ArrowRightIcon, ChevronDownIcon, ChevronUpIcon, CloseIcon } from '@/components/icons'
 import { listFamilies, loadFamily, saveFamily } from '@/lib/editor-api'
 import { COUNTRIES } from '@/data/countries'
@@ -167,7 +169,7 @@ function Editor() {
 
   const aspect = variant.aspects[selAspect]
   const aspectState = aspect
-    ? { lamps: aspect.lamps, arms: aspect.arms, on: aspect.on, glyphs: aspect.glyphs }
+    ? { lamps: aspect.lamps, arms: aspect.arms, on: aspect.on, feathers: aspect.feathers, glyphs: aspect.glyphs }
     : undefined
 
   return (
@@ -264,6 +266,7 @@ function StructureEditor({
     else if (type === 'arm') np = { type, id, kind: 'stop', label: 'Arm' }
     else if (type === 'poslight') np = { type, id, dir: 'ur', r: 7, label: 'Position light' }
     else if (type === 'feather') np = { type, id, dir: 'ur', r: 5, label: 'Feather' }
+    else if (type === 'junction') np = { type, id, positions: [1, 2, 3, 4, 5, 6], r: 5, label: 'Junction indicator' }
     else if (type === 'glyph') np = { type, id, size: 24, label: 'Glyph' }
     else np = { type: 'sign', id, kind: 'psr', primary: '40', size: 34, label: 'Sign' }
     mutVariant((v) => v.panels.push(np))
@@ -277,7 +280,7 @@ function StructureEditor({
         <div className="flex items-center justify-between">
           <p className={label()}>Panels (top → bottom)</p>
           <div className="flex flex-wrap gap-1">
-            {(['lamps', 'arm', 'feather', 'poslight', 'glyph', 'sign'] as const).map((t) => (
+            {(['lamps', 'arm', 'feather', 'junction', 'poslight', 'glyph', 'sign'] as const).map((t) => (
               <button key={t} onClick={() => addPanel(t)} className="rounded-none border border-border px-2 py-1 text-xs hover:border-accent">+ {t}</button>
             ))}
           </div>
@@ -317,22 +320,50 @@ function LampsEditor({
   mutVariant: (fn: (v: SignalVariant) => void) => void
 }) {
   const canvasRef = useRef<HTMLDivElement>(null)
-  const [drag, setDrag] = useState<string | null>(null)
+  const [drag, setDrag] = useState<{ k: 'dot'; id: string } | { k: 'pt'; i: number } | null>(null)
+  const [selPoint, setSelPoint] = useState<number | null>(null)
+  useEffect(() => { setSelPoint(null) }, [panel.id])
+
   const editPanel = (fn: (p: LampsPanel) => void) =>
     mutVariant((v) => { const p = v.panels.find((x) => x.id === panel.id); if (p?.type === 'lamps') fn(p) })
+  const clamp = (v: number, hi: number) => Math.max(0, Math.min(hi, v))
 
   const toCoords = (e: PointerEvent) => {
     const r = canvasRef.current!.getBoundingClientRect()
     return { x: Math.round((e.clientX - r.left) / CANVAS_SCALE), y: Math.round((e.clientY - r.top) / CANVAS_SCALE) }
   }
   const dot = panel.lamps.find((l) => l.id === selDot) ?? null
+  const bp = panel.backplate
+  const point = bp && selPoint != null ? bp.points[selPoint] : null
+
+  const addBackplate = () => {
+    editPanel((p) => {
+      const pad = 2
+      p.backplate = { points: [
+        { x: pad, y: pad, r: 6 },
+        { x: p.w - pad, y: pad, r: 6 },
+        { x: p.w - pad, y: p.h - pad, r: 6 },
+        { x: pad, y: p.h - pad, r: 6 },
+      ] }
+    })
+    setSelDot(null)
+    setSelPoint(0)
+  }
+  const addPoint = () => {
+    if (!bp) return
+    const i = selPoint ?? bp.points.length - 1
+    const a = bp.points[i]
+    const b = bp.points[(i + 1) % bp.points.length]
+    editPanel((p) => { p.backplate?.points.splice(i + 1, 0, { x: Math.round((a.x + b.x) / 2), y: Math.round((a.y + b.y) / 2), r: 0 }) })
+    setSelPoint(i + 1)
+  }
 
   return (
     <div className="rounded-none border border-border bg-surface p-4">
       <div className="flex items-center justify-between">
         <p className={label()}>Dots — drag to position</p>
         <button
-          onClick={() => { const id = uid('dot'); editPanel((p) => p.lamps.push({ id, color: 'red', x: Math.round(p.w / 2), y: Math.round(p.h / 2), r: 11, label: 'Dot' })); setSelDot(id) }}
+          onClick={() => { const id = uid('dot'); editPanel((p) => p.lamps.push({ id, color: 'red', x: Math.round(p.w / 2), y: Math.round(p.h / 2), r: 11, label: 'Dot' })); setSelDot(id); setSelPoint(null) }}
           className="rounded-none border border-border px-2 py-1 text-xs hover:border-accent"
         >
           + dot
@@ -344,14 +375,30 @@ function LampsEditor({
           ref={canvasRef}
           className="relative shrink-0 rounded-none border border-dashed border-border bg-white"
           style={{ width: panel.w * CANVAS_SCALE, height: panel.h * CANVAS_SCALE }}
-          onPointerMove={(e) => { if (drag) { const c = toCoords(e); editPanel((p) => { const l = p.lamps.find((x) => x.id === drag); if (l) { l.x = Math.max(0, Math.min(p.w, c.x)); l.y = Math.max(0, Math.min(p.h, c.y)) } }) } }}
+          onPointerMove={(e) => {
+            if (!drag) return
+            const c = toCoords(e)
+            if (drag.k === 'dot') editPanel((p) => { const l = p.lamps.find((x) => x.id === drag.id); if (l) { l.x = clamp(c.x, p.w); l.y = clamp(c.y, p.h) } })
+            else editPanel((p) => { const pt = p.backplate?.points[drag.i]; if (pt) { pt.x = clamp(c.x, p.w); pt.y = clamp(c.y, p.h) } })
+          }}
           onPointerUp={() => setDrag(null)}
           onPointerLeave={() => setDrag(null)}
         >
+          {bp && bp.points.length >= 2 && (
+            <svg
+              className="pointer-events-none absolute inset-0"
+              width={panel.w * CANVAS_SCALE}
+              height={panel.h * CANVAS_SCALE}
+              viewBox={`0 0 ${panel.w} ${panel.h}`}
+              style={{ overflow: 'visible' }}
+            >
+              <path d={roundedPolyPath(bp.points)} fill="none" stroke="rgba(20,24,34,.4)" strokeWidth={1.3} strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+            </svg>
+          )}
           {panel.lamps.map((l) => (
             <div
               key={l.id}
-              onPointerDown={(e) => { (e.target as Element).setPointerCapture(e.pointerId); setSelDot(l.id); setDrag(l.id) }}
+              onPointerDown={(e) => { (e.target as Element).setPointerCapture(e.pointerId); setSelDot(l.id); setSelPoint(null); setDrag({ k: 'dot', id: l.id }) }}
               className="absolute rounded-full"
               style={{
                 left: (l.x - l.r) * CANVAS_SCALE, top: (l.y - l.r) * CANVAS_SCALE,
@@ -361,11 +408,48 @@ function LampsEditor({
               }}
             />
           ))}
+          {bp?.points.map((pt, i) => (
+            <div
+              key={i}
+              onPointerDown={(e) => { (e.target as Element).setPointerCapture(e.pointerId); setSelPoint(i); setSelDot(null); setDrag({ k: 'pt', i }) }}
+              className="absolute"
+              style={{ left: pt.x * CANVAS_SCALE - 5, top: pt.y * CANVAS_SCALE - 5, width: 10, height: 10, background: i === selPoint ? '#2f6fed' : '#ffffff', border: '2px solid #2f6fed', borderRadius: 2, cursor: 'grab' }}
+              title={`point ${i + 1}`}
+            />
+          ))}
         </div>
 
         <div className="flex-1 space-y-2 text-sm">
           <NumRow label="panel w" value={panel.w} onChange={(n) => editPanel((p) => { p.w = n })} />
           <NumRow label="panel h" value={panel.h} onChange={(n) => editPanel((p) => { p.h = n })} />
+
+          <div className="mt-1 flex items-center justify-between border-t border-border pt-3">
+            <p className={label()}>Backplate</p>
+            {bp ? (
+              <button onClick={() => { editPanel((p) => { delete p.backplate }); setSelPoint(null) }} className="text-xs text-sig-red">remove</button>
+            ) : (
+              <button onClick={addBackplate} className="rounded-none border border-border px-2 py-1 text-xs hover:border-accent">+ backplate</button>
+            )}
+          </div>
+          {bp && (
+            <>
+              <button onClick={addPoint} className="rounded-none border border-border px-2 py-1 text-xs hover:border-accent">+ point</button>
+              {point ? (
+                <div className="space-y-2">
+                  <p className="font-mono text-xs text-muted">point {(selPoint ?? 0) + 1} of {bp.points.length} — drag on the canvas</p>
+                  <NumRow label="x" value={point.x} onChange={(n) => editPanel((p) => { const pt = p.backplate?.points[selPoint ?? 0]; if (pt) pt.x = n })} />
+                  <NumRow label="y" value={point.y} onChange={(n) => editPanel((p) => { const pt = p.backplate?.points[selPoint ?? 0]; if (pt) pt.y = n })} />
+                  <NumRow label="corner r" value={point.r ?? 0} onChange={(n) => editPanel((p) => { const pt = p.backplate?.points[selPoint ?? 0]; if (pt) pt.r = Math.max(0, n) })} />
+                  {bp.points.length > 3 && (
+                    <button onClick={() => { editPanel((p) => { p.backplate?.points.splice(selPoint ?? 0, 1) }); setSelPoint(null) }} className="text-xs text-sig-red">Delete point</button>
+                  )}
+                </div>
+              ) : (
+                <p className="text-xs text-faint">Tap a point handle to shape the outline, or + point to add one.</p>
+              )}
+            </>
+          )}
+
           {dot ? (
             <div className="mt-3 space-y-2 border-t border-border pt-3">
               <p className={label()}>Selected dot</p>
@@ -378,8 +462,16 @@ function LampsEditor({
               <NumRow label="radius" value={dot.r} onChange={(n) => editPanel((p) => { const l = p.lamps.find((x) => x.id === dot.id); if (l) l.r = n })} />
               <NumRow label="x" value={dot.x} onChange={(n) => editPanel((p) => { const l = p.lamps.find((x) => x.id === dot.id); if (l) l.x = n })} />
               <NumRow label="y" value={dot.y} onChange={(n) => editPanel((p) => { const l = p.lamps.find((x) => x.id === dot.id); if (l) l.y = n })} />
-              <TextRow label="id" value={dot.id} onChange={(s) => editPanel((p) => { const l = p.lamps.find((x) => x.id === dot.id); if (l) l.id = s })} />
+              <TextRow label="id" value={dot.id} onChange={(s) => { editPanel((p) => { const l = p.lamps.find((x) => x.id === dot.id); if (l) l.id = s }); setSelDot(s) }} />
               <TextRow label="label" value={dot.label} onChange={(s) => editPanel((p) => { const l = p.lamps.find((x) => x.id === dot.id); if (l) l.label = s })} />
+              <label className="flex items-center justify-between gap-2">
+                <span>can flash</span>
+                <input
+                  type="checkbox"
+                  checked={!!dot.canFlash}
+                  onChange={(e) => editPanel((p) => { const l = p.lamps.find((x) => x.id === dot.id); if (l) l.canFlash = e.target.checked || undefined })}
+                />
+              </label>
               <button onClick={() => { editPanel((p) => { p.lamps = p.lamps.filter((x) => x.id !== dot.id) }); setSelDot(null) }} className="text-xs text-sig-red">Delete dot</button>
             </div>
           ) : (
@@ -400,17 +492,28 @@ function PanelPropsEditor({ panel, mutVariant }: { panel: Panel; mutVariant: (fn
       {panel.type === 'arm' && (
         <SelectRow label="kind" value={panel.kind} options={['stop', 'distant', 'banner']} onChange={(s) => edit((p) => { if (p.type === 'arm') p.kind = s as typeof panel.kind })} />
       )}
+      {panel.type === 'arm' && panel.kind === 'banner' && (
+        <SelectRow label="bar" value={panel.tone ?? 'black'} options={['black', 'green']} onChange={(s) => edit((p) => { if (p.type === 'arm') p.tone = s === 'green' ? 'green' : undefined })} />
+      )}
       {(panel.type === 'feather' || panel.type === 'poslight') && (
         <SelectRow label="dir" value={panel.dir ?? 'ur'} options={['ur', 'ul']} onChange={(s) => edit((p) => { if (p.type === 'feather' || p.type === 'poslight') p.dir = s as 'ur' | 'ul' })} />
+      )}
+      {panel.type === 'junction' && (
+        <TextRow
+          label="positions (1–6)"
+          value={panel.positions.join(',')}
+          onChange={(s) => edit((p) => { if (p.type === 'junction') p.positions = [...new Set(s.split(',').map((x) => parseInt(x.trim(), 10)).filter((n) => n >= 1 && n <= 6))].sort((a, b) => a - b) })}
+        />
       )}
       {panel.type === 'glyph' && (
         <TextRow label="fixed text" value={panel.text ?? ''} onChange={(s) => edit((p) => { if (p.type === 'glyph') p.text = s || undefined })} />
       )}
       {panel.type === 'sign' && (
         <>
-          <SelectRow label="kind" value={panel.kind} options={['psr', 'psr-diff', 'tsr-warn', 'tsr-commence', 'tsr-terminate']} onChange={(s) => edit((p) => { if (p.type === 'sign') p.kind = s as typeof panel.kind })} />
+          <SelectRow label="kind" value={panel.kind} options={['psr', 'psr-diff', 'psr-diverge', 'psr-warn', 'psr-warn-diverge', 'tsr-warn', 'tsr-commence', 'tsr-terminate', 'de-mast-main', 'de-vorsignaltafel']} onChange={(s) => edit((p) => { if (p.type === 'sign') p.kind = s as typeof panel.kind })} />
           <TextRow label="primary" value={panel.primary ?? ''} onChange={(s) => edit((p) => { if (p.type === 'sign') p.primary = s || undefined })} />
           <TextRow label="secondary" value={panel.secondary ?? ''} onChange={(s) => edit((p) => { if (p.type === 'sign') p.secondary = s || undefined })} />
+          <SelectRow label="arrow" value={panel.arrow ?? 'none'} options={['none', 'left', 'right']} onChange={(s) => edit((p) => { if (p.type === 'sign') p.arrow = s === 'none' ? undefined : (s as 'left' | 'right') })} />
         </>
       )}
     </div>
@@ -437,6 +540,7 @@ function AspectEditor({
   const aux = variant.panels.filter(
     (p): p is PosLightPanel | FeatherPanel => p.type === 'poslight' || p.type === 'feather',
   )
+  const junctions = variant.panels.filter((p): p is JunctionPanel => p.type === 'junction')
   const glyphs = variant.panels.filter(
     (p): p is GlyphPanel => p.type === 'glyph' && p.text === undefined,
   )
@@ -488,6 +592,30 @@ function AspectEditor({
                   <button key={p.id} onClick={() => editAspect((a) => { const set = new Set(a.on ?? []); on ? set.delete(p.id) : set.add(p.id); a.on = [...set] })} className="flex w-full items-center justify-between rounded-none border border-border px-3 py-1.5">
                     <span>{p.label}</span><span className="font-mono text-xs">{on ? 'on' : 'off'}</span>
                   </button>
+                )
+              })}
+              {junctions.map((p) => {
+                const lit = aspect.feathers?.[p.id] ?? []
+                return (
+                  <div key={p.id} className="rounded-none border border-border px-3 py-1.5">
+                    <span>{p.label}</span>
+                    <div className="mt-1 flex flex-wrap gap-1">
+                      {p.positions.map((pos) => (
+                        <button
+                          key={pos}
+                          onClick={() => editAspect((a) => {
+                            const cur = a.feathers?.[p.id] ?? []
+                            const next = cur.includes(pos) ? cur.filter((x) => x !== pos) : [...cur, pos].sort((x, y) => x - y)
+                            a.feathers = { ...a.feathers, [p.id]: next }
+                            if (!next.length) delete a.feathers[p.id]
+                          })}
+                          className={chip(lit.includes(pos))}
+                        >
+                          {pos}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 )
               })}
               {glyphs.map((p) => (

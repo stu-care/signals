@@ -43,9 +43,42 @@
           "arms": {
             "banner": "clear"
           },
-          "whatItMeans": "The bar is inclined up to the right. The signal being repeated is “off” — it is showing a proceed aspect (green, or a single/double yellow), so it is not at danger.",
+          "whatItMeans": "The bar is inclined up to the left. The signal being repeated is “off” — it is showing a proceed aspect (green, or a single/double yellow), so it is not at danger.",
           "whatYouDo": "Continue, but still read the actual signal when it comes into view.",
           "controls": "Proceed, watching for the signal ahead.",
+          "related": [
+            "banner-on"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "banner-green",
+      "name": "Green banner repeater",
+      "shortName": "Green",
+      "blurb": "A banner whose disc turns green when the signal ahead is off; otherwise a black bar on white.",
+      "panels": [
+        {
+          "type": "arm",
+          "id": "banner",
+          "kind": "banner",
+          "tone": "green",
+          "label": "Banner bar"
+        }
+      ],
+      "aspects": [
+        {
+          "id": "off",
+          "name": "Inclined bar",
+          "meaning": "Signal ahead is off",
+          "concept": "banner-off",
+          "arms": {
+            "banner": "clear"
+          },
+          "whatItMeans": "The disc turns green and the black bar inclines up to the left. The signal being repeated is “off” — showing a proceed aspect — exactly as the inclined black-on-white bar indicates. The green background appears only in this off indication.",
+          "whatYouDo": "Continue, but still read the actual signal when it comes into view.",
+          "controls": "Proceed, watching for the signal ahead.",
+          "realWorldNote": "The classic banner repeater is a black bar on a white disc throughout. The green-disc off indication is a variant; treat it identically — the bar’s position carries the message.",
           "related": [
             "banner-on"
           ]

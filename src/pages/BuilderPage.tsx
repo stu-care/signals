@@ -12,12 +12,24 @@ import {
   glyphPanels,
   interpret,
   isExtinguished,
+  junctionPanels,
   lampSlots,
   type SignalState,
 } from '@/lib/interpret'
 import { ComingSoon } from '@/pages/ComingSoon'
 
+/** Lamps that can flash cycle off → on → flash; the rest just off → on. */
 const NEXT: Record<DotState, DotState> = { off: 'on', on: 'flash', flash: 'off' }
+const NEXT_NO_FLASH: Record<DotState, DotState> = { off: 'on', on: 'off', flash: 'off' }
+/** Human name for each junction-indicator position (1–3 left, 4–6 right). */
+const FEATHER_NAME: Record<number, string> = {
+  1: 'First left',
+  2: 'Second left',
+  3: 'Third left',
+  4: 'First right',
+  5: 'Second right',
+  6: 'Third right',
+}
 
 const DOT_FILL: Record<LampColour, string> = {
   red: '#e5372b',
@@ -46,6 +58,7 @@ export function BuilderPage() {
     const lampIds = new Set(lampSlots(variant).map((l) => l.id))
     const armIds = new Set(armPanels(variant).map((a) => a.id))
     const auxIds = new Set(auxPanels(variant).map((p) => p.id))
+    const junctionById = new Map(junctionPanels(variant).map((p) => [p.id, new Set(p.positions)]))
     const glyphIds = new Set(glyphPanels(variant).map((p) => p.id))
 
     const lamps: Record<string, DotState> = {}
@@ -53,10 +66,16 @@ export function BuilderPage() {
     const arms: Record<string, 'danger' | 'clear'> = {}
     for (const [id, p] of Object.entries(decoded.arms ?? {})) if (armIds.has(id) && p === 'clear') arms[id] = 'clear'
     const on = (decoded.on ?? []).filter((id) => auxIds.has(id))
+    const feathers: Record<string, number[]> = {}
+    for (const [id, ps] of Object.entries(decoded.feathers ?? {})) {
+      const allowed = junctionById.get(id)
+      const kept = allowed ? ps.filter((p) => allowed.has(p)) : []
+      if (kept.length) feathers[id] = kept
+    }
     const glyphs: Record<string, string> = {}
     for (const [id, v] of Object.entries(decoded.glyphs ?? {})) if (glyphIds.has(id) && v) glyphs[id] = v
 
-    return { familyId: family.id, variantId: variant.id, lamps, arms, on, glyphs }
+    return { familyId: family.id, variantId: variant.id, lamps, arms, on, feathers, glyphs }
   }, [data, params, country.code])
 
   if (!data || !state) return <ComingSoon country={country} />
@@ -69,22 +88,39 @@ export function BuilderPage() {
     setCopied(false)
   }
 
-  const selectFamily = (f: SignalFamily) =>
-    update({ familyId: f.id, variantId: f.variants[0].id, lamps: {}, arms: {}, on: [], glyphs: {} })
-  const selectVariant = (v: SignalVariant) =>
-    update({ ...state, variantId: v.id, lamps: {}, arms: {}, on: [], glyphs: {} })
+  const slots = lampSlots(variant)
+  const arms = armPanels(variant)
+  const aux = auxPanels(variant)
+  const junctions = junctionPanels(variant)
+  const glyphs = glyphPanels(variant)
+  const canFlashById = new Map(slots.map((l) => [l.id, !!l.canFlash]))
 
-  const cycleLamp = (id: string) =>
-    update({ ...state, lamps: { ...state.lamps, [id]: NEXT[state.lamps[id] ?? 'off'] } })
+  const selectFamily = (f: SignalFamily) =>
+    update({ familyId: f.id, variantId: f.variants[0].id, lamps: {}, arms: {}, on: [], feathers: {}, glyphs: {} })
+  const selectVariant = (v: SignalVariant) =>
+    update({ ...state, variantId: v.id, lamps: {}, arms: {}, on: [], feathers: {}, glyphs: {} })
+
+  const cycleLamp = (id: string) => {
+    const table = canFlashById.get(id) ? NEXT : NEXT_NO_FLASH
+    update({ ...state, lamps: { ...state.lamps, [id]: table[state.lamps[id] ?? 'off'] } })
+  }
   const toggleArm = (id: string) =>
     update({ ...state, arms: { ...state.arms, [id]: (state.arms[id] ?? 'danger') === 'clear' ? 'danger' : 'clear' } })
   const toggleAux = (id: string) =>
     update({ ...state, on: state.on.includes(id) ? state.on.filter((x) => x !== id) : [...state.on, id] })
+  const toggleFeather = (panelId: string, pos: number) => {
+    const cur = state.feathers[panelId] ?? []
+    const next = cur.includes(pos) ? cur.filter((p) => p !== pos) : [...cur, pos]
+    const feathers = { ...state.feathers }
+    if (next.length) feathers[panelId] = next
+    else delete feathers[panelId]
+    update({ ...state, feathers })
+  }
   const setGlyph = (id: string, v: string) =>
     update({ ...state, glyphs: { ...state.glyphs, [id]: v } })
-  const clearAll = () => update({ ...state, lamps: {}, arms: {}, on: [], glyphs: {} })
+  const clearAll = () => update({ ...state, lamps: {}, arms: {}, on: [], feathers: {}, glyphs: {} })
 
-  const signalState: SignalState = { lamps: state.lamps, arms: state.arms, on: state.on, glyphs: state.glyphs }
+  const signalState: SignalState = { lamps: state.lamps, arms: state.arms, on: state.on, feathers: state.feathers, glyphs: state.glyphs }
   const result = interpret(variant, signalState)
   const extinguished = isExtinguished(variant, signalState)
   const anyFlashing = Object.values(state.lamps).includes('flash')
@@ -97,11 +133,6 @@ export function BuilderPage() {
       setCopied(false)
     }
   }
-
-  const slots = lampSlots(variant)
-  const arms = armPanels(variant)
-  const aux = auxPanels(variant)
-  const glyphs = glyphPanels(variant)
   const armLabel = (kind: string, pos: 'danger' | 'clear') => {
     if (kind === 'banner') return pos === 'clear' ? 'Inclined (off)' : 'Horizontal (on)'
     return pos === 'clear' ? 'Clear (raised)' : 'Danger (horizontal)'
@@ -111,9 +142,9 @@ export function BuilderPage() {
     <div>
       <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Identify a signal</h1>
       <p className="mt-2 max-w-2xl text-muted">
-        Pick the signal type, then set it to match what you see — tap a dot to cycle it{' '}
-        <span className="whitespace-nowrap">off → on → flashing</span>, or toggle an arm. The
-        interpretation updates as you go.
+        Pick the signal type, then set it to match what you see — tap a dot to switch it{' '}
+        <span className="whitespace-nowrap">on and off</span> (lamps that can flash add a
+        flashing step), or toggle an arm. The interpretation updates as you go.
       </p>
 
       <div className="mt-6 space-y-3">
@@ -193,7 +224,7 @@ export function BuilderPage() {
             })}
           </div>
 
-          {(aux.length > 0 || glyphs.length > 0) && (
+          {(aux.length > 0 || junctions.length > 0 || glyphs.length > 0) && (
             <div className="mt-4 space-y-3 border-t border-border pt-4">
               {aux.map((p) => (
                 <button
@@ -207,6 +238,32 @@ export function BuilderPage() {
                   <StateBadge state={state.on.includes(p.id) ? 'on' : 'off'} />
                 </button>
               ))}
+              {junctions.map((p) => {
+                const lit = state.feathers[p.id] ?? []
+                return (
+                  <div key={p.id} className="rounded-none border border-border bg-white px-3 py-2 text-sm">
+                    <span className="text-muted">{p.label}</span>
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {p.positions.map((pos) => (
+                        <button
+                          key={pos}
+                          type="button"
+                          onClick={() => toggleFeather(p.id, pos)}
+                          aria-pressed={lit.includes(pos)}
+                          className={[
+                            'rounded-none border px-2 py-1 text-xs font-medium transition',
+                            lit.includes(pos)
+                              ? 'border-accent bg-accent text-white'
+                              : 'border-border bg-white text-muted hover:border-accent',
+                          ].join(' ')}
+                        >
+                          {FEATHER_NAME[pos] ?? `Pos ${pos}`}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )
+              })}
               {glyphs.map((p) => (
                 <label
                   key={p.id}

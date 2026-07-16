@@ -4,6 +4,7 @@ import type {
   Aspect,
   DotState,
   GlyphPanel,
+  JunctionPanel,
   LampSlot,
   Panel,
   SignalVariant,
@@ -22,6 +23,7 @@ export interface SignalState {
   lamps: Record<string, DotState>
   arms: Record<string, ArmPosition>
   on: string[]
+  feathers: Record<string, number[]>
   glyphs: Record<string, string>
 }
 
@@ -48,6 +50,9 @@ export function armPanels(variant: SignalVariant): ArmPanel[] {
 export function auxPanels(variant: SignalVariant): Panel[] {
   return variant.panels.filter((p) => p.type === 'poslight' || p.type === 'feather')
 }
+export function junctionPanels(variant: SignalVariant): JunctionPanel[] {
+  return variant.panels.filter((p): p is JunctionPanel => p.type === 'junction')
+}
 /** Glyph panels whose character is per-aspect (not a fixed static sign). */
 export function glyphPanels(variant: SignalVariant): GlyphPanel[] {
   return variant.panels.filter(
@@ -67,6 +72,13 @@ function distance(variant: SignalVariant, state: SignalState, aspect: Aspect): n
   }
   for (const p of auxPanels(variant)) {
     if (state.on.includes(p.id) !== !!aspect.on?.includes(p.id)) d += 1
+  }
+  for (const j of junctionPanels(variant)) {
+    const now = new Set(state.feathers[j.id] ?? [])
+    const want = new Set(aspect.feathers?.[j.id] ?? [])
+    for (const pos of j.positions) {
+      if (now.has(pos) !== want.has(pos)) d += 1
+    }
   }
   for (const g of glyphPanels(variant)) {
     if ((state.glyphs[g.id] ?? '') !== (aspect.glyphs?.[g.id] ?? '')) d += 1

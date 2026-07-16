@@ -1,0 +1,538 @@
+{
+  "id": "hv",
+  "name": "H/V Hauptsignal (DB)",
+  "blurb": "",
+  "intro": "",
+  "order": 100,
+  "variants": [
+    {
+      "id": "main",
+      "name": "Blocksignal",
+      "blurb": "Single block signal, Signal to use in blocks, without distant signal head",
+      "panels": [
+        {
+          "type": "lamps",
+          "id": "block",
+          "w": 88,
+          "h": 180,
+          "lamps": [
+            {
+              "id": "green",
+              "color": "green",
+              "x": 63,
+              "y": 150,
+              "r": 10,
+              "label": "Green"
+            },
+            {
+              "id": "red",
+              "color": "red",
+              "x": 25,
+              "y": 150,
+              "r": 10,
+              "label": "Red"
+            }
+          ],
+          "backplate": {
+            "points": [
+              {
+                "x": 5,
+                "y": 15,
+                "r": 2
+              },
+              {
+                "x": 15,
+                "y": 5,
+                "r": 2
+              },
+              {
+                "x": 73,
+                "y": 5,
+                "r": 2
+              },
+              {
+                "x": 83,
+                "y": 15,
+                "r": 2
+              },
+              {
+                "x": 83,
+                "y": 175,
+                "r": 2
+              },
+              {
+                "x": 5,
+                "y": 175,
+                "r": 2
+              }
+            ]
+          }
+        }
+      ],
+      "aspects": [
+        {
+          "id": "hp0",
+          "name": "Hp0 (Halt)",
+          "meaning": "Stop",
+          "concept": "stop",
+          "whatItMeans": "Stop. You must not pass this signal at danger without authority. The line ahead may be occupied, set against you, or unsafe.",
+          "whatYouDo": "Stop at the signal (at the stop line, before the signal). Wait for it to clear, or for instructions.",
+          "lamps": {
+            "hp0": "on",
+            "red": "on"
+          }
+        },
+        {
+          "id": "Hp1",
+          "name": "Hp1 (Fahrt)",
+          "meaning": "Clear",
+          "concept": "clear",
+          "whatItMeans": "The line ahead is clear for at least the next three signals. You may run at the maximum permitted line speed.",
+          "whatYouDo": "Proceed normally at line speed. Keep looking ahead — the next signal could be showing anything.",
+          "lamps": {
+            "hp1": "on",
+            "green": "on"
+          }
+        }
+      ],
+      "shortName": "block"
+    },
+    {
+      "id": "variant-9jevc",
+      "name": "Single distant signal",
+      "blurb": "Single distant signal ahead of block signals. It has an Ne2 plate.",
+      "panels": [
+        {
+          "type": "lamps",
+          "id": "distant",
+          "w": 130,
+          "h": 105,
+          "lamps": [
+            {
+              "id": "green-t",
+              "color": "green",
+              "x": 110,
+              "y": 20,
+              "r": 10,
+              "label": "Upper Green"
+            },
+            {
+              "id": "yellow-t",
+              "color": "yellow",
+              "x": 85,
+              "y": 20,
+              "r": 10,
+              "label": "Upper Yellow"
+            },
+            {
+              "id": "green-b",
+              "color": "green",
+              "x": 45,
+              "y": 85,
+              "r": 10,
+              "label": "Lower Green"
+            },
+            {
+              "id": "yellow-b",
+              "color": "yellow",
+              "x": 20,
+              "y": 85,
+              "r": 10,
+              "label": "Lower Yellow"
+            },
+            {
+              "id": "white",
+              "color": "white",
+              "x": 40,
+              "y": 30,
+              "r": 5,
+              "label": "White (Kennlicht)"
+            }
+          ],
+          "backplate": {
+            "points": [
+              {
+                "x": 5,
+                "y": 75,
+                "r": 2
+              },
+              {
+                "x": 40,
+                "y": 41,
+                "r": 2
+              },
+              {
+                "x": 29,
+                "y": 30,
+                "r": 100
+              },
+              {
+                "x": 40,
+                "y": 20,
+                "r": 131
+              },
+              {
+                "x": 52,
+                "y": 31,
+                "r": 2
+              },
+              {
+                "x": 80,
+                "y": 5,
+                "r": 2
+              },
+              {
+                "x": 115,
+                "y": 5,
+                "r": 2
+              },
+              {
+                "x": 125,
+                "y": 15,
+                "r": 2
+              },
+              {
+                "x": 125,
+                "y": 30,
+                "r": 0
+              },
+              {
+                "x": 50,
+                "y": 100,
+                "r": 2
+              },
+              {
+                "x": 15,
+                "y": 100,
+                "r": 2
+              },
+              {
+                "x": 5,
+                "y": 90,
+                "r": 2
+              }
+            ]
+          }
+        },
+        {
+          "type": "sign",
+          "id": "sign-dtyil",
+          "kind": "de-vorsignaltafel",
+          "size": 34,
+          "label": "Sign"
+        }
+      ],
+      "aspects": [
+        {
+          "id": "vr0",
+          "name": "Vr0 (Halt erwarten)",
+          "meaning": "Expect Stop",
+          "concept": "expect-stop",
+          "whatItMeans": "Expect stop, prepare to stop at next main signal",
+          "whatYouDo": "",
+          "lamps": {
+            "yellow-t": "on",
+            "yellow-b": "on"
+          }
+        },
+        {
+          "id": "vr1",
+          "name": "Vr1 (Fahrt erwarten)",
+          "meaning": "Expect Proceed",
+          "concept": "expect-proceed",
+          "whatItMeans": "Expect proceed, prepare to proceed at next main signal",
+          "whatYouDo": "",
+          "lamps": {
+            "green-t": "on",
+            "green-b": "on"
+          }
+        },
+        {
+          "id": "vr2",
+          "name": "Vr2 (Langsamfahrt erwarten)",
+          "meaning": "Expect Slow",
+          "concept": "expect-slow",
+          "whatItMeans": "Expect slow, prepare to proceed slowly at next main signal",
+          "whatYouDo": "",
+          "lamps": {
+            "green-t": "on",
+            "yellow-b": "on"
+          }
+        },
+        {
+          "id": "vr0-short",
+          "name": "Vr0 (Halt erwarten) Short",
+          "meaning": "Expect Stop, Short breaking distance",
+          "concept": "expect-stop",
+          "whatItMeans": "Expect stop, prepare to stop at next main signal. Placed instead of the \"normal\" single distant signal when the distance to the block signal is less than 1km. It has a white light (kennlicht) on the left side of the \"usual\" distant signal head.",
+          "whatYouDo": "",
+          "lamps": {
+            "yellow-t": "on",
+            "yellow-b": "on",
+            "white": "on"
+          },
+          "lookAlikes": "This is the same as a distant signal repeater which looks identical except without the Ne 2 board on the pole."
+        },
+        {
+          "id": "vr1-short",
+          "name": "Vr1 (Fahrt erwarten) Short",
+          "meaning": "Expect Proceed, Short breaking distance",
+          "concept": "expect-proceed",
+          "whatItMeans": "Expect proceed, prepare to proceed at next main signal. Placed instead of the \"normal\" single distant signal when the distance to the block signal is less than 1km. It has a white light (kennlicht) on the left side of the \"usual\" distant signal head.",
+          "whatYouDo": "",
+          "lamps": {
+            "green-t": "on",
+            "green-b": "on",
+            "white": "on"
+          },
+          "lookAlikes": "This is the same as a distant signal repeater which looks identical except without the Ne 2 board on the pole."
+        },
+        {
+          "id": "vr2-short",
+          "name": "Vr2 (Langsamfahrt erwarten) Short",
+          "meaning": "Expect Slow, Short breaking distance",
+          "concept": "expect-slow",
+          "whatItMeans": "Expect slow, prepare to proceed slowly at next main signal. Placed instead of the \"normal\" single distant signal when the distance to the block signal is less than 1km. It has a white light (kennlicht) on the left side of the \"usual\" distant signal head.",
+          "whatYouDo": "",
+          "lamps": {
+            "green-t": "on",
+            "yellow-b": "on",
+            "white": "on"
+          },
+          "lookAlikes": "This is the same as a distant signal repeater which looks identical except without the Ne 2 board on the pole."
+        }
+      ],
+      "shortName": "distant"
+    },
+    {
+      "id": "variant-mv8x9",
+      "name": "Combined Block + Distant",
+      "blurb": "Signal to use in blocks, with distant signal head. If main signal shows stop (Hp0) then distant signal is dark.",
+      "panels": [
+        {
+          "type": "lamps",
+          "id": "block",
+          "w": 88,
+          "h": 180,
+          "lamps": [
+            {
+              "id": "green",
+              "color": "green",
+              "x": 63,
+              "y": 150,
+              "r": 11,
+              "label": "Green"
+            },
+            {
+              "id": "red",
+              "color": "red",
+              "x": 25,
+              "y": 150,
+              "r": 11,
+              "label": "Red"
+            }
+          ],
+          "backplate": {
+            "points": [
+              {
+                "x": 5,
+                "y": 15,
+                "r": 2
+              },
+              {
+                "x": 15,
+                "y": 5,
+                "r": 2
+              },
+              {
+                "x": 73,
+                "y": 5,
+                "r": 2
+              },
+              {
+                "x": 83,
+                "y": 15,
+                "r": 2
+              },
+              {
+                "x": 83,
+                "y": 175,
+                "r": 2
+              },
+              {
+                "x": 5,
+                "y": 175,
+                "r": 2
+              }
+            ]
+          }
+        },
+        {
+          "type": "lamps",
+          "id": "distant",
+          "w": 120,
+          "h": 95,
+          "backplate": {
+            "points": [
+              {
+                "x": 5,
+                "y": 75,
+                "r": 2
+              },
+              {
+                "x": 40,
+                "y": 41,
+                "r": 2
+              },
+              {
+                "x": 29,
+                "y": 30,
+                "r": 100
+              },
+              {
+                "x": 40,
+                "y": 20,
+                "r": 131
+              },
+              {
+                "x": 52,
+                "y": 31,
+                "r": 2
+              },
+              {
+                "x": 80,
+                "y": 5,
+                "r": 2
+              },
+              {
+                "x": 115,
+                "y": 5,
+                "r": 2
+              },
+              {
+                "x": 125,
+                "y": 15,
+                "r": 2
+              },
+              {
+                "x": 125,
+                "y": 30,
+                "r": 0
+              },
+              {
+                "x": 50,
+                "y": 100,
+                "r": 2
+              },
+              {
+                "x": 15,
+                "y": 100,
+                "r": 2
+              },
+              {
+                "x": 5,
+                "y": 90,
+                "r": 2
+              }
+            ]
+          },
+          "lamps": [
+            {
+              "id": "green-t",
+              "color": "green",
+              "x": 110,
+              "y": 20,
+              "r": 10,
+              "label": "Upper Green"
+            },
+            {
+              "id": "yellow-t",
+              "color": "yellow",
+              "x": 85,
+              "y": 20,
+              "r": 10,
+              "label": "Upper Yellow"
+            },
+            {
+              "id": "green-b",
+              "color": "green",
+              "x": 45,
+              "y": 85,
+              "r": 10,
+              "label": "Lower Green"
+            },
+            {
+              "id": "yellow-b",
+              "color": "yellow",
+              "x": 20,
+              "y": 85,
+              "r": 10,
+              "label": "Lower Yellow"
+            },
+            {
+              "id": "white",
+              "color": "white",
+              "x": 40,
+              "y": 30,
+              "r": 5,
+              "label": "White (Kennlicht)"
+            }
+          ]
+        }
+      ],
+      "aspects": [
+        {
+          "id": "stop",
+          "name": "Hp0 (Halt)",
+          "meaning": "Stop",
+          "concept": "stop",
+          "whatItMeans": "Previously one red light had the meaning of \"Stop for train movements\" (shunting movements were allowed). To actually stop shunting two horizontal red lights were neccessary. Since 1959 one red light is enough to stop all movements.",
+          "whatYouDo": "Stop before the signal",
+          "lamps": {
+            "red": "on"
+          }
+        },
+        {
+          "id": "hp1-vr0",
+          "name": "Hp1 + Vr0 (Fahrt + Halt erwarten)",
+          "meaning": "Proceed preparing to stop at next main signal",
+          "concept": "expect-stop",
+          "whatItMeans": "Proceed preparing to stop at next main signal",
+          "whatYouDo": "Continue being ready to stop at the next signal.",
+          "lamps": {
+            "green": "on",
+            "yellow-t": "on",
+            "yellow-b": "on"
+          }
+        },
+        {
+          "id": "hp1-vr1",
+          "name": "Hp1 + Vr1 (Fahrt + Fahrt erwarten)",
+          "meaning": "Clear",
+          "concept": "clear",
+          "whatItMeans": "Proceed preparing to proceed at next main signal",
+          "whatYouDo": "Proceed at line speed",
+          "lamps": {
+            "green": "on",
+            "green-t": "on",
+            "green-b": "on"
+          }
+        },
+        {
+          "id": "hp1-vr2",
+          "name": "Hp1 + Vr2 (Fahrt + Langsamfahrt erwarten)",
+          "meaning": "Proceed preparing to proceed slowly at next main signal",
+          "concept": "expect-slow",
+          "whatItMeans": "Proceed preparing to proceed slowly at next main signal",
+          "whatYouDo": "Proceed preparing to proceed slowly at next main signal",
+          "lamps": {
+            "green": "on",
+            "green-t": "on",
+            "yellow-b": "on"
+          }
+        }
+      ],
+      "shortName": "combined"
+    }
+  ]
+}

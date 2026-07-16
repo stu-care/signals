@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useCurrentCountry } from '@/lib/useCurrentCountry'
 import { getCountryData } from '@/data'
 import { SignalRenderer } from '@/components/signal/SignalRenderer'
+import { FitScale } from '@/components/signal/FitScale'
 import { ComingSoon } from '@/pages/ComingSoon'
 
 export function CataloguePage() {
@@ -34,17 +35,20 @@ export function CataloguePage() {
                       to={`/${country.code}/aspect/${family.id}/${variant.id}/${aspect.id}`}
                       className="flex h-full flex-col items-center rounded-none border border-border bg-surface p-4 text-center transition hover:border-faint hover:bg-surface-2"
                     >
-                      <div className="flex min-h-[92px] items-center justify-center">
-                        <SignalRenderer
-                          panels={variant.panels}
-                          state={{
-                            lamps: aspect.lamps,
-                            arms: aspect.arms,
-                            on: aspect.on,
-                            glyphs: aspect.glyphs,
-                          }}
-                          scale={1.05}
-                        />
+                      <div className="h-[104px] w-full">
+                        <FitScale>
+                          <SignalRenderer
+                            panels={variant.panels}
+                            state={{
+                              lamps: aspect.lamps,
+                              arms: aspect.arms,
+                              on: aspect.on,
+                              feathers: aspect.feathers,
+                              glyphs: aspect.glyphs,
+                            }}
+                            scale={1.05}
+                          />
+                        </FitScale>
                       </div>
                       <span className="mt-3 text-sm font-semibold">{aspect.name}</span>
                       <span className="text-xs text-muted">{aspect.meaning}</span>

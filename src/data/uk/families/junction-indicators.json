@@ -1,0 +1,128 @@
+{
+  "id": "junction-indicators",
+  "name": "Junction indicators",
+  "blurb": "The row of white lights (a “feather”) that tells you which diverging route is set.",
+  "intro": "A junction indicator — often called a feather — is a row of five white lights beside a signal head. It lights only when you are being routed over a diverging junction, and its position shows which route. On each side there are three positions — inclined up at 45°, horizontal, and inclined down at 45° — numbered 1–3 to the left and 4–6 to the right. No feather means you are staying on the main (fastest) route. Read it together with the signal’s aspect: on a high-speed junction the aspects step down (flashing double yellow, flashing single yellow) and the feather confirms the route at the junction signal.",
+  "order": 1.5,
+  "variants": [
+    {
+      "id": "junction-indicator",
+      "name": "Junction indicator (feather)",
+      "shortName": "Feather",
+      "blurb": "Tap a position to see what a first-left, second-left and so on feather looks like.",
+      "panels": [
+        {
+          "type": "junction",
+          "id": "ji",
+          "positions": [1, 2, 3, 4, 5, 6],
+          "r": 5,
+          "label": "Junction indicator"
+        }
+      ],
+      "aspects": [
+        {
+          "id": "no-indicator",
+          "name": "No feather",
+          "meaning": "Main route — no divergence",
+          "concept": "route-main",
+          "whatItMeans": "The junction indicator is dark. You are being routed straight along the main (fastest) route — no diverging junction is set for you.",
+          "whatYouDo": "Proceed according to the signal’s aspect at normal line speed; no junction speed applies.",
+          "lookAlikes": "A dark feather is not a fault — the lights only come on when a diverging route is set.",
+          "related": [
+            "route-1L",
+            "route-1R"
+          ]
+        },
+        {
+          "id": "first-left",
+          "name": "First left",
+          "meaning": "Diverging left — first position",
+          "concept": "route-1L",
+          "feathers": {
+            "ji": [1]
+          },
+          "whatItMeans": "A feather is lit in the first left-hand position — a row of lights inclined up to the left at about 45°. You are routed onto a diverging route to the left.",
+          "whatYouDo": "Slow for the diverging route. Obey any junction or route-differential speed that applies, then take the turnout under control.",
+          "sequenceNote": "On a high-speed junction you will have seen a flashing double yellow then a flashing single yellow on the approach; the feather appears at the junction signal itself.",
+          "related": [
+            "route-2L",
+            "route-main"
+          ]
+        },
+        {
+          "id": "second-left",
+          "name": "Second left",
+          "meaning": "Diverging left — second position",
+          "concept": "route-2L",
+          "feathers": {
+            "ji": [2]
+          },
+          "whatItMeans": "A feather is lit in the second left-hand position — pointing horizontally to the left. It indicates a different left-hand diverging route from the first-left position.",
+          "whatYouDo": "Slow for the diverging route and obey the speed for the route you are taking.",
+          "related": [
+            "route-1L",
+            "route-3L"
+          ]
+        },
+        {
+          "id": "third-left",
+          "name": "Third left",
+          "meaning": "Diverging left — third position",
+          "concept": "route-3L",
+          "feathers": {
+            "ji": [3]
+          },
+          "whatItMeans": "A feather is lit in the third left-hand position — inclined down to the left at about 45°.",
+          "whatYouDo": "Slow for the diverging route and obey the speed for the route you are taking.",
+          "related": [
+            "route-2L"
+          ]
+        },
+        {
+          "id": "first-right",
+          "name": "First right",
+          "meaning": "Diverging right — first position",
+          "concept": "route-1R",
+          "feathers": {
+            "ji": [4]
+          },
+          "whatItMeans": "A feather is lit in the first right-hand position — a row of lights inclined up to the right at about 45°. You are routed onto a diverging route to the right.",
+          "whatYouDo": "Slow for the diverging route and obey the speed for the route you are taking.",
+          "related": [
+            "route-2R",
+            "route-main"
+          ]
+        },
+        {
+          "id": "second-right",
+          "name": "Second right",
+          "meaning": "Diverging right — second position",
+          "concept": "route-2R",
+          "feathers": {
+            "ji": [5]
+          },
+          "whatItMeans": "A feather is lit in the second right-hand position — pointing horizontally to the right, a different right-hand diverging route from the first-right position.",
+          "whatYouDo": "Slow for the diverging route and obey the speed for the route you are taking.",
+          "related": [
+            "route-1R",
+            "route-3R"
+          ]
+        },
+        {
+          "id": "third-right",
+          "name": "Third right",
+          "meaning": "Diverging right — third position",
+          "concept": "route-3R",
+          "feathers": {
+            "ji": [6]
+          },
+          "whatItMeans": "A feather is lit in the third right-hand position — inclined down to the right at about 45°.",
+          "whatYouDo": "Slow for the diverging route and obey the speed for the route you are taking.",
+          "related": [
+            "route-2R"
+          ]
+        }
+      ]
+    }
+  ]
+}

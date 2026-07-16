@@ -7,6 +7,7 @@ import {
   variantsShowingConcept,
 } from '@/data'
 import { SignalRenderer } from '@/components/signal/SignalRenderer'
+import { FitScale } from '@/components/signal/FitScale'
 import { FlashingBadge } from '@/components/signal/FlashingBadge'
 import { Field } from '@/components/ui/Field'
 import { RealWorldNote } from '@/components/ui/RealWorldNote'
@@ -30,6 +31,7 @@ export function AspectDetailPage() {
     lamps: aspect.lamps ?? {},
     arms: aspect.arms ?? {},
     on: aspect.on ?? [],
+    feathers: aspect.feathers ?? {},
     glyphs: aspect.glyphs ?? {},
   }).toString()}`
 
@@ -39,6 +41,7 @@ export function AspectDetailPage() {
     lamps: aspect.lamps,
     arms: aspect.arms,
     on: aspect.on,
+    feathers: aspect.feathers,
     glyphs: aspect.glyphs,
   }
 
@@ -53,8 +56,12 @@ export function AspectDetailPage() {
       </nav>
 
       <div className="mt-4 grid gap-6 sm:grid-cols-[160px_1fr] sm:items-center">
-        <div className="flex justify-center rounded-none border border-border bg-surface p-4">
-          <SignalRenderer panels={variant.panels} state={aspectState} scale={1.5} />
+        <div className="rounded-none border border-border bg-surface p-4">
+          <div className="h-40 w-full">
+            <FitScale>
+              <SignalRenderer panels={variant.panels} state={aspectState} scale={1.5} />
+            </FitScale>
+          </div>
         </div>
         <div>
           <div className="flex flex-wrap items-center gap-2">

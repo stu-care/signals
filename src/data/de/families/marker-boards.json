@@ -1,0 +1,69 @@
+{
+  "id": "marker-boards",
+  "name": "Marker boards",
+  "blurb": "Lineside plates that identify a signal or warn that one is coming.",
+  "intro": "German marker boards (Signaltafeln) stand beside the track to tell you what kind of signal you are looking at, or to warn that a signal is coming. This family covers two you meet constantly in Train Sim World: the white-red-white plate that marks a main (stop) signal, and the Ne 2 board that announces a distant signal ahead. They carry no speed or stop command themselves — they tell you how to read the signals around them.",
+  "order": 1,
+  "variants": [
+    {
+      "id": "main-mast",
+      "name": "Main signal mast plate",
+      "shortName": "Mast plate",
+      "blurb": "White-red-white plate on the mast — this is a main (stop) signal.",
+      "panels": [
+        {
+          "type": "sign",
+          "id": "plate",
+          "kind": "de-mast-main",
+          "size": 30,
+          "label": "White-red-white main signal mast plate"
+        }
+      ],
+      "aspects": [
+        {
+          "id": "main-plate",
+          "name": "Main signal (Hauptsignal)",
+          "meaning": "Absolute signal — stop if it is at danger or dark",
+          "concept": "de-main-plate",
+          "whatItMeans": "A white-red-white plate on a signal mast marks the signal as a main signal (Hauptsignal). It is an absolute signal: if it is showing stop (Hp 0) or is dark and unreadable, you must stop and may not pass it without authority.",
+          "whatYouDo": "Treat a red or dark main signal as stop. Do not pass it without a proceed aspect, a subsidiary/substitute signal (such as Zs 1), or authority from the signaller.",
+          "lookAlikes": "The red band is the key. A mast plate without it — or with other markings — can mark a self-acting block signal you may pass at caution when it is dark; the white-red-white plate does not permit that.",
+          "realWorldNote": "German signal mast plates (Mastschilder) come in several patterns; white-red-white is the standard absolute main-signal plate. Automatic/self-block signals carry different plates that allow passing at caution when unlit.",
+          "related": [
+            "de-vorsignal-plate"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vorsignaltafel",
+      "name": "Distant signal board (Ne 2)",
+      "shortName": "Ne 2",
+      "blurb": "White board with a black diagonal cross (X) — a distant signal is coming.",
+      "panels": [
+        {
+          "type": "sign",
+          "id": "board",
+          "kind": "de-vorsignaltafel",
+          "size": 30,
+          "label": "Ne 2 distant signal board"
+        }
+      ],
+      "aspects": [
+        {
+          "id": "vorsignaltafel",
+          "name": "Distant signal board (Ne 2)",
+          "meaning": "A distant signal is to be expected",
+          "concept": "de-vorsignal-plate",
+          "whatItMeans": "The Ne 2 board — a white board with a black diagonal cross (an X, its arms running corner to corner) — announces that a distant signal (Vorsignal) is to be expected. It can also stand alone to announce a main signal, a line-closing signal, or a Trapeztafel (Ne 1).",
+          "whatYouDo": "Be ready to read a distant signal shortly and act on the aspect it shows. The board itself gives no speed or stop command — it is a warning that a signal is coming.",
+          "sequenceNote": "On the approach the striped distant-signal beacons (Vorsignalbaken, Ne 3) count you down to the distant signal — three, then two, then one stripe at roughly 250 m, 175 m and 100 m.",
+          "realWorldNote": "Ne 2 (Vorsignaltafel). You meet it where a distant signal’s position needs marking; in Train Sim World it warns you a distant signal is near.",
+          "related": [
+            "de-main-plate"
+          ]
+        }
+      ]
+    }
+  ]
+}

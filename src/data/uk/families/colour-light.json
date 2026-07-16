@@ -12,51 +12,78 @@
       "blurb": "Four lamps: red, single yellow, double yellow, green. Two signals of warning before a red.",
       "panels": [
         {
-          "type": "lamps",
-          "id": "head",
-          "w": 30,
-          "h": 114,
-          "lamps": [
-            {
-              "id": "yellow-upper",
-              "color": "yellow",
-              "x": 15,
-              "y": 15,
-              "r": 11,
-              "label": "Upper yellow"
-            },
-            {
-              "id": "green",
-              "color": "green",
-              "x": 15,
-              "y": 43,
-              "r": 11,
-              "label": "Green"
-            },
-            {
-              "id": "yellow-main",
-              "color": "yellow",
-              "x": 15,
-              "y": 71,
-              "r": 11,
-              "label": "Yellow"
-            },
-            {
-              "id": "red",
-              "color": "red",
-              "x": 15,
-              "y": 99,
-              "r": 11,
-              "label": "Red"
-            }
-          ]
-        },
-        {
           "type": "feather",
           "id": "feather",
           "dir": "ul",
           "r": 5,
           "label": "Junction indicator (feather)"
+        },
+        {
+          "type": "lamps",
+          "id": "head",
+          "w": 40,
+          "h": 118,
+          "lamps": [
+            {
+              "id": "yellow-upper",
+              "color": "yellow",
+              "x": 20,
+              "y": 25,
+              "r": 10,
+              "label": "Upper yellow",
+              "canFlash": true
+            },
+            {
+              "id": "green",
+              "color": "green",
+              "x": 20,
+              "y": 50,
+              "r": 10,
+              "label": "Green",
+              "canFlash": true
+            },
+            {
+              "id": "yellow-main",
+              "color": "yellow",
+              "x": 20,
+              "y": 75,
+              "r": 10,
+              "label": "Yellow",
+              "canFlash": true
+            },
+            {
+              "id": "red",
+              "color": "red",
+              "x": 20,
+              "y": 100,
+              "r": 10,
+              "label": "Red"
+            }
+          ],
+          "backplate": {
+            "points": [
+              {
+                "x": 5,
+                "y": 5,
+                "r": 10
+              },
+              {
+                "x": 35,
+                "y": 5,
+                "r": 10
+              },
+              {
+                "x": 35,
+                "y": 115,
+                "r": 10
+              },
+              {
+                "x": 5,
+                "y": 115,
+                "r": 10
+              }
+            ]
+          }
         },
         {
           "type": "glyph",
@@ -82,6 +109,24 @@
           "related": [
             "prelim-caution"
           ]
+        },
+        {
+          "id": "flashing-green",
+          "name": "Flashing green",
+          "meaning": "Clear",
+          "concept": "clear",
+          "lamps": {
+            "green": "flash"
+          },
+          "whatItMeans": "The line ahead is clear for at least the next four signals. You may run at the maximum permitted line speed.",
+          "whatYouDo": "Proceed normally at line speed. Keep looking ahead — the next signal should be green.",
+          "sequenceNote": "Sits at the top of the sequence: flashing green → green → double yellow → single yellow → red.",
+          "safetyInteraction": "AWS gives a bell (or a short in-cab chime) at a green — no acknowledgement needed. Any other aspect gives a horn you must cancel.",
+          "controls": "Nothing to do for the aspect itself. If AWS sounds a warning at the next signal, acknowledge it (default keyboard binding: Q).",
+          "related": [
+            "clear"
+          ],
+          "realWorldNote": "An experimental signal on the 140 miles per hour (230 km/h) trial section of line between Peterborough and York. Very uncommon now though some do still exist."
         },
         {
           "id": "double-yellow",
@@ -179,6 +224,15 @@
             "flashing-prelim-caution",
             "caution"
           ]
+        },
+        {
+          "id": "dark",
+          "name": "Dark",
+          "meaning": "Danger - Stop",
+          "concept": "dark",
+          "whatItMeans": "Under British railway operating rules (the Rule Book), a dark or unlit signal must be strictly interpreted as the most restrictive aspect: a danger (stop) signal. Train drivers must bring their train to a complete halt and are only permitted to proceed after receiving direct authorization from the signaller.",
+          "whatYouDo": "Stop",
+          "realWorldNote": "This aspect is unlikely to be seen in TSW but I thought it worth noting for completeness."
         }
       ]
     },
@@ -189,43 +243,67 @@
       "blurb": "Three lamps: red, single yellow, green. One signal of warning before a red.",
       "panels": [
         {
-          "type": "lamps",
-          "id": "head",
-          "w": 30,
-          "h": 86,
-          "lamps": [
-            {
-              "id": "green",
-              "color": "green",
-              "x": 15,
-              "y": 15,
-              "r": 11,
-              "label": "Green"
-            },
-            {
-              "id": "yellow",
-              "color": "yellow",
-              "x": 15,
-              "y": 43,
-              "r": 11,
-              "label": "Yellow"
-            },
-            {
-              "id": "red",
-              "color": "red",
-              "x": 15,
-              "y": 71,
-              "r": 11,
-              "label": "Red"
-            }
-          ]
-        },
-        {
           "type": "feather",
           "id": "feather",
           "dir": "ul",
           "r": 5,
           "label": "Junction indicator (feather)"
+        },
+        {
+          "type": "lamps",
+          "id": "head",
+          "w": 40,
+          "h": 95,
+          "lamps": [
+            {
+              "id": "green",
+              "color": "green",
+              "x": 20,
+              "y": 25,
+              "r": 10,
+              "label": "Green"
+            },
+            {
+              "id": "yellow",
+              "color": "yellow",
+              "x": 20,
+              "y": 50,
+              "r": 10,
+              "label": "Yellow"
+            },
+            {
+              "id": "red",
+              "color": "red",
+              "x": 20,
+              "y": 75,
+              "r": 10,
+              "label": "Red"
+            }
+          ],
+          "backplate": {
+            "points": [
+              {
+                "x": 5,
+                "y": 5,
+                "r": 10
+              },
+              {
+                "x": 35,
+                "y": 5,
+                "r": 10
+              },
+              {
+                "x": 35,
+                "y": 90,
+                "r": 10
+              },
+              {
+                "x": 5,
+                "y": 90,
+                "r": 10
+              }
+            ]
+          }
         }
       ],
       "aspects": [
@@ -291,26 +369,50 @@
         {
           "type": "lamps",
           "id": "head",
-          "w": 30,
-          "h": 58,
+          "w": 40,
+          "h": 70,
           "lamps": [
             {
               "id": "green",
               "color": "green",
-              "x": 15,
-              "y": 15,
-              "r": 11,
+              "x": 20,
+              "y": 25,
+              "r": 10,
               "label": "Green"
             },
             {
               "id": "red",
               "color": "red",
-              "x": 15,
-              "y": 43,
-              "r": 11,
+              "x": 20,
+              "y": 50,
+              "r": 10,
               "label": "Red"
             }
-          ]
+          ],
+          "backplate": {
+            "points": [
+              {
+                "x": 5,
+                "y": 5,
+                "r": 10
+              },
+              {
+                "x": 35,
+                "y": 5,
+                "r": 10
+              },
+              {
+                "x": 35,
+                "y": 65,
+                "r": 10
+              },
+              {
+                "x": 5,
+                "y": 65,
+                "r": 10
+              }
+            ]
+          }
         }
       ],
       "aspects": [

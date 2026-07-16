@@ -4,18 +4,21 @@ import type {
   DotState,
   FeatherPanel,
   GlyphPanel,
+  JunctionPanel,
   LampColour,
   LampsPanel,
   Panel,
   PosLightPanel,
   SignPanel,
 } from '@/data/types'
+import { roundedPolyPath } from '@/lib/shape'
 
 /** Signal-state input: which dots are lit, arm positions, lit aux panels, glyph text. */
 export interface SignalStateInput {
   lamps?: Record<string, DotState>
   arms?: Record<string, ArmPosition>
   on?: string[]
+  feathers?: Record<string, number[]>
   glyphs?: Record<string, string>
 }
 
@@ -39,6 +42,7 @@ function panelVisible(panel: Panel, state?: SignalStateInput, showInactive?: boo
   if (showInactive) return true
   if (panel.type === 'lamps' || panel.type === 'arm' || panel.type === 'sign') return true
   if (panel.type === 'glyph') return (panel.text ?? state?.glyphs?.[panel.id] ?? '') !== ''
+  if (panel.type === 'junction') return (state?.feathers?.[panel.id]?.length ?? 0) > 0
   return state?.on?.includes(panel.id) ?? false
 }
 
@@ -147,8 +151,27 @@ function LampsPanelView({
     .map((l) => ({ l, st: state?.lamps?.[l.id] ?? 'off' }))
     .sort((a, b) => (a.st === 'off' ? 0 : 1) - (b.st === 'off' ? 0 : 1))
 
+  const bp = panel.backplate
   return (
     <div style={{ position: 'relative', width: panel.w * scale, height: panel.h * scale }}>
+      {bp && bp.points.length >= 2 && (
+        <svg
+          width={panel.w * scale}
+          height={panel.h * scale}
+          viewBox={`0 0 ${panel.w} ${panel.h}`}
+          style={{ position: 'absolute', inset: 0, overflow: 'visible', pointerEvents: 'none' }}
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d={roundedPolyPath(bp.points)}
+            fill="none"
+            stroke="rgba(20,24,34,.3)"
+            strokeWidth={1.3}
+            strokeLinejoin="round"
+            vectorEffect="non-scaling-stroke"
+          />
+        </svg>
+      )}
       {ordered.map(({ l, st }) => (
         <div
           key={l.id}
@@ -252,7 +275,13 @@ function BannerView({
   const pos = state?.arms?.[panel.id] ?? 'danger'
   const R = 28
   const c = R + 5
-  const rot = pos === 'clear' ? -45 : 0
+  // "off" (clear) inclines the bar up to the left (+45° in screen coords).
+  const rot = pos === 'clear' ? 45 : 0
+  // Green variant: the disc turns green, but only in the "off" (inclined)
+  // indication. The bar itself stays black.
+  const greenBg = panel.tone === 'green' && pos === 'clear'
+  const disc = greenBg ? '#1fa85a' : '#ffffff'
+  const discStroke = greenBg ? '#0c6234' : '#c2c6ce'
   return (
     <svg
       width={(R + 5) * 2 * scale}
@@ -260,11 +289,102 @@ function BannerView({
       viewBox={`0 0 ${(R + 5) * 2} ${(R + 5) * 2}`}
       xmlns="http://www.w3.org/2000/svg"
     >
-      <circle cx={c} cy={c} r={R} fill="#ffffff" stroke="#c2c6ce" strokeWidth={2} />
+      <circle cx={c} cy={c} r={R} fill={disc} stroke={discStroke} strokeWidth={2} />
       <g transform={`translate(${c} ${c}) rotate(${rot})`}>
         <rect x={-R * 0.82} y={-4} width={R * 1.64} height={8} rx={2} fill="#1c1f24" />
       </g>
     </svg>
+  )
+}
+
+/**
+ * Angle (deg above horizontal, so negative points down) and side for each
+ * standard UK junction-indicator position. Per side the three arms are inclined
+ * 45° up, horizontal, then 45° down: positions 1–3 diverge left, 4–6 right.
+ */
+function junctionRay(position: number): { angle: number; side: -1 | 1 } {
+  const table: Record<number, { angle: number; side: -1 | 1 }> = {
+    1: { angle: 45, side: -1 },
+    2: { angle: 0, side: -1 },
+    3: { angle: -45, side: -1 },
+    4: { angle: 45, side: 1 },
+    5: { angle: 0, side: 1 },
+    6: { angle: -45, side: 1 },
+  }
+  return table[position] ?? { angle: 45, side: -1 }
+}
+
+/**
+ * Multi-position junction indicator. Draws the declared positions as a faint
+ * fan and lights the active ones — so "first left" (position 1) and "second
+ * left" (position 2) can be compared at a glance.
+ */
+function JunctionView({
+  panel,
+  state,
+  scale,
+  showInactive,
+}: {
+  panel: JunctionPanel
+  state?: SignalStateInput
+  scale: number
+  showInactive?: boolean
+}) {
+  const R = (panel.r ?? 5) * scale
+  const lit = new Set(state?.feathers?.[panel.id] ?? [])
+  const n = 5
+  const step = R * 2 + 3 * scale
+  const start = step * 0.7
+  const reach = start + step * (n - 1) + R // centre of last dot + radius
+
+  // Bounding box across all declared positions, measured from the origin.
+  // Feathers can point up (positive angle), horizontal, or down (negative), so
+  // track vertical extent both ways and centre the origin between them.
+  let maxUp = 0
+  let maxDown = 0
+  let maxLeft = 0
+  let maxRight = 0
+  for (const p of panel.positions) {
+    const { angle, side } = junctionRay(p)
+    const rad = (angle * Math.PI) / 180
+    const v = Math.sin(rad) * reach // + up
+    const h = Math.abs(Math.cos(rad)) * reach
+    if (v >= 0) maxUp = Math.max(maxUp, v)
+    if (v <= 0) maxDown = Math.max(maxDown, -v)
+    if (side < 0) maxLeft = Math.max(maxLeft, h)
+    else maxRight = Math.max(maxRight, h)
+  }
+  const W = maxLeft + maxRight + R * 2
+  const H = maxUp + maxDown + R * 2
+  // Origin: at the left/right split, with the up feathers above and down below.
+  const ox = maxLeft + R
+  const oy = maxUp + R
+
+  return (
+    <div style={{ position: 'relative', width: W, height: H }}>
+      {panel.positions.map((p) => {
+        const on = lit.has(p)
+        if (!on && !showInactive) return null
+        const { angle, side } = junctionRay(p)
+        const rad = (angle * Math.PI) / 180
+        const dx = side * Math.cos(rad) * step
+        const dy = -Math.sin(rad) * step
+        const sx = ox + side * Math.cos(rad) * start
+        const sy = oy - Math.sin(rad) * start
+        return (
+          <div key={p} style={{ opacity: on ? 1 : 0.16 }}>
+            {Array.from({ length: n }).map((_, i) => (
+              <div
+                key={i}
+                style={{ position: 'absolute', left: sx + dx * i - R, top: sy + dy * i - R }}
+              >
+                <Dot color="white" state={on ? 'on' : 'off'} r={R} />
+              </div>
+            ))}
+          </div>
+        )
+      })}
+    </div>
   )
 }
 
@@ -326,6 +446,23 @@ function ArmView({
   )
 }
 
+const SIGN_INK = '#1c1f24'
+const SIGN_RED = '#d81e2c'
+const SIGN_YELLOW = '#f1c015'
+const SIGN_TSR = '#CDFC01'
+const SIGN_TSR_RING = '#8a9e05'
+
+/** A left/right triangular arrow (for the diverging-route panels). */
+function arrowSvg(dir: 'left' | 'right', color: string, h: number) {
+  const w = h * 0.92
+  const pts = dir === 'left' ? `${w},0 0,${h / 2} ${w},${h}` : `0,0 ${w},${h / 2} 0,${h}`
+  return (
+    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} xmlns="http://www.w3.org/2000/svg">
+      <polygon points={pts} fill={color} />
+    </svg>
+  )
+}
+
 function SignView({ panel, scale }: { panel: SignPanel; scale: number }) {
   const s = (panel.size ?? 30) * scale
   const bw = Math.max(1.5, 2 * scale)
@@ -344,43 +481,153 @@ function SignView({ panel, scale }: { panel: SignPanel; scale: number }) {
       borderRadius: 2 * scale,
       boxSizing: 'border-box' as const,
     })
+  /** A red-ring roundel (permissible-speed style). */
+  const roundel = (children: React.ReactNode) => {
+    const dia = s * 1.66
+    const ring = Math.max(3, s * 0.2)
+    return (
+      <div
+        style={{
+          width: dia,
+          height: dia,
+          borderRadius: '50%',
+          background: '#ffffff',
+          border: `${ring}px solid ${SIGN_RED}`,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxSizing: 'border-box',
+        }}
+      >
+        {children}
+      </div>
+    )
+  }
 
+  // Permissible speed — red ring, black figure.
+  if (panel.kind === 'psr') {
+    return roundel(<span style={num(SIGN_INK, s * 0.66)}>{panel.primary}</span>)
+  }
+  // Differential permissible — red ring, two figures split by a line.
   if (panel.kind === 'psr-diff') {
+    return roundel(
+      <>
+        <span style={num(SIGN_INK, s * 0.46)}>{panel.primary}</span>
+        <div style={{ width: '54%', height: bw, background: SIGN_INK, margin: `${s * 0.09}px 0` }} />
+        <span style={num(SIGN_INK, s * 0.46)}>{panel.secondary}</span>
+      </>,
+    )
+  }
+  // Diverging-route arrow panels — a shallow white plate with a coloured border
+  // (red for the permissible route, yellow for its warning) and a black arrow.
+  // No figure: these sit above the matching speed indicator.
+  if (panel.kind === 'psr-diverge' || panel.kind === 'psr-warn-diverge') {
+    const border = panel.kind === 'psr-diverge' ? SIGN_RED : SIGN_YELLOW
     return (
-      <div style={plate(s * 1.4, s * 1.95, '#ffffff', '#20242a')}>
-        <span style={num('#1c1f24', s * 0.62)}>{panel.primary}</span>
-        <div style={{ width: '78%', height: bw, background: '#20242a', margin: `${s * 0.12}px 0` }} />
-        <span style={num('#1c1f24', s * 0.62)}>{panel.secondary}</span>
+      <div style={plate(s * 1.8, s * 0.78, '#ffffff', border)}>
+        {arrowSvg(panel.arrow ?? 'left', SIGN_INK, s * 0.46)}
       </div>
     )
   }
+  // Warning indicator — downward triangle, yellow border, white ground, black figure.
+  if (panel.kind === 'psr-warn') {
+    const tw = s * 1.95
+    const th = s * 1.66
+    const sw = Math.max(3, s * 0.13)
+    return (
+      <div style={{ position: 'relative', width: tw, height: th }}>
+        <svg width={tw} height={th} viewBox={`0 0 ${tw} ${th}`} xmlns="http://www.w3.org/2000/svg">
+          <polygon
+            points={`${sw},${sw} ${tw - sw},${sw} ${tw / 2},${th - sw}`}
+            fill="#ffffff"
+            stroke={SIGN_YELLOW}
+            strokeWidth={sw}
+            strokeLinejoin="round"
+          />
+        </svg>
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            alignItems: 'flex-start',
+            justifyContent: 'center',
+            paddingTop: th * 0.2,
+          }}
+        >
+          <span style={num(SIGN_INK, s * 0.5)}>{panel.primary}</span>
+        </div>
+      </div>
+    )
+  }
+  // TSR warning — yellow-green board, two white dots side by side.
   if (panel.kind === 'tsr-warn') {
-    const d = s * 0.22
+    const d = s * 0.28
+    const dot = {
+      width: d,
+      height: d,
+      borderRadius: '50%',
+      background: '#ffffff',
+      boxShadow: `inset 0 0 0 ${Math.max(1, bw * 0.7)}px rgba(0,0,0,.2)`,
+    } as const
     return (
-      <div style={{ ...plate(s * 1.7, s * 1.15, '#f1c015', '#9c7d07'), position: 'relative' }}>
-        <div style={{ position: 'absolute', width: d, height: d, borderRadius: '50%', background: '#fff', left: '25%', top: '24%' }} />
-        <div style={{ position: 'absolute', width: d, height: d, borderRadius: '50%', background: '#fff', right: '25%', bottom: '24%' }} />
+      <div style={{ ...plate(s * 1.75, s * 1.15, SIGN_TSR, SIGN_TSR_RING), flexDirection: 'row', gap: s * 0.32 }}>
+        <div style={dot} />
+        <div style={dot} />
       </div>
     )
   }
+  // TSR commencement — yellow-green board, black figure.
   if (panel.kind === 'tsr-commence') {
     return (
-      <div style={plate(s * 1.5, s * 1.15, '#1c1f24', '#20242a')}>
-        <span style={num('#ffffff', s * 0.72)}>{panel.primary}</span>
+      <div style={plate(s * 1.5, s * 1.15, SIGN_TSR, SIGN_TSR_RING)}>
+        <span style={num(SIGN_INK, s * 0.72)}>{panel.primary}</span>
       </div>
     )
   }
-  if (panel.kind === 'tsr-terminate') {
+  // German main-signal mast plate — portrait board, white / red / white bands.
+  if (panel.kind === 'de-mast-main') {
+    const w = s * 0.82
+    const h = s * 2.1
     return (
-      <div style={plate(s * 1.15, s * 1.15, '#1c1f24', '#20242a')}>
-        <span style={num('#ffffff', s * 0.72)}>T</span>
+      <div
+        style={{
+          width: w,
+          height: h,
+          border: `${bw}px solid #20242a`,
+          boxSizing: 'border-box',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+        }}
+      >
+        <div style={{ flex: 1, background: '#ffffff' }} />
+        <div style={{ flex: 1, background: SIGN_RED }} />
+        <div style={{ flex: 1, background: '#ffffff' }} />
       </div>
     )
   }
-  // psr
+  // German distant-signal board (Ne 2, Vorsignaltafel) — white portrait board
+  // with a black diagonal cross (an X): the arms run corner to corner, leaving a
+  // white V-notch on each edge.
+  if (panel.kind === 'de-vorsignaltafel') {
+    const w = s * 1.2
+    const h = s * 1.6
+    const m = bw + s * 0.03 // inset from the border to the X corners
+    const t = w * 0.22 // arm thickness
+    return (
+      <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} xmlns="http://www.w3.org/2000/svg">
+        <rect x={bw / 2} y={bw / 2} width={w - bw} height={h - bw} fill="#ffffff" stroke="#20242a" strokeWidth={bw} />
+        <line x1={m} y1={m} x2={w - m} y2={h - m} stroke="#1c1f24" strokeWidth={t} strokeLinecap="butt" />
+        <line x1={w - m} y1={m} x2={m} y2={h - m} stroke="#1c1f24" strokeWidth={t} strokeLinecap="butt" />
+      </svg>
+    )
+  }
+  // TSR termination — yellow-green board, black "T".
   return (
-    <div style={plate(s * 1.5, s * 1.15, '#ffffff', '#20242a')}>
-      <span style={num('#1c1f24', s * 0.72)}>{panel.primary}</span>
+    <div style={plate(s * 1.15, s * 1.15, SIGN_TSR, SIGN_TSR_RING)}>
+      <span style={num(SIGN_INK, s * 0.72)}>T</span>
     </div>
   )
 }
@@ -389,10 +636,12 @@ function PanelView({
   panel,
   state,
   scale,
+  showInactive,
 }: {
   panel: Panel
   state?: SignalStateInput
   scale: number
+  showInactive?: boolean
 }) {
   switch (panel.type) {
     case 'lamps':
@@ -401,6 +650,8 @@ function PanelView({
       return <PosLightView panel={panel} state={state} scale={scale} />
     case 'feather':
       return <FeatherView panel={panel} state={state} scale={scale} />
+    case 'junction':
+      return <JunctionView panel={panel} state={state} scale={scale} showInactive={showInactive} />
     case 'glyph':
       return <GlyphView panel={panel} state={state} scale={scale} />
     case 'arm':
@@ -425,6 +676,9 @@ function deriveLabel(panels: Panel[], state?: SignalStateInput): string {
       parts.push(`${p.label.toLowerCase()} ${pos === 'clear' ? 'raised (clear)' : 'horizontal (danger)'}`)
     } else if (p.type === 'poslight' || p.type === 'feather') {
       if (state?.on?.includes(p.id)) parts.push(`${p.label.toLowerCase()} lit`)
+    } else if (p.type === 'junction') {
+      const on = state?.feathers?.[p.id] ?? []
+      if (on.length) parts.push(`${p.label.toLowerCase()} at position ${[...on].sort((a, b) => a - b).join(' and ')}`)
     } else if (p.type === 'glyph') {
       const t = p.text ?? state?.glyphs?.[p.id]
       if (t) parts.push(`${p.label.toLowerCase()} showing ${t}`)
@@ -453,7 +707,7 @@ export function SignalRenderer({
       {visible.map((p, i) => (
         <div key={p.id} style={{ display: 'contents' }}>
           {i > 0 && <SoftRule scale={scale} />}
-          <PanelView panel={p} state={state} scale={scale} />
+          <PanelView panel={p} state={state} scale={scale} showInactive={showInactive} />
         </div>
       ))}
     </div>

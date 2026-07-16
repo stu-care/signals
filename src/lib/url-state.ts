@@ -15,6 +15,7 @@ export interface BuilderState {
   lamps: Record<string, DotState>
   arms: Record<string, ArmPosition>
   on: string[]
+  feathers: Record<string, number[]>
   glyphs: Record<string, string>
 }
 
@@ -37,6 +38,11 @@ export function encodeBuilder(state: BuilderState): URLSearchParams {
   if (arms.length) params.set('a', arms.join(','))
 
   if (state.on.length) params.set('on', state.on.join(','))
+
+  const feathers = Object.entries(state.feathers)
+    .filter(([, ps]) => ps.length)
+    .map(([id, ps]) => `${id}:${[...ps].sort((a, b) => a - b).join('.')}`)
+  if (feathers.length) params.set('jf', feathers.join(','))
 
   const glyphs = Object.entries(state.glyphs)
     .filter(([, v]) => v !== '')
@@ -68,6 +74,22 @@ export function decodeBuilder(params: URLSearchParams): Partial<BuilderState> {
 
   const on = (params.get('on')?.split(',').filter(Boolean)) ?? []
 
+  const feathers: Record<string, number[]> = {}
+  const jf = params.get('jf')
+  if (jf) {
+    for (const token of jf.split(',')) {
+      const idx = token.lastIndexOf(':')
+      if (idx === -1) continue
+      const id = token.slice(0, idx)
+      const ps = token
+        .slice(idx + 1)
+        .split('.')
+        .map(Number)
+        .filter((n) => Number.isInteger(n) && n >= 1 && n <= 6)
+      if (id && ps.length) feathers[id] = ps
+    }
+  }
+
   const glyphs: Record<string, string> = {}
   const g = params.get('g')
   if (g) {
@@ -86,6 +108,7 @@ export function decodeBuilder(params: URLSearchParams): Partial<BuilderState> {
     lamps,
     arms,
     on,
+    feathers,
     glyphs,
   }
 }
