@@ -33,6 +33,8 @@ interface SignalRendererProps {
    * and detail pages only draw what is actually lit.
    */
   showInactive?: boolean
+  /** If set, lamp dots become clickable and call this with the lamp id. */
+  onLampClick?: (id: string) => void
   ariaLabel?: string
   className?: string
 }
@@ -139,10 +141,12 @@ function LampsPanelView({
   panel,
   state,
   scale,
+  onLampClick,
 }: {
   panel: LampsPanel
   state?: SignalStateInput
   scale: number
+  onLampClick?: (id: string) => void
 }) {
   // Draw off dots first, then lit (on/flash) dots, so where two lamps share a
   // position (e.g. a GPL red and white in the same place) the LIT one is always
@@ -172,14 +176,25 @@ function LampsPanelView({
           />
         </svg>
       )}
-      {ordered.map(({ l, st }) => (
-        <div
-          key={l.id}
-          style={{ position: 'absolute', left: (l.x - l.r) * scale, top: (l.y - l.r) * scale }}
-        >
-          <Dot color={l.color} state={st} r={l.r * scale} />
-        </div>
-      ))}
+      {ordered.map(({ l, st }) => {
+        const pos = { position: 'absolute' as const, left: (l.x - l.r) * scale, top: (l.y - l.r) * scale }
+        const dot = <Dot color={l.color} state={st} r={l.r * scale} />
+        return onLampClick ? (
+          <button
+            key={l.id}
+            type="button"
+            onClick={() => onLampClick(l.id)}
+            aria-label={`${l.label}: ${st}`}
+            style={{ ...pos, padding: 0, border: 'none', background: 'none', cursor: 'pointer', lineHeight: 0, borderRadius: '50%' }}
+          >
+            {dot}
+          </button>
+        ) : (
+          <div key={l.id} style={pos}>
+            {dot}
+          </div>
+        )
+      })}
     </div>
   )
 }
@@ -637,15 +652,19 @@ function PanelView({
   state,
   scale,
   showInactive,
+  onLampClick,
 }: {
   panel: Panel
   state?: SignalStateInput
   scale: number
   showInactive?: boolean
+  onLampClick?: (id: string) => void
 }) {
   switch (panel.type) {
+    case 'lamps-ref':
+      return null // resolved to a lamps panel before rendering; nothing to draw raw
     case 'lamps':
-      return <LampsPanelView panel={panel} state={state} scale={scale} />
+      return <LampsPanelView panel={panel} state={state} scale={scale} onLampClick={onLampClick} />
     case 'poslight':
       return <PosLightView panel={panel} state={state} scale={scale} />
     case 'feather':
@@ -693,21 +712,26 @@ export function SignalRenderer({
   state,
   scale = 1,
   showInactive,
+  onLampClick,
   ariaLabel,
   className,
 }: SignalRendererProps) {
   const visible = panels.filter((p) => panelVisible(p, state, showInactive))
+  // In interactive mode the lamps are real buttons, so don't hide them behind an
+  // `img` role; label the group instead.
+  const roleProps = onLampClick
+    ? ({ role: 'group', 'aria-label': ariaLabel ?? 'Signal — tap a lamp to change it' } as const)
+    : ({ role: 'img', 'aria-label': ariaLabel ?? deriveLabel(panels, state) } as const)
   return (
     <div
       className={className}
-      role="img"
-      aria-label={ariaLabel ?? deriveLabel(panels, state)}
+      {...roleProps}
       style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center' }}
     >
       {visible.map((p, i) => (
         <div key={p.id} style={{ display: 'contents' }}>
           {i > 0 && <SoftRule scale={scale} />}
-          <PanelView panel={p} state={state} scale={scale} showInactive={showInactive} />
+          <PanelView panel={p} state={state} scale={scale} showInactive={showInactive} onLampClick={onLampClick} />
         </div>
       ))}
     </div>

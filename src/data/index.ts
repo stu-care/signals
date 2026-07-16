@@ -2,11 +2,31 @@ import type {
   Aspect,
   CountryCode,
   CountryData,
+  LampsPanel,
+  Panel,
   SafetySystem,
+  SharedLampPanel,
   SignalFamily,
   SignalVariant,
 } from './types'
 import { COUNTRIES } from './countries'
+
+/**
+ * Resolve `lamps-ref` panels to full lamp panels using a country's shared
+ * definitions, so the renderer/interpreter only ever meet resolved lamp panels.
+ * An unresolved reference becomes an empty placeholder rather than crashing.
+ */
+export function resolveLampsRefs(panels: Panel[], shared: SharedLampPanel[]): Panel[] {
+  const byId = new Map(shared.map((s) => [s.id, s]))
+  return panels.map((p): Panel => {
+    if (p.type !== 'lamps-ref') return p
+    const def = byId.get(p.ref)
+    const resolved: LampsPanel = def
+      ? { type: 'lamps', id: p.id, w: def.w, h: def.h, lamps: def.lamps, ...(def.backplate ? { backplate: def.backplate } : {}) }
+      : { type: 'lamps', id: p.id, w: 20, h: 20, lamps: [] }
+    return resolved
+  })
+}
 
 /**
  * Country datasets are discovered dynamically from the JSON files on disk:
@@ -24,6 +44,10 @@ const safetyModules = import.meta.glob('./*/safety.json', {
   eager: true,
   import: 'default',
 })
+const lampPanelModules = import.meta.glob('./*/lamp-panels.json', {
+  eager: true,
+  import: 'default',
+})
 
 /** './uk/families/colour-light.json' -> 'uk' */
 function countryOf(path: string): string {
@@ -33,9 +57,18 @@ function countryOf(path: string): string {
 function buildDatasets(): Partial<Record<CountryCode, CountryData>> {
   const out: Partial<Record<CountryCode, CountryData>> = {}
   for (const country of COUNTRIES) {
+    const sharedEntry = Object.entries(lampPanelModules).find(
+      ([p]) => countryOf(p) === country.code,
+    )
+    const shared = (sharedEntry?.[1] as unknown as SharedLampPanel[]) ?? []
+
     const families = Object.entries(familyModules)
       .filter(([p]) => countryOf(p) === country.code)
       .map(([, m]) => m as unknown as SignalFamily)
+      .map((f) => ({
+        ...f,
+        variants: f.variants.map((v) => ({ ...v, panels: resolveLampsRefs(v.panels, shared) })),
+      }))
       .sort(
         (a, b) => (a.order ?? 1000) - (b.order ?? 1000) || a.name.localeCompare(b.name),
       )
@@ -97,6 +130,30 @@ export function findAspectByConcept(
 /** Which variants can display a given concept (for "shown on" lists). */
 export function variantsShowingConcept(code: string, concept: string): AspectEntry[] {
   return getAllAspects(code).filter((e) => e.aspect.concept === concept)
+}
+
+export interface LibraryPanel {
+  code: string
+  familyName: string
+  variantName: string
+  panel: Panel
+}
+
+/** Every panel across all live datasets — a library to reuse when building. */
+export function getAllLibraryPanels(): LibraryPanel[] {
+  const out: LibraryPanel[] = []
+  for (const code of Object.keys(DATASETS) as CountryCode[]) {
+    const data = DATASETS[code]
+    if (!data) continue
+    for (const family of data.families) {
+      for (const variant of family.variants) {
+        for (const panel of variant.panels) {
+          out.push({ code, familyName: family.name, variantName: variant.shortName ?? variant.name, panel })
+        }
+      }
+    }
+  }
+  return out
 }
 
 export function getAllAspects(code: string): AspectEntry[] {

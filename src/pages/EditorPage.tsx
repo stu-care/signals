@@ -2,22 +2,34 @@ import { useEffect, useRef, useState, type PointerEvent } from 'react'
 import type {
   ArmPanel,
   Aspect,
+  Backplate,
   DotState,
   FeatherPanel,
   GlyphPanel,
   JunctionPanel,
   LampColour,
-  LampsPanel,
+  LampSlot,
   Panel,
   PosLightPanel,
+  SharedLampPanel,
   SignalFamily,
   SignalVariant,
 } from '@/data/types'
 import { SignalRenderer } from '@/components/signal/SignalRenderer'
 import { roundedPolyPath } from '@/lib/shape'
 import { ArrowRightIcon, ChevronDownIcon, ChevronUpIcon, CloseIcon } from '@/components/icons'
-import { listFamilies, loadFamily, saveFamily } from '@/lib/editor-api'
+import {
+  listFamilies,
+  loadFamily,
+  loadLampPanels,
+  saveFamily,
+  saveLampPanels,
+} from '@/lib/editor-api'
+import { resolveLampsRefs } from '@/data'
 import { COUNTRIES } from '@/data/countries'
+
+/** The editable body of a lamp panel — shared by inline and shared-def editing. */
+type LampBody = { id: string; w: number; h: number; lamps: LampSlot[]; backplate?: Backplate }
 const COLORS: LampColour[] = ['red', 'amber', 'yellow', 'green', 'white', 'lunar', 'blue']
 const DOT_FILL: Record<LampColour, string> = {
   red: '#e5372b', amber: '#ef8b1b', yellow: '#f1c015', green: '#1fa85a',
@@ -57,10 +69,14 @@ function Editor() {
   const [status, setStatus] = useState('')
   const [newId, setNewId] = useState('')
   const [newName, setNewName] = useState('')
+  const [sharedPanels, setSharedPanels] = useState<SharedLampPanel[]>([])
+  const [sharedDirty, setSharedDirty] = useState(false)
 
   const refresh = (c: string) => listFamilies(c).then(setIds).catch((e) => setStatus(String(e)))
   useEffect(() => {
     refresh(country)
+    loadLampPanels(country).then(setSharedPanels).catch(() => setSharedPanels([]))
+    setSharedDirty(false)
   }, [country])
 
   useEffect(() => {
@@ -145,6 +161,13 @@ function Editor() {
     setStatus('unsaved changes')
   }
   const mutVariant = (fn: (v: SignalVariant) => void) => mutate((f) => fn(f.variants[vi]))
+  const mutShared = (fn: (list: SharedLampPanel[]) => void) => {
+    const next = clone(sharedPanels)
+    fn(next)
+    setSharedPanels(next)
+    setSharedDirty(true)
+    setStatus('unsaved changes')
+  }
 
   const addVariant = () => {
     const nv = { id: uid('variant'), name: 'New variant', blurb: '', panels: [], aspects: [] }
@@ -160,6 +183,10 @@ function Editor() {
     setStatus('saving…')
     try {
       await saveFamily(country, family)
+      if (sharedDirty) {
+        await saveLampPanels(country, sharedPanels)
+        setSharedDirty(false)
+      }
       await refresh(country)
       setStatus('saved — reload the app to see it live')
     } catch (e) {
@@ -167,6 +194,7 @@ function Editor() {
     }
   }
 
+  const resolvedPanels = resolveLampsRefs(variant.panels, sharedPanels)
   const aspect = variant.aspects[selAspect]
   const aspectState = aspect
     ? { lamps: aspect.lamps, arms: aspect.arms, on: aspect.on, feathers: aspect.feathers, glyphs: aspect.glyphs }
@@ -212,7 +240,7 @@ function Editor() {
         {/* Preview */}
         <div>
           <div className="flex min-h-[220px] items-center justify-center rounded-none border border-border bg-surface p-6">
-            <SignalRenderer panels={variant.panels} state={aspectState} scale={1.8} showInactive={tab === 'structure'} />
+            <SignalRenderer panels={resolvedPanels} state={aspectState} scale={1.8} showInactive={tab === 'structure'} />
           </div>
           <div className="mt-3 flex gap-2">
             <button onClick={() => setTab('structure')} className={tabBtn(tab === 'structure')}>Structure</button>
@@ -230,10 +258,12 @@ function Editor() {
               selDot={selDot}
               setSelDot={setSelDot}
               mutVariant={mutVariant}
+              sharedPanels={sharedPanels}
+              mutShared={mutShared}
             />
           ) : (
             <AspectEditor
-              variant={variant}
+              variant={{ ...variant, panels: resolvedPanels }}
               selAspect={selAspect}
               setSelAspect={setSelAspect}
               mutVariant={mutVariant}
@@ -248,7 +278,7 @@ function Editor() {
 /* ---- Structure editor -------------------------------------------- */
 
 function StructureEditor({
-  variant, selPanel, setSelPanel, selDot, setSelDot, mutVariant,
+  variant, selPanel, setSelPanel, selDot, setSelDot, mutVariant, sharedPanels, mutShared,
 }: {
   variant: SignalVariant
   selPanel: string | null
@@ -256,13 +286,17 @@ function StructureEditor({
   selDot: string | null
   setSelDot: (id: string | null) => void
   mutVariant: (fn: (v: SignalVariant) => void) => void
+  sharedPanels: SharedLampPanel[]
+  mutShared: (fn: (list: SharedLampPanel[]) => void) => void
 }) {
   const panel = variant.panels.find((p) => p.id === selPanel) ?? null
+  const [showLib, setShowLib] = useState(false)
 
   const addPanel = (type: Panel['type']) => {
     const id = uid(type)
     let np: Panel
     if (type === 'lamps') np = { type, id, w: 30, h: 120, lamps: [] }
+    else if (type === 'lamps-ref') return // linked via the lamp library, not this row
     else if (type === 'arm') np = { type, id, kind: 'stop', label: 'Arm' }
     else if (type === 'poslight') np = { type, id, dir: 'ur', r: 7, label: 'Position light' }
     else if (type === 'feather') np = { type, id, dir: 'ur', r: 5, label: 'Feather' }
@@ -274,6 +308,32 @@ function StructureEditor({
     setSelDot(null)
   }
 
+  const addRef = (ref: string) => {
+    const id = uid('lamps')
+    mutVariant((v) => v.panels.push({ type: 'lamps-ref', id, ref }))
+    setSelPanel(id)
+    setSelDot(null)
+    setShowLib(false)
+  }
+  const newSharedPanel = () => {
+    const ref = uid('lamp')
+    mutShared((list) => list.push({ id: ref, name: 'New lamp panel', w: 30, h: 120, lamps: [] }))
+    addRef(ref)
+  }
+  const makeShared = (panelId: string) => {
+    const inline = variant.panels.find((p) => p.id === panelId)
+    if (inline?.type !== 'lamps') return
+    const ref = uid('lamp')
+    mutShared((list) => list.push({ id: ref, name: 'Lamp panel', w: inline.w, h: inline.h, lamps: clone(inline.lamps), ...(inline.backplate ? { backplate: clone(inline.backplate) } : {}) }))
+    mutVariant((v) => { const idx = v.panels.findIndex((p) => p.id === panelId); if (idx >= 0) v.panels[idx] = { type: 'lamps-ref', id: panelId, ref } })
+    setSelDot(null)
+  }
+
+  const panelName = (p: Panel) =>
+    p.type === 'lamps-ref'
+      ? `lamps · ${sharedPanels.find((s) => s.id === p.ref)?.name ?? '⚠ missing'}`
+      : `${p.type}${'label' in p && p.label ? ` · ${p.label}` : ''}`
+
   return (
     <div className="space-y-4">
       <div className="rounded-none border border-border bg-surface p-4">
@@ -283,13 +343,35 @@ function StructureEditor({
             {(['lamps', 'arm', 'feather', 'junction', 'poslight', 'glyph', 'sign'] as const).map((t) => (
               <button key={t} onClick={() => addPanel(t)} className="rounded-none border border-border px-2 py-1 text-xs hover:border-accent">+ {t}</button>
             ))}
+            <button onClick={() => setShowLib((s) => !s)} className={`rounded-none border px-2 py-1 text-xs ${showLib ? 'border-accent bg-accent text-white' : 'border-border hover:border-accent'}`}>lamp library</button>
           </div>
         </div>
+        {showLib && (
+          <div className="mt-3 border-t border-border pt-3">
+            <p className={label()}>Shared lamp panels — link one (edits apply everywhere)</p>
+            <div className="mt-2 space-y-1">
+              {sharedPanels.length === 0 && (
+                <p className="text-xs text-faint">None yet. Add a lamps panel and “Make shared”, or start one below.</p>
+              )}
+              {sharedPanels.map((s) => (
+                <button
+                  key={s.id}
+                  onClick={() => addRef(s.id)}
+                  className="flex w-full items-center justify-between gap-3 rounded-none border border-border px-2 py-1 text-left text-xs hover:border-accent"
+                >
+                  <span className="truncate">{s.name}</span>
+                  <span className="shrink-0 font-mono text-faint">{s.lamps.length} lamp{s.lamps.length === 1 ? '' : 's'}</span>
+                </button>
+              ))}
+              <button onClick={newSharedPanel} className="mt-1 rounded-none border border-border px-2 py-1 text-xs hover:border-accent">+ new lamp panel</button>
+            </div>
+          </div>
+        )}
         <ul className="mt-3 space-y-1">
           {variant.panels.map((p, i) => (
             <li key={p.id} className={`flex items-center justify-between rounded-none border px-3 py-1.5 text-sm ${p.id === selPanel ? 'border-accent bg-accent/5' : 'border-border'}`}>
               <button onClick={() => { setSelPanel(p.id); setSelDot(null) }} className="flex-1 text-left">
-                {p.type}{'label' in p && p.label ? ` · ${p.label}` : ''}
+                {panelName(p)}
               </button>
               <span className="flex gap-1">
                 <button aria-label="Move panel up" onClick={() => mutVariant((v) => { if (i > 0) [v.panels[i - 1], v.panels[i]] = [v.panels[i], v.panels[i - 1]] })} className="p-1 text-faint hover:text-ink"><ChevronUpIcon className="size-3.5" /></button>
@@ -302,9 +384,46 @@ function StructureEditor({
       </div>
 
       {panel?.type === 'lamps' && (
-        <LampsEditor panel={panel} selDot={selDot} setSelDot={setSelDot} mutVariant={mutVariant} />
+        <div className="space-y-3">
+          <LampsEditor
+            panel={panel}
+            selDot={selDot}
+            setSelDot={setSelDot}
+            edit={(fn) => mutVariant((v) => { const p = v.panels.find((x) => x.id === panel.id); if (p?.type === 'lamps') fn(p) })}
+          />
+          <button onClick={() => makeShared(panel.id)} className="rounded-none border border-border px-3 py-2 text-xs hover:border-accent">
+            Make this a shared lamp panel (reusable — edit once, updates everywhere)
+          </button>
+        </div>
       )}
-      {panel && panel.type !== 'lamps' && (
+      {panel?.type === 'lamps-ref' && (() => {
+        const def = sharedPanels.find((s) => s.id === panel.ref)
+        if (!def) {
+          return (
+            <div className="rounded-none border border-sig-red/40 bg-surface p-4 text-sm text-sig-red">
+              Missing shared lamp panel “{panel.ref}”. Delete this panel or recreate the definition.
+            </div>
+          )
+        }
+        return (
+          <div className="space-y-3">
+            <div className="rounded-none border border-accent/40 bg-accent/5 p-3">
+              <p className={`${label()} text-accent`}>Shared lamp panel</p>
+              <p className="mt-1 text-xs text-muted">Edits here apply to every signal that links this panel.</p>
+              <div className="mt-2 text-sm">
+                <TextRow label="name" value={def.name} onChange={(s) => mutShared((list) => { const d = list.find((x) => x.id === def.id); if (d) d.name = s })} />
+              </div>
+            </div>
+            <LampsEditor
+              panel={def}
+              selDot={selDot}
+              setSelDot={setSelDot}
+              edit={(fn) => mutShared((list) => { const d = list.find((x) => x.id === def.id); if (d) fn(d) })}
+            />
+          </div>
+        )
+      })()}
+      {panel && panel.type !== 'lamps' && panel.type !== 'lamps-ref' && (
         <PanelPropsEditor panel={panel} mutVariant={mutVariant} />
       )}
     </div>
@@ -312,20 +431,19 @@ function StructureEditor({
 }
 
 function LampsEditor({
-  panel, selDot, setSelDot, mutVariant,
+  panel, selDot, setSelDot, edit,
 }: {
-  panel: LampsPanel
+  panel: LampBody
   selDot: string | null
   setSelDot: (id: string | null) => void
-  mutVariant: (fn: (v: SignalVariant) => void) => void
+  edit: (fn: (p: LampBody) => void) => void
 }) {
   const canvasRef = useRef<HTMLDivElement>(null)
   const [drag, setDrag] = useState<{ k: 'dot'; id: string } | { k: 'pt'; i: number } | null>(null)
   const [selPoint, setSelPoint] = useState<number | null>(null)
   useEffect(() => { setSelPoint(null) }, [panel.id])
 
-  const editPanel = (fn: (p: LampsPanel) => void) =>
-    mutVariant((v) => { const p = v.panels.find((x) => x.id === panel.id); if (p?.type === 'lamps') fn(p) })
+  const editPanel = edit
   const clamp = (v: number, hi: number) => Math.max(0, Math.min(hi, v))
 
   const toCoords = (e: PointerEvent) => {

@@ -169,7 +169,7 @@ export function BuilderPage() {
       <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,340px)_1fr]">
         <div className="rounded-none border border-border bg-surface p-6">
           <div className="flex min-h-[220px] items-center justify-center py-4">
-            <SignalRenderer panels={variant.panels} state={signalState} scale={1.9} showInactive />
+            <SignalRenderer panels={variant.panels} state={signalState} scale={1.9} showInactive onLampClick={cycleLamp} />
           </div>
 
           <div className="mt-4 space-y-2">

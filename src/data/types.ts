@@ -86,6 +86,32 @@ export interface LampsPanel {
   backplate?: Backplate
 }
 
+/**
+ * A named, reusable lamp panel stored per country in `lamp-panels.json`. Signals
+ * reference it by id (see {@link LampsRefPanel}); editing the definition updates
+ * every signal that uses it.
+ */
+export interface SharedLampPanel {
+  id: string
+  name: string
+  w: number
+  h: number
+  lamps: LampSlot[]
+  backplate?: Backplate
+}
+
+/**
+ * A reference to a {@link SharedLampPanel}. It is resolved to a full
+ * {@link LampsPanel} when datasets are built, so the renderer and interpreter
+ * only ever see resolved lamp panels.
+ */
+export interface LampsRefPanel {
+  type: 'lamps-ref'
+  id: string
+  /** Id of the shared lamp panel this stands in for. */
+  ref: string
+}
+
 /** Position-light subsidiary: two white dots on a diagonal. Lit per aspect. */
 export interface PosLightPanel {
   type: 'poslight'
@@ -179,6 +205,7 @@ export interface SignPanel {
 
 export type Panel =
   | LampsPanel
+  | LampsRefPanel
   | PosLightPanel
   | FeatherPanel
   | JunctionPanel

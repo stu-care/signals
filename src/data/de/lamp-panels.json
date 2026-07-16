@@ -1,0 +1,172 @@
+[
+  {
+    "id": "lamp-mkprh",
+    "name": "HV Block (DE)",
+    "w": 88,
+    "h": 180,
+    "lamps": [
+      {
+        "id": "green",
+        "color": "green",
+        "x": 63,
+        "y": 150,
+        "r": 10,
+        "label": "Green"
+      },
+      {
+        "id": "red",
+        "color": "red",
+        "x": 25,
+        "y": 150,
+        "r": 10,
+        "label": "Red"
+      }
+    ],
+    "backplate": {
+      "points": [
+        {
+          "x": 5,
+          "y": 15,
+          "r": 2
+        },
+        {
+          "x": 15,
+          "y": 5,
+          "r": 2
+        },
+        {
+          "x": 73,
+          "y": 5,
+          "r": 2
+        },
+        {
+          "x": 83,
+          "y": 15,
+          "r": 2
+        },
+        {
+          "x": 83,
+          "y": 175,
+          "r": 2
+        },
+        {
+          "x": 5,
+          "y": 175,
+          "r": 2
+        }
+      ]
+    }
+  },
+  {
+    "id": "lamp-8jsm2",
+    "name": "HV Distant (DE)",
+    "w": 130,
+    "h": 105,
+    "lamps": [
+      {
+        "id": "green-t",
+        "color": "green",
+        "x": 110,
+        "y": 20,
+        "r": 10,
+        "label": "Upper Green"
+      },
+      {
+        "id": "yellow-t",
+        "color": "yellow",
+        "x": 85,
+        "y": 20,
+        "r": 10,
+        "label": "Upper Yellow"
+      },
+      {
+        "id": "green-b",
+        "color": "green",
+        "x": 45,
+        "y": 85,
+        "r": 10,
+        "label": "Lower Green"
+      },
+      {
+        "id": "yellow-b",
+        "color": "yellow",
+        "x": 20,
+        "y": 85,
+        "r": 10,
+        "label": "Lower Yellow"
+      },
+      {
+        "id": "white",
+        "color": "white",
+        "x": 40,
+        "y": 30,
+        "r": 5,
+        "label": "White (Kennlicht)"
+      }
+    ],
+    "backplate": {
+      "points": [
+        {
+          "x": 5,
+          "y": 75,
+          "r": 2
+        },
+        {
+          "x": 40,
+          "y": 43,
+          "r": 2
+        },
+        {
+          "x": 28,
+          "y": 30,
+          "r": 100
+        },
+        {
+          "x": 40,
+          "y": 18,
+          "r": 131
+        },
+        {
+          "x": 52,
+          "y": 31,
+          "r": 2
+        },
+        {
+          "x": 80,
+          "y": 5,
+          "r": 2
+        },
+        {
+          "x": 115,
+          "y": 5,
+          "r": 2
+        },
+        {
+          "x": 125,
+          "y": 15,
+          "r": 2
+        },
+        {
+          "x": 125,
+          "y": 30,
+          "r": 0
+        },
+        {
+          "x": 50,
+          "y": 100,
+          "r": 2
+        },
+        {
+          "x": 15,
+          "y": 100,
+          "r": 2
+        },
+        {
+          "x": 5,
+          "y": 90,
+          "r": 2
+        }
+      ]
+    }
+  }
+]

@@ -1,4 +1,4 @@
-import type { SignalFamily } from '@/data/types'
+import type { SharedLampPanel, SignalFamily } from '@/data/types'
 
 /** Client for the dev-only editor backend (see vite-editor-plugin.ts). */
 
@@ -21,4 +21,19 @@ export async function saveFamily(country: string, family: SignalFamily): Promise
     body: JSON.stringify(family),
   })
   if (!res.ok) throw new Error(`save failed: ${res.status} ${await res.text()}`)
+}
+
+export async function loadLampPanels(country: string): Promise<SharedLampPanel[]> {
+  const res = await fetch(`/api/editor/lamp-panels?country=${country}`)
+  if (!res.ok) throw new Error(`lamp-panels load failed: ${res.status}`)
+  return (await res.json()) as SharedLampPanel[]
+}
+
+export async function saveLampPanels(country: string, panels: SharedLampPanel[]): Promise<void> {
+  const res = await fetch(`/api/editor/lamp-panels?country=${country}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(panels),
+  })
+  if (!res.ok) throw new Error(`lamp-panels save failed: ${res.status} ${await res.text()}`)
 }

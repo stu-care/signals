@@ -1,0 +1,173 @@
+[
+  {
+    "id": "lamp-6ta46",
+    "name": "2 Aspect (UK)",
+    "w": 40,
+    "h": 70,
+    "lamps": [
+      {
+        "id": "green",
+        "color": "green",
+        "x": 20,
+        "y": 25,
+        "r": 10,
+        "label": "Green"
+      },
+      {
+        "id": "red",
+        "color": "red",
+        "x": 20,
+        "y": 50,
+        "r": 10,
+        "label": "Red"
+      }
+    ],
+    "backplate": {
+      "points": [
+        {
+          "x": 5,
+          "y": 5,
+          "r": 10
+        },
+        {
+          "x": 35,
+          "y": 5,
+          "r": 10
+        },
+        {
+          "x": 35,
+          "y": 65,
+          "r": 10
+        },
+        {
+          "x": 5,
+          "y": 65,
+          "r": 10
+        }
+      ]
+    }
+  },
+  {
+    "id": "lamp-yzm6h",
+    "name": "3 Aspect (UK)",
+    "w": 40,
+    "h": 95,
+    "lamps": [
+      {
+        "id": "green",
+        "color": "green",
+        "x": 20,
+        "y": 25,
+        "r": 10,
+        "label": "Green"
+      },
+      {
+        "id": "yellow",
+        "color": "yellow",
+        "x": 20,
+        "y": 50,
+        "r": 10,
+        "label": "Yellow"
+      },
+      {
+        "id": "red",
+        "color": "red",
+        "x": 20,
+        "y": 75,
+        "r": 10,
+        "label": "Red"
+      }
+    ],
+    "backplate": {
+      "points": [
+        {
+          "x": 5,
+          "y": 5,
+          "r": 10
+        },
+        {
+          "x": 35,
+          "y": 5,
+          "r": 10
+        },
+        {
+          "x": 35,
+          "y": 90,
+          "r": 10
+        },
+        {
+          "x": 5,
+          "y": 90,
+          "r": 10
+        }
+      ]
+    }
+  },
+  {
+    "id": "lamp-yt120",
+    "name": "4 Aspect (UK)",
+    "w": 40,
+    "h": 118,
+    "lamps": [
+      {
+        "id": "yellow-upper",
+        "color": "yellow",
+        "x": 20,
+        "y": 25,
+        "r": 10,
+        "label": "Upper yellow",
+        "canFlash": true
+      },
+      {
+        "id": "green",
+        "color": "green",
+        "x": 20,
+        "y": 50,
+        "r": 10,
+        "label": "Green",
+        "canFlash": true
+      },
+      {
+        "id": "yellow-main",
+        "color": "yellow",
+        "x": 20,
+        "y": 75,
+        "r": 10,
+        "label": "Yellow",
+        "canFlash": true
+      },
+      {
+        "id": "red",
+        "color": "red",
+        "x": 20,
+        "y": 100,
+        "r": 10,
+        "label": "Red"
+      }
+    ],
+    "backplate": {
+      "points": [
+        {
+          "x": 5,
+          "y": 5,
+          "r": 10
+        },
+        {
+          "x": 35,
+          "y": 5,
+          "r": 10
+        },
+        {
+          "x": 35,
+          "y": 115,
+          "r": 10
+        },
+        {
+          "x": 5,
+          "y": 115,
+          "r": 10
+        }
+      ]
+    }
+  }
+]

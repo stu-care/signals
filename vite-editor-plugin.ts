@@ -43,6 +43,30 @@ export function editorPlugin(): Plugin {
             return send(res, 200, { ids })
           }
 
+          // /lamp-panels?country — GET reads the shared lamp-panel store, PUT writes it.
+          if (url.pathname.startsWith('/lamp-panels')) {
+            const file = path.resolve(process.cwd(), 'src/data', country, 'lamp-panels.json')
+            if (req.method === 'GET') {
+              try {
+                const text = await readFile(file, 'utf8')
+                res.statusCode = 200
+                res.setHeader('Content-Type', 'application/json')
+                return res.end(text)
+              } catch {
+                return send(res, 200, [])
+              }
+            }
+            if (req.method === 'PUT') {
+              const chunks: Buffer[] = []
+              for await (const c of req) chunks.push(c as Buffer)
+              const parsed = JSON.parse(Buffer.concat(chunks).toString('utf8'))
+              if (!Array.isArray(parsed)) return send(res, 400, { error: 'expected an array' })
+              await mkdir(path.dirname(file), { recursive: true })
+              await writeFile(file, JSON.stringify(parsed, null, 2) + '\n', 'utf8')
+              return send(res, 200, { ok: true })
+            }
+          }
+
           // /family?country&id — GET reads, PUT writes.
           if (url.pathname.startsWith('/family')) {
             if (!ID_RE.test(id)) return send(res, 400, { error: 'bad id' })
