@@ -1,172 +1,1542 @@
 [
   {
     "id": "lamp-mkprh",
-    "name": "HV Block (DE)",
+    "name": "H/V Blocksignal",
     "w": 88,
     "h": 180,
     "lamps": [
       {
-        "id": "green",
+        "id": "block-green",
         "color": "green",
         "x": 63,
         "y": 150,
-        "r": 10,
-        "label": "Green"
+        "r": 11,
+        "label": "Block Green"
       },
       {
-        "id": "red",
+        "id": "block-red",
         "color": "red",
         "x": 25,
         "y": 150,
-        "r": 10,
-        "label": "Red"
+        "r": 11,
+        "label": "Block Red"
       }
     ],
-    "backplate": {
-      "points": [
-        {
-          "x": 5,
-          "y": 15,
-          "r": 2
-        },
-        {
-          "x": 15,
-          "y": 5,
-          "r": 2
-        },
-        {
-          "x": 73,
-          "y": 5,
-          "r": 2
-        },
-        {
-          "x": 83,
-          "y": 15,
-          "r": 2
-        },
-        {
-          "x": 83,
-          "y": 175,
-          "r": 2
-        },
-        {
-          "x": 5,
-          "y": 175,
-          "r": 2
-        }
-      ]
-    }
+    "backplates": [
+      {
+        "points": [
+          {
+            "x": 5,
+            "y": 15,
+            "r": 2
+          },
+          {
+            "x": 15,
+            "y": 5,
+            "r": 2
+          },
+          {
+            "x": 73,
+            "y": 5,
+            "r": 2
+          },
+          {
+            "x": 83,
+            "y": 15,
+            "r": 2
+          },
+          {
+            "x": 83,
+            "y": 175,
+            "r": 2
+          },
+          {
+            "x": 5,
+            "y": 175,
+            "r": 2
+          }
+        ]
+      }
+    ]
   },
   {
     "id": "lamp-8jsm2",
-    "name": "HV Distant (DE)",
+    "name": "H/V Vorsignal",
     "w": 130,
     "h": 105,
     "lamps": [
       {
-        "id": "green-t",
+        "id": "vor-reen-t",
         "color": "green",
         "x": 110,
         "y": 20,
-        "r": 10,
-        "label": "Upper Green"
+        "r": 11,
+        "label": "Vor Upper Green"
       },
       {
-        "id": "yellow-t",
+        "id": "vor-yellow-t",
         "color": "yellow",
         "x": 85,
         "y": 20,
-        "r": 10,
-        "label": "Upper Yellow"
+        "r": 11,
+        "label": "Vor Upper Yellow"
       },
       {
-        "id": "green-b",
+        "id": "vor-green-b",
         "color": "green",
         "x": 45,
         "y": 85,
-        "r": 10,
-        "label": "Lower Green"
+        "r": 11,
+        "label": "Vor Lower Green"
       },
       {
-        "id": "yellow-b",
+        "id": "vor-yellow-b",
         "color": "yellow",
         "x": 20,
         "y": 85,
-        "r": 10,
-        "label": "Lower Yellow"
-      },
-      {
-        "id": "white",
-        "color": "white",
-        "x": 40,
-        "y": 30,
-        "r": 5,
-        "label": "White (Kennlicht)"
+        "r": 11,
+        "label": "Vor Lower Yellow"
       }
     ],
-    "backplate": {
-      "points": [
-        {
-          "x": 5,
-          "y": 75,
-          "r": 2
-        },
-        {
-          "x": 40,
-          "y": 43,
-          "r": 2
-        },
-        {
-          "x": 28,
-          "y": 30,
-          "r": 100
-        },
-        {
-          "x": 40,
-          "y": 18,
-          "r": 131
-        },
-        {
-          "x": 52,
-          "y": 31,
-          "r": 2
-        },
-        {
-          "x": 80,
-          "y": 5,
-          "r": 2
-        },
-        {
-          "x": 115,
-          "y": 5,
-          "r": 2
-        },
-        {
-          "x": 125,
-          "y": 15,
-          "r": 2
-        },
-        {
-          "x": 125,
-          "y": 30,
-          "r": 0
-        },
-        {
-          "x": 50,
-          "y": 100,
-          "r": 2
-        },
-        {
-          "x": 15,
-          "y": 100,
-          "r": 2
-        },
-        {
-          "x": 5,
-          "y": 90,
-          "r": 2
-        }
-      ]
-    }
+    "backplates": [
+      {
+        "points": [
+          {
+            "x": 5,
+            "y": 75,
+            "r": 2
+          },
+          {
+            "x": 80,
+            "y": 5,
+            "r": 2
+          },
+          {
+            "x": 115,
+            "y": 5,
+            "r": 2
+          },
+          {
+            "x": 125,
+            "y": 15,
+            "r": 2
+          },
+          {
+            "x": 125,
+            "y": 30,
+            "r": 0
+          },
+          {
+            "x": 50,
+            "y": 100,
+            "r": 2
+          },
+          {
+            "x": 15,
+            "y": 100,
+            "r": 2
+          },
+          {
+            "x": 5,
+            "y": 90,
+            "r": 2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "lamp-vlbyp",
+    "name": "H/V Zs1",
+    "w": 50,
+    "h": 50,
+    "lamps": [
+      {
+        "id": "zs1-white-br",
+        "color": "white",
+        "x": 35,
+        "y": 32,
+        "r": 6,
+        "label": "Zs1 White (Bottom Right)",
+        "canFlash": true
+      },
+      {
+        "id": "zs1-white-tc",
+        "color": "white",
+        "x": 25,
+        "y": 18,
+        "r": 6,
+        "label": "ZS1 White (Top Center)",
+        "canFlash": true
+      },
+      {
+        "id": "zs1-white-bl",
+        "color": "white",
+        "x": 15,
+        "y": 32,
+        "r": 6,
+        "label": "Zs1 White (Bottom Left)",
+        "canFlash": true
+      }
+    ],
+    "backplates": [
+      {
+        "points": [
+          {
+            "x": 5,
+            "y": 5,
+            "r": 2
+          },
+          {
+            "x": 45,
+            "y": 5,
+            "r": 2
+          },
+          {
+            "x": 45,
+            "y": 45,
+            "r": 2
+          },
+          {
+            "x": 5,
+            "y": 45,
+            "r": 2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "lamp-0glvr",
+    "name": "H/V Einfahrsignal",
+    "w": 88,
+    "h": 180,
+    "lamps": [
+      {
+        "id": "ein-green",
+        "color": "green",
+        "x": 63,
+        "y": 28,
+        "r": 11,
+        "label": "Ein Green"
+      },
+      {
+        "id": "eim-red",
+        "color": "red",
+        "x": 25,
+        "y": 150,
+        "r": 11,
+        "label": "Ein Red"
+      },
+      {
+        "id": "ein-yellow",
+        "color": "yellow",
+        "x": 63,
+        "y": 150,
+        "r": 11,
+        "label": "Ein Yellow"
+      }
+    ],
+    "backplates": [
+      {
+        "points": [
+          {
+            "x": 5,
+            "y": 15,
+            "r": 2
+          },
+          {
+            "x": 15,
+            "y": 5,
+            "r": 2
+          },
+          {
+            "x": 73,
+            "y": 5,
+            "r": 2
+          },
+          {
+            "x": 83,
+            "y": 15,
+            "r": 2
+          },
+          {
+            "x": 83,
+            "y": 175,
+            "r": 2
+          },
+          {
+            "x": 5,
+            "y": 175,
+            "r": 2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "lamp-9ouo9",
+    "name": "H/V Hauptsignal",
+    "w": 88,
+    "h": 180,
+    "lamps": [
+      {
+        "id": "haup-green",
+        "color": "green",
+        "x": 63,
+        "y": 28,
+        "r": 11,
+        "label": "Haup Green"
+      },
+      {
+        "id": "haup-red-b",
+        "color": "red",
+        "x": 25,
+        "y": 150,
+        "r": 11,
+        "label": "Haup Red (Bottom)"
+      },
+      {
+        "id": "haup-yellow",
+        "color": "yellow",
+        "x": 63,
+        "y": 150,
+        "r": 11,
+        "label": "Haup Yellow"
+      },
+      {
+        "id": "haup-red-t",
+        "color": "red",
+        "x": 25,
+        "y": 28,
+        "r": 11,
+        "label": "Haup Red (Top)"
+      }
+    ],
+    "backplates": [
+      {
+        "points": [
+          {
+            "x": 5,
+            "y": 15,
+            "r": 2
+          },
+          {
+            "x": 15,
+            "y": 5,
+            "r": 2
+          },
+          {
+            "x": 73,
+            "y": 5,
+            "r": 2
+          },
+          {
+            "x": 83,
+            "y": 15,
+            "r": 2
+          },
+          {
+            "x": 83,
+            "y": 175,
+            "r": 2
+          },
+          {
+            "x": 5,
+            "y": 175,
+            "r": 2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "lamp-7215f",
+    "name": "H/V Sperrsignal",
+    "w": 70,
+    "h": 45,
+    "lamps": [
+      {
+        "id": "sperr-white-b",
+        "color": "white",
+        "x": 20,
+        "y": 30,
+        "r": 6,
+        "label": "Sperr White (Bottom)"
+      },
+      {
+        "id": "sperr-white-t",
+        "color": "white",
+        "x": 35,
+        "y": 15,
+        "r": 6,
+        "label": "Sperr White (Top)"
+      },
+      {
+        "id": "sperr-red-r",
+        "color": "red",
+        "x": 50,
+        "y": 15,
+        "r": 6,
+        "label": "Sperr Red (Right)"
+      },
+      {
+        "id": "sperr-red-l",
+        "color": "red",
+        "x": 20,
+        "y": 15,
+        "r": 6,
+        "label": "Sperr Red (Left)"
+      }
+    ],
+    "backplates": [
+      {
+        "points": [
+          {
+            "x": 5,
+            "y": 15,
+            "r": 2
+          },
+          {
+            "x": 15,
+            "y": 5,
+            "r": 2
+          },
+          {
+            "x": 55,
+            "y": 5,
+            "r": 2
+          },
+          {
+            "x": 65,
+            "y": 15,
+            "r": 2
+          },
+          {
+            "x": 65,
+            "y": 40,
+            "r": 2
+          },
+          {
+            "x": 5,
+            "y": 40,
+            "r": 2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "lamp-wdc77",
+    "name": "H/V Ausfahrsignal",
+    "w": 88,
+    "h": 180,
+    "lamps": [
+      {
+        "id": "aus-red-r",
+        "color": "red",
+        "x": 63,
+        "y": 55,
+        "r": 11,
+        "label": "Aus Red (Right)"
+      },
+      {
+        "id": "aus-yellow",
+        "color": "yellow",
+        "x": 25,
+        "y": 150,
+        "r": 11,
+        "label": "Aus Yellow"
+      },
+      {
+        "id": "aus-green",
+        "color": "green",
+        "x": 25,
+        "y": 26,
+        "r": 11,
+        "label": "Aus Green",
+        "canFlash": true
+      },
+      {
+        "id": "aus-red-l",
+        "color": "red",
+        "x": 25,
+        "y": 55,
+        "r": 11,
+        "label": "Aus Red (Left)"
+      },
+      {
+        "id": "aus-white-t",
+        "color": "white",
+        "x": 63,
+        "y": 80,
+        "r": 6,
+        "label": "Aus White (Top)"
+      },
+      {
+        "id": "aus-white-b",
+        "color": "white",
+        "x": 25,
+        "y": 125,
+        "r": 6,
+        "label": "Aus White (Bottom)"
+      }
+    ],
+    "backplates": [
+      {
+        "points": [
+          {
+            "x": 5,
+            "y": 15,
+            "r": 2
+          },
+          {
+            "x": 15,
+            "y": 5,
+            "r": 2
+          },
+          {
+            "x": 73,
+            "y": 5,
+            "r": 2
+          },
+          {
+            "x": 83,
+            "y": 15,
+            "r": 2
+          },
+          {
+            "x": 83,
+            "y": 175,
+            "r": 2
+          },
+          {
+            "x": 5,
+            "y": 175,
+            "r": 2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "lamp-feir7",
+    "name": "H/V Vorsignal",
+    "w": 178,
+    "h": 160,
+    "lamps": [
+      {
+        "id": "vor-yellow-b",
+        "color": "yellow",
+        "x": 30,
+        "y": 120,
+        "r": 11,
+        "label": "Vor Yellow (Bottom)"
+      },
+      {
+        "id": "vor-green-b",
+        "color": "green",
+        "x": 70,
+        "y": 120,
+        "r": 11,
+        "label": "Vor Green (Bottom)"
+      },
+      {
+        "id": "vor-yellow-t",
+        "color": "yellow",
+        "x": 105,
+        "y": 45,
+        "r": 11,
+        "label": "Vor Yellow (Top)"
+      },
+      {
+        "id": "vor-green-top",
+        "color": "green",
+        "x": 150,
+        "y": 45,
+        "r": 11,
+        "label": "Vor Green (Top)"
+      }
+    ],
+    "backplates": [
+      {
+        "points": [
+          {
+            "x": 100,
+            "y": 5,
+            "r": 2
+          },
+          {
+            "x": 155,
+            "y": 5,
+            "r": 2
+          },
+          {
+            "x": 170,
+            "y": 25,
+            "r": 2
+          },
+          {
+            "x": 170,
+            "y": 55,
+            "r": 2
+          },
+          {
+            "x": 65,
+            "y": 155,
+            "r": 2
+          },
+          {
+            "x": 25,
+            "y": 155,
+            "r": 2
+          },
+          {
+            "x": 5,
+            "y": 140,
+            "r": 2
+          },
+          {
+            "x": 5,
+            "y": 100,
+            "r": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "lamp-k5hgs",
+    "name": "H/V Vorsignalwiederholer",
+    "w": 178,
+    "h": 160,
+    "lamps": [
+      {
+        "id": "vwh-yellow-b",
+        "color": "yellow",
+        "x": 30,
+        "y": 120,
+        "r": 11,
+        "label": "Vwh Yellow (Bottom)"
+      },
+      {
+        "id": "vwh-green-b",
+        "color": "green",
+        "x": 70,
+        "y": 120,
+        "r": 11,
+        "label": "Vwh Green (Bottom)"
+      },
+      {
+        "id": "vwh-yellow-t",
+        "color": "yellow",
+        "x": 105,
+        "y": 45,
+        "r": 11,
+        "label": "Vwh Yellow (Top)"
+      },
+      {
+        "id": "vwh-green-top",
+        "color": "green",
+        "x": 150,
+        "y": 45,
+        "r": 11,
+        "label": "Vwh Green (Top)"
+      },
+      {
+        "id": "vwh-white",
+        "color": "white",
+        "x": 45,
+        "y": 45,
+        "r": 6,
+        "label": "Vwh White"
+      }
+    ],
+    "backplates": [
+      {
+        "points": [
+          {
+            "x": 100,
+            "y": 5,
+            "r": 2
+          },
+          {
+            "x": 155,
+            "y": 5,
+            "r": 2
+          },
+          {
+            "x": 170,
+            "y": 25,
+            "r": 2
+          },
+          {
+            "x": 170,
+            "y": 55,
+            "r": 2
+          },
+          {
+            "x": 65,
+            "y": 155,
+            "r": 2
+          },
+          {
+            "x": 25,
+            "y": 155,
+            "r": 2
+          },
+          {
+            "x": 5,
+            "y": 140,
+            "r": 2
+          },
+          {
+            "x": 5,
+            "y": 100,
+            "r": 0
+          },
+          {
+            "x": 45,
+            "y": 60,
+            "r": 2
+          },
+          {
+            "x": 30,
+            "y": 45,
+            "r": 31
+          },
+          {
+            "x": 45,
+            "y": 30,
+            "r": 16
+          },
+          {
+            "x": 60,
+            "y": 45,
+            "r": 2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "lamp-04269",
+    "name": "Rangiersignal",
+    "w": 180,
+    "h": 180,
+    "lamps": [
+      {
+        "id": "rang-c",
+        "color": "white",
+        "x": 90,
+        "y": 90,
+        "r": 8,
+        "label": "Rang Center"
+      },
+      {
+        "id": "rang-v-1",
+        "color": "white",
+        "x": 90,
+        "y": 25,
+        "r": 8,
+        "label": "Rang Vertical 1"
+      },
+      {
+        "id": "rang-v-2",
+        "color": "white",
+        "x": 90,
+        "y": 57,
+        "r": 8,
+        "label": "Rang Vertical 2"
+      },
+      {
+        "id": "rang-v-3",
+        "color": "white",
+        "x": 90,
+        "y": 122,
+        "r": 8,
+        "label": "Rang Vertical 3"
+      },
+      {
+        "id": "rang-v-4",
+        "color": "white",
+        "x": 90,
+        "y": 155,
+        "r": 8,
+        "label": "Rang Vertical 4"
+      },
+      {
+        "id": "rang-h-1",
+        "color": "white",
+        "x": 25,
+        "y": 90,
+        "r": 8,
+        "label": "Rang Horizontal 1"
+      },
+      {
+        "id": "rang-h-2",
+        "color": "white",
+        "x": 57,
+        "y": 90,
+        "r": 8,
+        "label": "Rang Horizontal 2"
+      },
+      {
+        "id": "rang-h-3",
+        "color": "white",
+        "x": 122,
+        "y": 90,
+        "r": 8,
+        "label": "Rang Horizontal 3"
+      },
+      {
+        "id": "rang-h-4",
+        "color": "white",
+        "x": 155,
+        "y": 90,
+        "r": 8,
+        "label": "Rang Horizontal 4"
+      },
+      {
+        "id": "rang-d-1",
+        "color": "white",
+        "x": 45,
+        "y": 135,
+        "r": 8,
+        "label": "Rang Diagonal 1"
+      },
+      {
+        "id": "rang-d-2",
+        "color": "white",
+        "x": 65,
+        "y": 115,
+        "r": 8,
+        "label": "Rang Diagonal 2"
+      },
+      {
+        "id": "rang-d-3",
+        "color": "white",
+        "x": 115,
+        "y": 65,
+        "r": 8,
+        "label": "Rang Diagonal 3"
+      },
+      {
+        "id": "rang-d-4",
+        "color": "white",
+        "x": 135,
+        "y": 45,
+        "r": 8,
+        "label": "Rang Diagonal 4"
+      }
+    ],
+    "backplates": [
+      {
+        "points": [
+          {
+            "x": 10,
+            "y": 56,
+            "r": 2
+          },
+          {
+            "x": 56,
+            "y": 10,
+            "r": 2
+          },
+          {
+            "x": 124,
+            "y": 10,
+            "r": 2
+          },
+          {
+            "x": 170,
+            "y": 56,
+            "r": 2
+          },
+          {
+            "x": 170,
+            "y": 124,
+            "r": 2
+          },
+          {
+            "x": 124,
+            "y": 170,
+            "r": 2
+          },
+          {
+            "x": 56,
+            "y": 170,
+            "r": 2
+          },
+          {
+            "x": 10,
+            "y": 124,
+            "r": 2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "lamp-1iqht",
+    "name": "Ks Mehrabschnittsignal + Zs1",
+    "w": 100,
+    "h": 190,
+    "lamps": [
+      {
+        "id": "mz1-green",
+        "color": "green",
+        "x": 30,
+        "y": 82,
+        "r": 11,
+        "label": "M + Zs1 Green",
+        "canFlash": true
+      },
+      {
+        "id": "mz1-yellow",
+        "color": "yellow",
+        "x": 70,
+        "y": 82,
+        "r": 11,
+        "label": "M + Zs1 Yellow"
+      },
+      {
+        "id": "mz1-red",
+        "color": "red",
+        "x": 50,
+        "y": 42,
+        "r": 11,
+        "label": "M+Zs1 Red"
+      },
+      {
+        "id": "mz1-white-t",
+        "color": "white",
+        "x": 25,
+        "y": 20,
+        "r": 6,
+        "label": "M + Zs1 White (Top)"
+      },
+      {
+        "id": "mz1-white-m",
+        "color": "white",
+        "x": 50,
+        "y": 115,
+        "r": 6,
+        "label": "M + Zs1 White (Middle)"
+      },
+      {
+        "id": "mz1-white-b",
+        "color": "white",
+        "x": 18,
+        "y": 151,
+        "r": 6,
+        "label": "M + Zs1 White (Bottom)"
+      }
+    ],
+    "backplates": [
+      {
+        "points": [
+          {
+            "x": 5,
+            "y": 5,
+            "r": 2
+          },
+          {
+            "x": 95,
+            "y": 5,
+            "r": 2
+          },
+          {
+            "x": 95,
+            "y": 185,
+            "r": 2
+          },
+          {
+            "x": 5,
+            "y": 185,
+            "r": 2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "lamp-nrfpl",
+    "name": "Ks Mehrabschnittsignal + Zs7",
+    "w": 100,
+    "h": 190,
+    "lamps": [
+      {
+        "id": "mz7-green",
+        "color": "green",
+        "x": 30,
+        "y": 82,
+        "r": 11,
+        "label": "M + Zs7 Green",
+        "canFlash": true
+      },
+      {
+        "id": "mz7-yellow",
+        "color": "yellow",
+        "x": 70,
+        "y": 82,
+        "r": 11,
+        "label": "M + Zs7 Yellow"
+      },
+      {
+        "id": "mz7-red",
+        "color": "red",
+        "x": 50,
+        "y": 42,
+        "r": 11,
+        "label": "M+Zs7 Red"
+      },
+      {
+        "id": "mz7-white-t",
+        "color": "white",
+        "x": 25,
+        "y": 20,
+        "r": 6,
+        "label": "M + Zs7 White (Top)"
+      },
+      {
+        "id": "mz7-white-b",
+        "color": "white",
+        "x": 18,
+        "y": 151,
+        "r": 6,
+        "label": "M + Zs7 White (Bottom)"
+      },
+      {
+        "id": "mz7-yellow-bl",
+        "color": "yellow",
+        "x": 30,
+        "y": 115,
+        "r": 6,
+        "label": "M + Zs7 Yellow (Bottom Left)"
+      },
+      {
+        "id": "mz7-yellow-bc",
+        "color": "yellow",
+        "x": 50,
+        "y": 150,
+        "r": 6,
+        "label": "M + Zs7 Yellow (Bottom Center)"
+      },
+      {
+        "id": "mz7-yellow-br",
+        "color": "yellow",
+        "x": 70,
+        "y": 115,
+        "r": 6,
+        "label": "M + Zs7 Yellow (Bottom Right)"
+      }
+    ],
+    "backplates": [
+      {
+        "points": [
+          {
+            "x": 5,
+            "y": 5,
+            "r": 2
+          },
+          {
+            "x": 95,
+            "y": 5,
+            "r": 2
+          },
+          {
+            "x": 95,
+            "y": 185,
+            "r": 2
+          },
+          {
+            "x": 5,
+            "y": 185,
+            "r": 2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "lamp-1adft",
+    "name": "Ks Hauptsignal + Zs1",
+    "w": 100,
+    "h": 190,
+    "lamps": [
+      {
+        "id": "hz1-green",
+        "color": "green",
+        "x": 50,
+        "y": 82,
+        "r": 11,
+        "label": "H + Zs1 Green",
+        "canFlash": true
+      },
+      {
+        "id": "hz1-red",
+        "color": "red",
+        "x": 50,
+        "y": 42,
+        "r": 11,
+        "label": "H+Zs1 Red"
+      },
+      {
+        "id": "hz1-white-t",
+        "color": "white",
+        "x": 25,
+        "y": 20,
+        "r": 6,
+        "label": "H + Zs1 White (Top)"
+      },
+      {
+        "id": "hz1-white-m",
+        "color": "white",
+        "x": 50,
+        "y": 115,
+        "r": 6,
+        "label": "H + Zs1 White (Middle)"
+      },
+      {
+        "id": "hz1-white-b",
+        "color": "white",
+        "x": 18,
+        "y": 151,
+        "r": 6,
+        "label": "H + Zs1 White (Bottom)"
+      }
+    ],
+    "backplates": [
+      {
+        "points": [
+          {
+            "x": 5,
+            "y": 5,
+            "r": 2
+          },
+          {
+            "x": 95,
+            "y": 5,
+            "r": 2
+          },
+          {
+            "x": 95,
+            "y": 185,
+            "r": 2
+          },
+          {
+            "x": 5,
+            "y": 185,
+            "r": 2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "lamp-nrfpd",
+    "name": "Ks Hauptsignal + Zs7",
+    "w": 100,
+    "h": 190,
+    "lamps": [
+      {
+        "id": "hz7-green",
+        "color": "green",
+        "x": 50,
+        "y": 82,
+        "r": 11,
+        "label": "H + Zs7 Green",
+        "canFlash": true
+      },
+      {
+        "id": "hz7-red",
+        "color": "red",
+        "x": 50,
+        "y": 42,
+        "r": 11,
+        "label": "H+Zs7 Red"
+      },
+      {
+        "id": "hz7-white-t",
+        "color": "white",
+        "x": 25,
+        "y": 20,
+        "r": 6,
+        "label": "H + Zs7 White (Top)"
+      },
+      {
+        "id": "hz7-white-b",
+        "color": "white",
+        "x": 18,
+        "y": 151,
+        "r": 6,
+        "label": "H + Zs7 White (Bottom)"
+      },
+      {
+        "id": "hz7-yellow-bl",
+        "color": "yellow",
+        "x": 30,
+        "y": 115,
+        "r": 6,
+        "label": "H + Zs7 Yellow (Bottom Left)"
+      },
+      {
+        "id": "hz7-yellow-bc",
+        "color": "yellow",
+        "x": 50,
+        "y": 150,
+        "r": 6,
+        "label": "H + Zs7 Yellow (Bottom Center)"
+      },
+      {
+        "id": "hz7-yellow-br",
+        "color": "yellow",
+        "x": 70,
+        "y": 115,
+        "r": 6,
+        "label": "H + Zs7 Yellow (Bottom Right)"
+      }
+    ],
+    "backplates": [
+      {
+        "points": [
+          {
+            "x": 5,
+            "y": 5,
+            "r": 2
+          },
+          {
+            "x": 95,
+            "y": 5,
+            "r": 2
+          },
+          {
+            "x": 95,
+            "y": 185,
+            "r": 2
+          },
+          {
+            "x": 5,
+            "y": 185,
+            "r": 2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "lamp-24trj",
+    "name": "Ks Vorsignal",
+    "w": 100,
+    "h": 155,
+    "lamps": [
+      {
+        "id": "kvor-yellow",
+        "color": "yellow",
+        "x": 75,
+        "y": 47,
+        "r": 11,
+        "label": "Vor Yellow"
+      },
+      {
+        "id": "kvor-green",
+        "color": "green",
+        "x": 27,
+        "y": 47,
+        "r": 11,
+        "label": "Vor Green"
+      },
+      {
+        "id": "kvor-white-t",
+        "color": "white",
+        "x": 27,
+        "y": 20,
+        "r": 6,
+        "label": "Vor White (Top)"
+      },
+      {
+        "id": "kvor-white-b",
+        "color": "white",
+        "x": 15,
+        "y": 118,
+        "r": 6,
+        "label": "Vor White (Bottom)"
+      }
+    ],
+    "backplates": [
+      {
+        "points": [
+          {
+            "x": 5,
+            "y": 5,
+            "r": 2
+          },
+          {
+            "x": 95,
+            "y": 5,
+            "r": 2
+          },
+          {
+            "x": 95,
+            "y": 150,
+            "r": 2
+          },
+          {
+            "x": 5,
+            "y": 150,
+            "r": 2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "lamp-bn2lo",
+    "name": "Hl Vorsignal",
+    "w": 88,
+    "h": 180,
+    "lamps": [
+      {
+        "id": "vor-green",
+        "color": "green",
+        "x": 65,
+        "y": 35,
+        "r": 11,
+        "label": "Vor Green"
+      },
+      {
+        "id": "vor-red",
+        "color": "red",
+        "x": 25,
+        "y": 35,
+        "r": 11,
+        "label": "Vor Red"
+      }
+    ],
+    "backplates": [
+      {
+        "points": [
+          {
+            "x": 5,
+            "y": 15,
+            "r": 2
+          },
+          {
+            "x": 15,
+            "y": 5,
+            "r": 2
+          },
+          {
+            "x": 73,
+            "y": 5,
+            "r": 2
+          },
+          {
+            "x": 83,
+            "y": 15,
+            "r": 2
+          },
+          {
+            "x": 83,
+            "y": 175,
+            "r": 2
+          },
+          {
+            "x": 5,
+            "y": 175,
+            "r": 2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "lamp-b8qv8",
+    "name": "Hl Mehrabschnittssignal",
+    "w": 88,
+    "h": 235,
+    "lamps": [
+      {
+        "id": "mehr-green",
+        "color": "green",
+        "x": 65,
+        "y": 35,
+        "r": 11,
+        "label": "Mehr Green"
+      },
+      {
+        "id": "mehr-yellow-t",
+        "color": "yellow",
+        "x": 25,
+        "y": 35,
+        "r": 11,
+        "label": "Mehr Yellow (Top)"
+      },
+      {
+        "id": "mls-yellow-1",
+        "color": "yellow",
+        "x": 18,
+        "y": 195,
+        "r": 6,
+        "label": "Mehr LS Yellow 1"
+      },
+      {
+        "id": "mls-yellow-2",
+        "color": "yellow",
+        "x": 37,
+        "y": 195,
+        "r": 6,
+        "label": "Mehr LS Yellow 2"
+      },
+      {
+        "id": "mls-yellow-3",
+        "color": "yellow",
+        "x": 55,
+        "y": 195,
+        "r": 6,
+        "label": "Mehr LS Yellow 3"
+      },
+      {
+        "id": "mls-yellow-4",
+        "color": "yellow",
+        "x": 73,
+        "y": 195,
+        "r": 6,
+        "label": "Mehr LS Yellow 4"
+      },
+      {
+        "id": "mls-green-1",
+        "color": "green",
+        "x": 18,
+        "y": 215,
+        "r": 6,
+        "label": "Mehr LS Green 1"
+      },
+      {
+        "id": "mls-green-2",
+        "color": "green",
+        "x": 37,
+        "y": 215,
+        "r": 6,
+        "label": "Mehr LS Green 2"
+      },
+      {
+        "id": "mls-green-3",
+        "color": "green",
+        "x": 55,
+        "y": 215,
+        "r": 6,
+        "label": "Mehr LS Green 3"
+      },
+      {
+        "id": "mls-green-4",
+        "color": "green",
+        "x": 73,
+        "y": 215,
+        "r": 6,
+        "label": "Mehr LS Green 4"
+      },
+      {
+        "id": "mehr-yellow-b",
+        "color": "yellow",
+        "x": 25,
+        "y": 145,
+        "r": 11,
+        "label": "Mehr Yellow (Bottom)"
+      },
+      {
+        "id": "mehr-red-b",
+        "color": "red",
+        "x": 65,
+        "y": 145,
+        "r": 11,
+        "label": "Mehr Red (Bottom)"
+      },
+      {
+        "id": "mehr-red-t",
+        "color": "red",
+        "x": 45,
+        "y": 90,
+        "r": 11,
+        "label": "Mehr Red (Top)"
+      },
+      {
+        "id": "mehr-white-b",
+        "color": "white",
+        "x": 25,
+        "y": 115,
+        "r": 6,
+        "label": "Mehr White (Bottom)"
+      },
+      {
+        "id": "mehr-white-t",
+        "color": "white",
+        "x": 65,
+        "y": 65,
+        "r": 6,
+        "label": "Mehr White (Top)"
+      }
+    ],
+    "backplates": [
+      {
+        "points": [
+          {
+            "x": 5,
+            "y": 15,
+            "r": 2
+          },
+          {
+            "x": 15,
+            "y": 5,
+            "r": 2
+          },
+          {
+            "x": 73,
+            "y": 5,
+            "r": 2
+          },
+          {
+            "x": 83,
+            "y": 15,
+            "r": 2
+          },
+          {
+            "x": 83,
+            "y": 175,
+            "r": 2
+          },
+          {
+            "x": 5,
+            "y": 175,
+            "r": 2
+          }
+        ]
+      },
+      {
+        "points": [
+          {
+            "x": 5,
+            "y": 180,
+            "r": 2
+          },
+          {
+            "x": 83,
+            "y": 180,
+            "r": 2
+          },
+          {
+            "x": 83,
+            "y": 230,
+            "r": 2
+          },
+          {
+            "x": 5,
+            "y": 230,
+            "r": 2
+          }
+        ]
+      }
+    ]
   }
 ]

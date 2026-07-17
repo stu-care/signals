@@ -1,0 +1,173 @@
+{
+  "id": "ks",
+  "name": "Kombinationssignale (Ks)",
+  "blurb": "",
+  "intro": "",
+  "order": 1,
+  "variants": [
+    {
+      "id": "main",
+      "name": "Combined",
+      "blurb": "",
+      "panels": [
+        {
+          "type": "glyph",
+          "id": "glyph-4n82s",
+          "size": 24,
+          "label": "Glyph"
+        },
+        {
+          "type": "lamps-ref",
+          "id": "lamps-jeqpo",
+          "ref": "lamp-1iqht"
+        },
+        {
+          "type": "glyph",
+          "id": "glyph-c1bwj",
+          "size": 24,
+          "label": "Glyph"
+        },
+        {
+          "type": "sign",
+          "id": "sign-lxau2",
+          "kind": "de-mast-main",
+          "primary": "40",
+          "size": 34,
+          "label": "Sign"
+        },
+        {
+          "type": "sign",
+          "id": "sign-pih2p",
+          "kind": "de-mast-vf",
+          "primary": "40",
+          "size": 34,
+          "label": "Sign"
+        }
+      ],
+      "aspects": [
+        {
+          "id": "hp0-1",
+          "name": "Hp0 (Halt)",
+          "meaning": "Stop",
+          "concept": "danger",
+          "whatItMeans": "",
+          "whatYouDo": "",
+          "lamps": {
+            "mz1-red": "on"
+          }
+        },
+        {
+          "id": "ks1",
+          "name": "Ks1 (Fahrt)",
+          "meaning": "Proceed",
+          "concept": "clear",
+          "whatItMeans": "",
+          "whatYouDo": "",
+          "lamps": {
+            "mz1-green": "on"
+          }
+        },
+        {
+          "id": "ks2",
+          "name": "Ks2 (Halt erwarten)",
+          "meaning": "Expect stop",
+          "concept": "caution",
+          "whatItMeans": "",
+          "whatYouDo": "",
+          "lamps": {
+            "mz1-yellow": "on"
+          }
+        }
+      ]
+    },
+    {
+      "id": "variant-afr4n",
+      "name": "Main",
+      "blurb": "",
+      "panels": [
+        {
+          "type": "glyph",
+          "id": "glyph-838b4",
+          "size": 24,
+          "label": "Glyph"
+        },
+        {
+          "type": "lamps-ref",
+          "id": "lamps-mjcjl",
+          "ref": "lamp-nrfpl"
+        },
+        {
+          "type": "sign",
+          "id": "sign-hhzjk",
+          "kind": "de-mast-main",
+          "primary": "40",
+          "size": 34,
+          "label": "Sign"
+        }
+      ],
+      "aspects": [
+        {
+          "id": "hp0",
+          "name": "Hp0 (Halt)",
+          "meaning": "Stop",
+          "concept": "danger",
+          "whatItMeans": "",
+          "whatYouDo": "",
+          "lamps": {
+            "mz7-red": "on"
+          }
+        },
+        {
+          "id": "ks1",
+          "name": "Ks1 (Fahrt)",
+          "meaning": "Proceed",
+          "concept": "clear",
+          "whatItMeans": "",
+          "whatYouDo": "",
+          "lamps": {
+            "mz7-green": "on"
+          }
+        }
+      ]
+    },
+    {
+      "id": "variant-6x180",
+      "name": "Distant",
+      "blurb": "",
+      "panels": [
+        {
+          "type": "lamps-ref",
+          "id": "lamps-7f31b",
+          "ref": "lamp-24trj"
+        },
+        {
+          "type": "glyph",
+          "id": "glyph-2utmb",
+          "size": 24,
+          "label": "Glyph"
+        },
+        {
+          "type": "sign",
+          "id": "sign-ylvs0",
+          "kind": "de-vorsignaltafel",
+          "primary": "40",
+          "size": 34,
+          "label": "Sign"
+        }
+      ],
+      "aspects": [
+        {
+          "id": "ks2",
+          "name": "Ks2 (Halt erwarten)",
+          "meaning": "Expect stop",
+          "concept": "caution",
+          "whatItMeans": "",
+          "whatYouDo": "",
+          "lamps": {
+            "kvor-yellow": "on"
+          }
+        }
+      ]
+    }
+  ]
+}

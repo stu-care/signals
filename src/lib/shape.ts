@@ -1,8 +1,31 @@
+import type { Backplate } from '@/data/types'
+
 export interface ShapePoint {
   x: number
   y: number
   /** Corner radius at this vertex (px); 0 = sharp. */
   r?: number
+}
+
+/** Anything carrying backplate(s) — supports the legacy singular `backplate`. */
+type Backplated = { backplates?: Backplate[]; backplate?: Backplate }
+
+/**
+ * The backplates on a lamp body as a plain array, tolerating the pre-multi legacy
+ * shape where a single outline lived on `backplate`. Read-only; does not mutate.
+ */
+export function backplatesOf(body: Backplated): Backplate[] {
+  if (body.backplates) return body.backplates
+  return body.backplate ? [body.backplate] : []
+}
+
+/**
+ * Migrate a lamp body in place to the canonical `backplates` array, folding away
+ * any legacy singular `backplate`. Safe to call repeatedly.
+ */
+export function migrateBackplates(body: Backplated): void {
+  if (body.backplate && !body.backplates) body.backplates = [body.backplate]
+  delete body.backplate
 }
 
 const round = (n: number) => Math.round(n * 100) / 100

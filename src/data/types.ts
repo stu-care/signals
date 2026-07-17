@@ -67,13 +67,29 @@ export interface BackplatePoint {
 }
 
 /**
- * An optional custom outline behind a lamp panel, drawn as a soft grey line only
- * (no fill) so a signal head can be shaped to look accurate. Points are a closed
- * polygon in the panel's coordinate space; each corner can be individually curved.
+ * A closed-polygon backplate: points in the panel's coordinate space, each corner
+ * individually curvable. `kind` is optional here (absent = poly) so legacy data
+ * that only carried `points` still validates.
  */
-export interface Backplate {
+export interface PolyBackplate {
+  kind?: 'poly'
   points: BackplatePoint[]
 }
+
+/** A circular backplate: centre and radius in the panel's coordinate space. */
+export interface CircleBackplate {
+  kind: 'circle'
+  cx: number
+  cy: number
+  r: number
+}
+
+/**
+ * An optional custom outline behind a lamp panel, drawn as a soft grey line only
+ * (no fill) so a signal head can be shaped to look accurate. A panel may carry
+ * several — any mix of polygons and circles.
+ */
+export type Backplate = PolyBackplate | CircleBackplate
 
 /** Free canvas of dots — the main signal head, GPL clusters, German Ks, etc. */
 export interface LampsPanel {
@@ -82,8 +98,8 @@ export interface LampsPanel {
   w: number
   h: number
   lamps: LampSlot[]
-  /** Optional soft-grey outline shaped around the dots. */
-  backplate?: Backplate
+  /** Soft-grey outlines shaped around the dots (polygons and/or circles). */
+  backplates?: Backplate[]
 }
 
 /**
@@ -97,7 +113,7 @@ export interface SharedLampPanel {
   w: number
   h: number
   lamps: LampSlot[]
-  backplate?: Backplate
+  backplates?: Backplate[]
 }
 
 /**
@@ -187,7 +203,14 @@ export type SignKind =
   | 'tsr-commence'
   | 'tsr-terminate'
   // German lineside boards.
+  // Mast plates (Mastschilder) — tall portrait plates whose banding says how to
+  // pass the adjacent signal at Halt/failed. `main` = white-red-white (a).
   | 'de-mast-main'
+  | 'de-mast-distant' // b) white-yellow-white-yellow-white (also distant function)
+  | 'de-mast-black' // c) white-black-white-black-white (Berlin/Hamburg DC S-Bahn)
+  | 'de-mast-red' // d) solid red (Berlin DC S-Bahn)
+  | 'de-mast-dots' // e) white with two black dots
+  | 'de-mast-vf' // Ks distant-function plate — yellow downward triangle
   | 'de-vorsignaltafel'
 
 /** A static lineside sign (speed boards) — flat plate, no aspect state. */

@@ -10,6 +10,7 @@ import type {
   SignalVariant,
 } from './types'
 import { COUNTRIES } from './countries'
+import { backplatesOf } from '@/lib/shape'
 
 /**
  * Resolve `lamps-ref` panels to full lamp panels using a country's shared
@@ -21,9 +22,16 @@ export function resolveLampsRefs(panels: Panel[], shared: SharedLampPanel[]): Pa
   return panels.map((p): Panel => {
     if (p.type !== 'lamps-ref') return p
     const def = byId.get(p.ref)
-    const resolved: LampsPanel = def
-      ? { type: 'lamps', id: p.id, w: def.w, h: def.h, lamps: def.lamps, ...(def.backplate ? { backplate: def.backplate } : {}) }
-      : { type: 'lamps', id: p.id, w: 20, h: 20, lamps: [] }
+    if (!def) return { type: 'lamps', id: p.id, w: 20, h: 20, lamps: [] }
+    const backplates = backplatesOf(def)
+    const resolved: LampsPanel = {
+      type: 'lamps',
+      id: p.id,
+      w: def.w,
+      h: def.h,
+      lamps: def.lamps,
+      ...(backplates.length ? { backplates } : {}),
+    }
     return resolved
   })
 }
@@ -130,6 +138,31 @@ export function findAspectByConcept(
 /** Which variants can display a given concept (for "shown on" lists). */
 export function variantsShowingConcept(code: string, concept: string): AspectEntry[] {
   return getAllAspects(code).filter((e) => e.aspect.concept === concept)
+}
+
+export interface ConceptOption {
+  concept: string
+  /** A representative aspect name using this concept, to jog the memory. */
+  sample: string
+}
+
+/**
+ * Every distinct concept id across all live datasets, each paired with a sample
+ * aspect name — a pick-list for the editor so concepts get reused, not retyped.
+ * Reflects data on disk; the editor merges in the current family's unsaved ones.
+ */
+export function getAllConceptOptions(): ConceptOption[] {
+  const byConcept = new Map<string, string>()
+  for (const code of Object.keys(DATASETS) as CountryCode[]) {
+    for (const e of getAllAspects(code)) {
+      if (e.aspect.concept && !byConcept.has(e.aspect.concept)) {
+        byConcept.set(e.aspect.concept, e.aspect.name || '')
+      }
+    }
+  }
+  return [...byConcept.entries()]
+    .map(([concept, sample]) => ({ concept, sample }))
+    .sort((a, b) => a.concept.localeCompare(b.concept))
 }
 
 export interface LibraryPanel {

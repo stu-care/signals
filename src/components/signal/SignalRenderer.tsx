@@ -11,7 +11,7 @@ import type {
   PosLightPanel,
   SignPanel,
 } from '@/data/types'
-import { roundedPolyPath } from '@/lib/shape'
+import { backplatesOf, roundedPolyPath } from '@/lib/shape'
 
 /** Signal-state input: which dots are lit, arm positions, lit aux panels, glyph text. */
 export interface SignalStateInput {
@@ -155,10 +155,10 @@ function LampsPanelView({
     .map((l) => ({ l, st: state?.lamps?.[l.id] ?? 'off' }))
     .sort((a, b) => (a.st === 'off' ? 0 : 1) - (b.st === 'off' ? 0 : 1))
 
-  const bp = panel.backplate
+  const bps = backplatesOf(panel)
   return (
     <div style={{ position: 'relative', width: panel.w * scale, height: panel.h * scale }}>
-      {bp && bp.points.length >= 2 && (
+      {bps.length > 0 && (
         <svg
           width={panel.w * scale}
           height={panel.h * scale}
@@ -166,14 +166,30 @@ function LampsPanelView({
           style={{ position: 'absolute', inset: 0, overflow: 'visible', pointerEvents: 'none' }}
           xmlns="http://www.w3.org/2000/svg"
         >
-          <path
-            d={roundedPolyPath(bp.points)}
-            fill="none"
-            stroke="rgba(20,24,34,.3)"
-            strokeWidth={1.3}
-            strokeLinejoin="round"
-            vectorEffect="non-scaling-stroke"
-          />
+          {bps.map((b, i) =>
+            b.kind === 'circle' ? (
+              <circle
+                key={i}
+                cx={b.cx}
+                cy={b.cy}
+                r={b.r}
+                fill="none"
+                stroke="rgba(20,24,34,.3)"
+                strokeWidth={1.3}
+                vectorEffect="non-scaling-stroke"
+              />
+            ) : b.points.length >= 2 ? (
+              <path
+                key={i}
+                d={roundedPolyPath(b.points)}
+                fill="none"
+                stroke="rgba(20,24,34,.3)"
+                strokeWidth={1.3}
+                strokeLinejoin="round"
+                vectorEffect="non-scaling-stroke"
+              />
+            ) : null,
+          )}
         </svg>
       )}
       {ordered.map(({ l, st }) => {
@@ -601,15 +617,34 @@ function SignView({ panel, scale }: { panel: SignPanel; scale: number }) {
       </div>
     )
   }
-  // German main-signal mast plate — portrait board, white / red / white bands.
+  // German mast plates (Mastschilder) — tall portrait boards. The band pattern
+  // prescribes how to pass the adjacent signal when it is at Halt or has failed.
+  const mastW = s * 0.5
+  const mastH = s * 4
+  const bandPlate = (bands: string[]) => (
+    <div
+      style={{
+        width: mastW,
+        height: mastH,
+        border: `${bw}px solid #20242a`,
+        boxSizing: 'border-box',
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden',
+      }}
+    >
+      {bands.map((c, i) => (
+        <div key={i} style={{ flex: 1, background: c }} />
+      ))}
+    </div>
+  )
+  // a) white-red-white — absolute main signal (red band double-height).
   if (panel.kind === 'de-mast-main') {
-    const w = s * 0.82
-    const h = s * 2.1
     return (
       <div
         style={{
-          width: w,
-          height: h,
+          width: mastW,
+          height: mastH,
           border: `${bw}px solid #20242a`,
           boxSizing: 'border-box',
           display: 'flex',
@@ -618,9 +653,48 @@ function SignView({ panel, scale }: { panel: SignPanel; scale: number }) {
         }}
       >
         <div style={{ flex: 1, background: '#ffffff' }} />
-        <div style={{ flex: 1, background: SIGN_RED }} />
+        <div style={{ flex: 2, background: SIGN_RED }} />
         <div style={{ flex: 1, background: '#ffffff' }} />
       </div>
+    )
+  }
+  // b) white-yellow-white-yellow-white — main signal that also has distant function.
+  if (panel.kind === 'de-mast-distant') {
+    return bandPlate(['#ffffff', SIGN_YELLOW, '#ffffff', SIGN_YELLOW, '#ffffff'])
+  }
+  // c) white-black-white-black-white — Berlin/Hamburg DC S-Bahn automatic block.
+  if (panel.kind === 'de-mast-black') {
+    return bandPlate(['#ffffff', SIGN_INK, '#ffffff', SIGN_INK, '#ffffff'])
+  }
+  // d) solid red — Berlin DC S-Bahn.
+  if (panel.kind === 'de-mast-red') {
+    return (
+      <div style={{ width: mastW, height: mastH, background: SIGN_RED, border: `${bw}px solid #20242a`, boxSizing: 'border-box' }} />
+    )
+  }
+  // e) white with two black dots (stacked) — pass a stop signal only on written order.
+  if (panel.kind === 'de-mast-dots') {
+    const dd = mastW * 0.50
+    return (
+      <div style={{ position: 'relative', width: mastW, height: mastH, background: '#ffffff', border: `${bw}px solid #20242a`, boxSizing: 'border-box' }}>
+        {[0.32, 0.68].map((fy, i) => (
+          <div
+            key={i}
+            style={{ position: 'absolute', left: (mastW - dd) / 4, top: mastH * fy - dd / 2, width: dd, height: dd, borderRadius: '50%', background: SIGN_INK }}
+          />
+        ))}
+      </div>
+    )
+  }
+  // Ks distant-function mast plate — a yellow triangle pointing downwards, placed
+  // below the white-red-white plate on a Ks main signal that also has distant function.
+  if (panel.kind === 'de-mast-vf') {
+    const w = s * 0.6
+    const h = s * 3
+    return (
+      <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} xmlns="http://www.w3.org/2000/svg">
+        <polygon points={`0,0 ${w},0 ${w / 2},${h}`} fill={SIGN_YELLOW} stroke="#9c7d07" strokeWidth={bw} strokeLinejoin="round" />
+      </svg>
     )
   }
   // German distant-signal board (Ne 2, Vorsignaltafel) — white portrait board
@@ -628,9 +702,9 @@ function SignView({ panel, scale }: { panel: SignPanel; scale: number }) {
   // white V-notch on each edge.
   if (panel.kind === 'de-vorsignaltafel') {
     const w = s * 1.2
-    const h = s * 1.6
-    const m = bw + s * 0.03 // inset from the border to the X corners
-    const t = w * 0.22 // arm thickness
+    const h = s * 2.4
+    const m = bw + s * 0.0 // inset from the border to the X corners
+    const t = w * 0.16 // arm thickness
     return (
       <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} xmlns="http://www.w3.org/2000/svg">
         <rect x={bw / 2} y={bw / 2} width={w - bw} height={h - bw} fill="#ffffff" stroke="#20242a" strokeWidth={bw} />

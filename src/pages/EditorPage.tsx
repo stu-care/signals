@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type PointerEvent } from 'react'
+import { useEffect, useMemo, useRef, useState, type PointerEvent } from 'react'
 import type {
   ArmPanel,
   Aspect,
@@ -16,7 +16,7 @@ import type {
   SignalVariant,
 } from '@/data/types'
 import { SignalRenderer } from '@/components/signal/SignalRenderer'
-import { roundedPolyPath } from '@/lib/shape'
+import { migrateBackplates, roundedPolyPath } from '@/lib/shape'
 import { ArrowRightIcon, ChevronDownIcon, ChevronUpIcon, CloseIcon } from '@/components/icons'
 import {
   listFamilies,
@@ -25,11 +25,16 @@ import {
   saveFamily,
   saveLampPanels,
 } from '@/lib/editor-api'
-import { resolveLampsRefs } from '@/data'
+import { getAllConceptOptions, resolveLampsRefs } from '@/data'
 import { COUNTRIES } from '@/data/countries'
 
 /** The editable body of a lamp panel — shared by inline and shared-def editing. */
-type LampBody = { id: string; w: number; h: number; lamps: LampSlot[]; backplate?: Backplate }
+type LampBody = { id: string; w: number; h: number; lamps: LampSlot[]; backplates?: Backplate[] }
+
+/** Fold any legacy singular `backplate` on a family's lamps panels + shared defs. */
+function migrateFamilyBackplates(f: SignalFamily): void {
+  for (const v of f.variants) for (const p of v.panels) if (p.type === 'lamps') migrateBackplates(p)
+}
 const COLORS: LampColour[] = ['red', 'amber', 'yellow', 'green', 'white', 'lunar', 'blue']
 const DOT_FILL: Record<LampColour, string> = {
   red: '#e5372b', amber: '#ef8b1b', yellow: '#f1c015', green: '#1fa85a',
@@ -75,7 +80,9 @@ function Editor() {
   const refresh = (c: string) => listFamilies(c).then(setIds).catch((e) => setStatus(String(e)))
   useEffect(() => {
     refresh(country)
-    loadLampPanels(country).then(setSharedPanels).catch(() => setSharedPanels([]))
+    loadLampPanels(country)
+      .then((list) => { list.forEach(migrateBackplates); setSharedPanels(list) })
+      .catch(() => setSharedPanels([]))
     setSharedDirty(false)
   }, [country])
 
@@ -86,6 +93,7 @@ function Editor() {
     }
     loadFamily(country, familyId)
       .then((f) => {
+        migrateFamilyBackplates(f)
         setFamily(f)
         setVi(0)
         setSelPanel(f.variants[0]?.panels[0]?.id ?? null)
@@ -95,6 +103,19 @@ function Editor() {
       })
       .catch((e) => setStatus(String(e)))
   }, [familyId, country])
+
+  // Existing concepts (saved, across all countries) + this family's unsaved ones,
+  // so the aspect "concept" field can offer a pick-list instead of blind typing.
+  const conceptOptions = useMemo(() => {
+    const map = new Map<string, string>()
+    for (const o of getAllConceptOptions()) map.set(o.concept, o.sample)
+    family?.variants.forEach((v) =>
+      v.aspects.forEach((a) => { if (a.concept && !map.has(a.concept)) map.set(a.concept, a.name || '') }),
+    )
+    return [...map.entries()]
+      .map(([concept, sample]) => ({ concept, sample }))
+      .sort((a, b) => a.concept.localeCompare(b.concept))
+  }, [family])
 
   // ---- chooser (no family selected) ----
   if (!familyId) {
@@ -267,6 +288,7 @@ function Editor() {
               selAspect={selAspect}
               setSelAspect={setSelAspect}
               mutVariant={mutVariant}
+              conceptOptions={conceptOptions}
             />
           )}
         </div>
@@ -324,7 +346,7 @@ function StructureEditor({
     const inline = variant.panels.find((p) => p.id === panelId)
     if (inline?.type !== 'lamps') return
     const ref = uid('lamp')
-    mutShared((list) => list.push({ id: ref, name: 'Lamp panel', w: inline.w, h: inline.h, lamps: clone(inline.lamps), ...(inline.backplate ? { backplate: clone(inline.backplate) } : {}) }))
+    mutShared((list) => list.push({ id: ref, name: 'Lamp panel', w: inline.w, h: inline.h, lamps: clone(inline.lamps), ...(inline.backplates?.length ? { backplates: clone(inline.backplates) } : {}) }))
     mutVariant((v) => { const idx = v.panels.findIndex((p) => p.id === panelId); if (idx >= 0) v.panels[idx] = { type: 'lamps-ref', id: panelId, ref } })
     setSelDot(null)
   }
@@ -439,9 +461,16 @@ function LampsEditor({
   edit: (fn: (p: LampBody) => void) => void
 }) {
   const canvasRef = useRef<HTMLDivElement>(null)
-  const [drag, setDrag] = useState<{ k: 'dot'; id: string } | { k: 'pt'; i: number } | null>(null)
+  const [drag, setDrag] = useState<
+    | { k: 'dot'; id: string }
+    | { k: 'pt'; bi: number; i: number }
+    | { k: 'cc'; bi: number }
+    | { k: 'cr'; bi: number }
+    | null
+  >(null)
+  const [selBp, setSelBp] = useState<number | null>(null)
   const [selPoint, setSelPoint] = useState<number | null>(null)
-  useEffect(() => { setSelPoint(null) }, [panel.id])
+  useEffect(() => { setSelBp(null); setSelPoint(null) }, [panel.id])
 
   const editPanel = edit
   const clamp = (v: number, hi: number) => Math.max(0, Math.min(hi, v))
@@ -451,28 +480,47 @@ function LampsEditor({
     return { x: Math.round((e.clientX - r.left) / CANVAS_SCALE), y: Math.round((e.clientY - r.top) / CANVAS_SCALE) }
   }
   const dot = panel.lamps.find((l) => l.id === selDot) ?? null
-  const bp = panel.backplate
-  const point = bp && selPoint != null ? bp.points[selPoint] : null
+  const bps = panel.backplates ?? []
+  const curBp = selBp != null ? bps[selBp] : null
+  const poly = curBp && curBp.kind !== 'circle' ? curBp : null
+  const circle = curBp && curBp.kind === 'circle' ? curBp : null
+  const point = poly && selPoint != null ? poly.points[selPoint] : null
 
-  const addBackplate = () => {
+  const selectBp = (i: number) => { setSelBp(i); setSelPoint(null); setSelDot(null) }
+  const addPoly = () => {
+    const idx = bps.length
     editPanel((p) => {
       const pad = 2
-      p.backplate = { points: [
+      ;(p.backplates ??= []).push({ points: [
         { x: pad, y: pad, r: 6 },
         { x: p.w - pad, y: pad, r: 6 },
         { x: p.w - pad, y: p.h - pad, r: 6 },
         { x: pad, y: p.h - pad, r: 6 },
-      ] }
+      ] })
     })
-    setSelDot(null)
-    setSelPoint(0)
+    setSelBp(idx); setSelPoint(0); setSelDot(null)
+  }
+  const addCircle = () => {
+    const idx = bps.length
+    editPanel((p) => {
+      const r = Math.max(1, Math.round(Math.min(p.w, p.h) / 2) - 2)
+      ;(p.backplates ??= []).push({ kind: 'circle', cx: Math.round(p.w / 2), cy: Math.round(p.h / 2), r })
+    })
+    setSelBp(idx); setSelPoint(null); setSelDot(null)
+  }
+  const removeBp = () => {
+    if (selBp == null) return
+    const i = selBp
+    editPanel((p) => { p.backplates?.splice(i, 1); if (p.backplates && p.backplates.length === 0) delete p.backplates })
+    setSelBp(null); setSelPoint(null)
   }
   const addPoint = () => {
-    if (!bp) return
-    const i = selPoint ?? bp.points.length - 1
-    const a = bp.points[i]
-    const b = bp.points[(i + 1) % bp.points.length]
-    editPanel((p) => { p.backplate?.points.splice(i + 1, 0, { x: Math.round((a.x + b.x) / 2), y: Math.round((a.y + b.y) / 2), r: 0 }) })
+    if (!poly || selBp == null) return
+    const bi = selBp
+    const i = selPoint ?? poly.points.length - 1
+    const a = poly.points[i]
+    const b = poly.points[(i + 1) % poly.points.length]
+    editPanel((p) => { const t = p.backplates?.[bi]; if (t && t.kind !== 'circle') t.points.splice(i + 1, 0, { x: Math.round((a.x + b.x) / 2), y: Math.round((a.y + b.y) / 2), r: 0 }) })
     setSelPoint(i + 1)
   }
 
@@ -481,7 +529,7 @@ function LampsEditor({
       <div className="flex items-center justify-between">
         <p className={label()}>Dots — drag to position</p>
         <button
-          onClick={() => { const id = uid('dot'); editPanel((p) => p.lamps.push({ id, color: 'red', x: Math.round(p.w / 2), y: Math.round(p.h / 2), r: 11, label: 'Dot' })); setSelDot(id); setSelPoint(null) }}
+          onClick={() => { const id = uid('dot'); editPanel((p) => p.lamps.push({ id, color: 'red', x: Math.round(p.w / 2), y: Math.round(p.h / 2), r: 11, label: 'Dot' })); setSelDot(id); setSelBp(null); setSelPoint(null) }}
           className="rounded-none border border-border px-2 py-1 text-xs hover:border-accent"
         >
           + dot
@@ -497,12 +545,14 @@ function LampsEditor({
             if (!drag) return
             const c = toCoords(e)
             if (drag.k === 'dot') editPanel((p) => { const l = p.lamps.find((x) => x.id === drag.id); if (l) { l.x = clamp(c.x, p.w); l.y = clamp(c.y, p.h) } })
-            else editPanel((p) => { const pt = p.backplate?.points[drag.i]; if (pt) { pt.x = clamp(c.x, p.w); pt.y = clamp(c.y, p.h) } })
+            else if (drag.k === 'pt') editPanel((p) => { const t = p.backplates?.[drag.bi]; if (t && t.kind !== 'circle') { const pt = t.points[drag.i]; if (pt) { pt.x = clamp(c.x, p.w); pt.y = clamp(c.y, p.h) } } })
+            else if (drag.k === 'cc') editPanel((p) => { const t = p.backplates?.[drag.bi]; if (t && t.kind === 'circle') { t.cx = clamp(c.x, p.w); t.cy = clamp(c.y, p.h) } })
+            else editPanel((p) => { const t = p.backplates?.[drag.bi]; if (t && t.kind === 'circle') t.r = Math.max(1, Math.round(Math.hypot(c.x - t.cx, c.y - t.cy))) })
           }}
           onPointerUp={() => setDrag(null)}
           onPointerLeave={() => setDrag(null)}
         >
-          {bp && bp.points.length >= 2 && (
+          {bps.length > 0 && (
             <svg
               className="pointer-events-none absolute inset-0"
               width={panel.w * CANVAS_SCALE}
@@ -510,13 +560,20 @@ function LampsEditor({
               viewBox={`0 0 ${panel.w} ${panel.h}`}
               style={{ overflow: 'visible' }}
             >
-              <path d={roundedPolyPath(bp.points)} fill="none" stroke="rgba(20,24,34,.4)" strokeWidth={1.3} strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+              {bps.map((b, i) => {
+                const stroke = i === selBp ? 'rgba(47,111,237,.75)' : 'rgba(20,24,34,.4)'
+                return b.kind === 'circle' ? (
+                  <circle key={i} cx={b.cx} cy={b.cy} r={b.r} fill="none" stroke={stroke} strokeWidth={1.3} vectorEffect="non-scaling-stroke" />
+                ) : b.points.length >= 2 ? (
+                  <path key={i} d={roundedPolyPath(b.points)} fill="none" stroke={stroke} strokeWidth={1.3} strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+                ) : null
+              })}
             </svg>
           )}
           {panel.lamps.map((l) => (
             <div
               key={l.id}
-              onPointerDown={(e) => { (e.target as Element).setPointerCapture(e.pointerId); setSelDot(l.id); setSelPoint(null); setDrag({ k: 'dot', id: l.id }) }}
+              onPointerDown={(e) => { (e.target as Element).setPointerCapture(e.pointerId); setSelDot(l.id); setSelBp(null); setSelPoint(null); setDrag({ k: 'dot', id: l.id }) }}
               className="absolute rounded-full"
               style={{
                 left: (l.x - l.r) * CANVAS_SCALE, top: (l.y - l.r) * CANVAS_SCALE,
@@ -526,15 +583,31 @@ function LampsEditor({
               }}
             />
           ))}
-          {bp?.points.map((pt, i) => (
+          {poly?.points.map((pt, i) => (
             <div
               key={i}
-              onPointerDown={(e) => { (e.target as Element).setPointerCapture(e.pointerId); setSelPoint(i); setSelDot(null); setDrag({ k: 'pt', i }) }}
+              onPointerDown={(e) => { (e.target as Element).setPointerCapture(e.pointerId); setSelPoint(i); setSelDot(null); setDrag({ k: 'pt', bi: selBp!, i }) }}
               className="absolute"
               style={{ left: pt.x * CANVAS_SCALE - 5, top: pt.y * CANVAS_SCALE - 5, width: 10, height: 10, background: i === selPoint ? '#2f6fed' : '#ffffff', border: '2px solid #2f6fed', borderRadius: 2, cursor: 'grab' }}
               title={`point ${i + 1}`}
             />
           ))}
+          {circle && (
+            <>
+              <div
+                onPointerDown={(e) => { (e.target as Element).setPointerCapture(e.pointerId); setDrag({ k: 'cc', bi: selBp! }) }}
+                className="absolute"
+                style={{ left: circle.cx * CANVAS_SCALE - 5, top: circle.cy * CANVAS_SCALE - 5, width: 10, height: 10, background: '#2f6fed', border: '2px solid #2f6fed', borderRadius: 2, cursor: 'grab' }}
+                title="centre"
+              />
+              <div
+                onPointerDown={(e) => { (e.target as Element).setPointerCapture(e.pointerId); setDrag({ k: 'cr', bi: selBp! }) }}
+                className="absolute"
+                style={{ left: (circle.cx + circle.r) * CANVAS_SCALE - 5, top: circle.cy * CANVAS_SCALE - 5, width: 10, height: 10, background: '#ffffff', border: '2px solid #2f6fed', borderRadius: '50%', cursor: 'ew-resize' }}
+                title="radius"
+              />
+            </>
+          )}
         </div>
 
         <div className="flex-1 space-y-2 text-sm">
@@ -542,30 +615,54 @@ function LampsEditor({
           <NumRow label="panel h" value={panel.h} onChange={(n) => editPanel((p) => { p.h = n })} />
 
           <div className="mt-1 flex items-center justify-between border-t border-border pt-3">
-            <p className={label()}>Backplate</p>
-            {bp ? (
-              <button onClick={() => { editPanel((p) => { delete p.backplate }); setSelPoint(null) }} className="text-xs text-sig-red">remove</button>
-            ) : (
-              <button onClick={addBackplate} className="rounded-none border border-border px-2 py-1 text-xs hover:border-accent">+ backplate</button>
-            )}
+            <p className={label()}>Backplates</p>
+            <span className="flex gap-1">
+              <button onClick={addPoly} className="rounded-none border border-border px-2 py-1 text-xs hover:border-accent">+ poly</button>
+              <button onClick={addCircle} className="rounded-none border border-border px-2 py-1 text-xs hover:border-accent">+ circle</button>
+            </span>
           </div>
-          {bp && (
-            <>
-              <button onClick={addPoint} className="rounded-none border border-border px-2 py-1 text-xs hover:border-accent">+ point</button>
-              {point ? (
-                <div className="space-y-2">
-                  <p className="font-mono text-xs text-muted">point {(selPoint ?? 0) + 1} of {bp.points.length} — drag on the canvas</p>
-                  <NumRow label="x" value={point.x} onChange={(n) => editPanel((p) => { const pt = p.backplate?.points[selPoint ?? 0]; if (pt) pt.x = n })} />
-                  <NumRow label="y" value={point.y} onChange={(n) => editPanel((p) => { const pt = p.backplate?.points[selPoint ?? 0]; if (pt) pt.y = n })} />
-                  <NumRow label="corner r" value={point.r ?? 0} onChange={(n) => editPanel((p) => { const pt = p.backplate?.points[selPoint ?? 0]; if (pt) pt.r = Math.max(0, n) })} />
-                  {bp.points.length > 3 && (
-                    <button onClick={() => { editPanel((p) => { p.backplate?.points.splice(selPoint ?? 0, 1) }); setSelPoint(null) }} className="text-xs text-sig-red">Delete point</button>
-                  )}
-                </div>
+          {bps.length === 0 ? (
+            <p className="text-xs text-faint">None. Add a soft-grey outline behind the dots.</p>
+          ) : (
+            <div className="flex flex-wrap gap-1">
+              {bps.map((b, i) => (
+                <button key={i} onClick={() => selectBp(i)} className={chip(i === selBp)}>
+                  {b.kind === 'circle' ? 'circle' : 'poly'} {i + 1}
+                </button>
+              ))}
+            </div>
+          )}
+          {curBp && (
+            <div className="space-y-2 border-t border-border pt-2">
+              <div className="flex items-center justify-between">
+                <p className="font-mono text-xs text-muted">{curBp.kind === 'circle' ? 'circle' : 'polygon'} {(selBp ?? 0) + 1}</p>
+                <button onClick={removeBp} className="text-xs text-sig-red">remove</button>
+              </div>
+              {circle ? (
+                <>
+                  <NumRow label="centre x" value={circle.cx} onChange={(n) => editPanel((p) => { const t = p.backplates?.[selBp ?? 0]; if (t && t.kind === 'circle') t.cx = n })} />
+                  <NumRow label="centre y" value={circle.cy} onChange={(n) => editPanel((p) => { const t = p.backplates?.[selBp ?? 0]; if (t && t.kind === 'circle') t.cy = n })} />
+                  <NumRow label="radius" value={circle.r} onChange={(n) => editPanel((p) => { const t = p.backplates?.[selBp ?? 0]; if (t && t.kind === 'circle') t.r = Math.max(1, n) })} />
+                </>
               ) : (
-                <p className="text-xs text-faint">Tap a point handle to shape the outline, or + point to add one.</p>
+                <>
+                  <button onClick={addPoint} className="rounded-none border border-border px-2 py-1 text-xs hover:border-accent">+ point</button>
+                  {point ? (
+                    <div className="space-y-2">
+                      <p className="font-mono text-xs text-muted">point {(selPoint ?? 0) + 1} of {poly!.points.length} — drag on the canvas</p>
+                      <NumRow label="x" value={point.x} onChange={(n) => editPanel((p) => { const t = p.backplates?.[selBp ?? 0]; if (t && t.kind !== 'circle') { const pt = t.points[selPoint ?? 0]; if (pt) pt.x = n } })} />
+                      <NumRow label="y" value={point.y} onChange={(n) => editPanel((p) => { const t = p.backplates?.[selBp ?? 0]; if (t && t.kind !== 'circle') { const pt = t.points[selPoint ?? 0]; if (pt) pt.y = n } })} />
+                      <NumRow label="corner r" value={point.r ?? 0} onChange={(n) => editPanel((p) => { const t = p.backplates?.[selBp ?? 0]; if (t && t.kind !== 'circle') { const pt = t.points[selPoint ?? 0]; if (pt) pt.r = Math.max(0, n) } })} />
+                      {poly!.points.length > 3 && (
+                        <button onClick={() => { editPanel((p) => { const t = p.backplates?.[selBp ?? 0]; if (t && t.kind !== 'circle') t.points.splice(selPoint ?? 0, 1) }); setSelPoint(null) }} className="text-xs text-sig-red">Delete point</button>
+                      )}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-faint">Tap a point handle to shape the outline, or + point to add one.</p>
+                  )}
+                </>
               )}
-            </>
+            </div>
           )}
 
           {dot ? (
@@ -628,7 +725,7 @@ function PanelPropsEditor({ panel, mutVariant }: { panel: Panel; mutVariant: (fn
       )}
       {panel.type === 'sign' && (
         <>
-          <SelectRow label="kind" value={panel.kind} options={['psr', 'psr-diff', 'psr-diverge', 'psr-warn', 'psr-warn-diverge', 'tsr-warn', 'tsr-commence', 'tsr-terminate', 'de-mast-main', 'de-vorsignaltafel']} onChange={(s) => edit((p) => { if (p.type === 'sign') p.kind = s as typeof panel.kind })} />
+          <SelectRow label="kind" value={panel.kind} options={['psr', 'psr-diff', 'psr-diverge', 'psr-warn', 'psr-warn-diverge', 'tsr-warn', 'tsr-commence', 'tsr-terminate', 'de-mast-main', 'de-mast-distant', 'de-mast-black', 'de-mast-red', 'de-mast-dots', 'de-mast-vf', 'de-vorsignaltafel']} onChange={(s) => edit((p) => { if (p.type === 'sign') p.kind = s as typeof panel.kind })} />
           <TextRow label="primary" value={panel.primary ?? ''} onChange={(s) => edit((p) => { if (p.type === 'sign') p.primary = s || undefined })} />
           <TextRow label="secondary" value={panel.secondary ?? ''} onChange={(s) => edit((p) => { if (p.type === 'sign') p.secondary = s || undefined })} />
           <SelectRow label="arrow" value={panel.arrow ?? 'none'} options={['none', 'left', 'right']} onChange={(s) => edit((p) => { if (p.type === 'sign') p.arrow = s === 'none' ? undefined : (s as 'left' | 'right') })} />
@@ -644,15 +741,35 @@ const CYCLE: Record<DotState, DotState> = { off: 'on', on: 'flash', flash: 'off'
 const ASPECT_TEXT: Array<keyof Aspect> = ['id', 'name', 'meaning', 'concept', 'whatItMeans', 'whatYouDo', 'sequenceNote', 'safetyInteraction', 'lookAlikes', 'controls', 'realWorldNote']
 
 function AspectEditor({
-  variant, selAspect, setSelAspect, mutVariant,
+  variant, selAspect, setSelAspect, mutVariant, conceptOptions,
 }: {
   variant: SignalVariant
   selAspect: number
   setSelAspect: (i: number) => void
   mutVariant: (fn: (v: SignalVariant) => void) => void
+  conceptOptions: { concept: string; sample: string }[]
 }) {
   const aspect = variant.aspects[selAspect]
   const editAspect = (fn: (a: Aspect) => void) => mutVariant((v) => { const a = v.aspects[selAspect]; if (a) fn(a) })
+  const [dragIdx, setDragIdx] = useState<number | null>(null)
+  const [overIdx, setOverIdx] = useState<number | null>(null)
+
+  /** Move an aspect, keeping the selection on whichever aspect was selected before. */
+  const moveAspect = (from: number, to: number) => {
+    if (from === to) return
+    const order = variant.aspects.map((_, i) => i)
+    order.splice(to, 0, ...order.splice(from, 1))
+    mutVariant((v) => v.aspects.splice(to, 0, ...v.aspects.splice(from, 1)))
+    const next = order.indexOf(selAspect)
+    if (next !== -1) setSelAspect(next)
+  }
+  /** Insertion marker on the edge of the chip the dragged aspect would land on. */
+  const dropEdge = (i: number) => {
+    if (dragIdx === null || dragIdx === i || overIdx !== i) return undefined
+    const c = i === selAspect ? '#ffffff' : '#2f6fed'
+    return { boxShadow: `inset ${dragIdx < i ? '-3px' : '3px'} 0 0 0 ${c}` }
+  }
+
   const lamps = variant.panels.flatMap((p) => (p.type === 'lamps' ? p.lamps : []))
   const arms = variant.panels.filter((p): p is ArmPanel => p.type === 'arm')
   const aux = variant.panels.filter(
@@ -677,9 +794,22 @@ function AspectEditor({
         </div>
         <div className="mt-3 flex flex-wrap gap-1">
           {variant.aspects.map((a, i) => (
-            <button key={a.id} onClick={() => setSelAspect(i)} className={chip(i === selAspect)}>{a.name || a.id}</button>
+            <button
+              key={a.id}
+              draggable
+              onDragStart={(e) => { setDragIdx(i); e.dataTransfer.effectAllowed = 'move' }}
+              onDragOver={(e) => { if (dragIdx === null) return; e.preventDefault(); e.dataTransfer.dropEffect = 'move'; setOverIdx(i) }}
+              onDrop={(e) => { e.preventDefault(); if (dragIdx !== null) moveAspect(dragIdx, i); setDragIdx(null); setOverIdx(null) }}
+              onDragEnd={() => { setDragIdx(null); setOverIdx(null) }}
+              onClick={() => setSelAspect(i)}
+              style={dropEdge(i)}
+              className={`${chip(i === selAspect)} cursor-grab ${dragIdx === i ? 'opacity-40' : ''}`}
+            >
+              {a.name || a.id}
+            </button>
           ))}
         </div>
+        {variant.aspects.length > 1 && <p className="mt-2 text-xs text-faint">Drag aspects to reorder.</p>}
       </div>
 
       {aspect && (
@@ -751,14 +881,29 @@ function AspectEditor({
             {ASPECT_TEXT.map((k) => (
               <label key={k} className="block">
                 <span className="font-mono text-xs text-muted">{k}</span>
-                <textarea
-                  rows={k === 'whatItMeans' || k === 'whatYouDo' ? 2 : 1}
-                  value={(aspect[k] as string) ?? ''}
-                  onChange={(e) => editAspect((a) => { (a as unknown as Record<string, unknown>)[k] = e.target.value })}
-                  className="mt-0.5 w-full resize-y rounded-none border border-border px-2 py-1"
-                />
+                {k === 'concept' ? (
+                  <input
+                    list="editor-concepts"
+                    value={aspect.concept ?? ''}
+                    onChange={(e) => editAspect((a) => { a.concept = e.target.value })}
+                    placeholder="pick an existing concept or type a new one"
+                    className="mt-0.5 w-full rounded-none border border-border px-2 py-1 font-mono text-xs"
+                  />
+                ) : (
+                  <textarea
+                    rows={k === 'whatItMeans' || k === 'whatYouDo' ? 2 : 1}
+                    value={(aspect[k] as string) ?? ''}
+                    onChange={(e) => editAspect((a) => { (a as unknown as Record<string, unknown>)[k] = e.target.value })}
+                    className="mt-0.5 w-full resize-y rounded-none border border-border px-2 py-1"
+                  />
+                )}
               </label>
             ))}
+            <datalist id="editor-concepts">
+              {conceptOptions.map((o) => (
+                <option key={o.concept} value={o.concept}>{o.sample}</option>
+              ))}
+            </datalist>
           </div>
         </>
       )}

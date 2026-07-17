@@ -1,0 +1,16 @@
+{
+  "id": "hl",
+  "name": "Hl Hauptlichtsignal",
+  "blurb": "",
+  "intro": "",
+  "order": 3,
+  "variants": [
+    {
+      "id": "main",
+      "name": "Main",
+      "blurb": "",
+      "panels": [],
+      "aspects": []
+    }
+  ]
+}

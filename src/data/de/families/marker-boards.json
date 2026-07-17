@@ -1,9 +1,9 @@
 {
   "id": "marker-boards",
   "name": "Marker boards",
-  "blurb": "Lineside plates that identify a signal or warn that one is coming.",
-  "intro": "German marker boards (Signaltafeln) stand beside the track to tell you what kind of signal you are looking at, or to warn that a signal is coming. This family covers two you meet constantly in Train Sim World: the white-red-white plate that marks a main (stop) signal, and the Ne 2 board that announces a distant signal ahead. They carry no speed or stop command themselves — they tell you how to read the signals around them.",
-  "order": 1,
+  "blurb": "Mast and lineside plates that tell you how to read the signal they mark.",
+  "intro": "German marker boards (Signaltafeln) and mast plates (Mastschilder) stand on or beside the signal post to tell you what kind of signal you are looking at, and how to behave if it is at stop or has failed. This family covers the mast plates — from the white-red-white plate that marks an absolute main signal to the banded and dotted plates that let you pass a failed signal under certain rules — the yellow downward triangle that marks a Ks signal with distant function, and the Ne 2 board that announces a distant signal ahead. They carry no speed or stop command of their own; they qualify the signals around them.",
+  "order": 4,
   "variants": [
     {
       "id": "main-mast",
@@ -30,7 +30,165 @@
           "lookAlikes": "The red band is the key. A mast plate without it — or with other markings — can mark a self-acting block signal you may pass at caution when it is dark; the white-red-white plate does not permit that.",
           "realWorldNote": "German signal mast plates (Mastschilder) come in several patterns; white-red-white is the standard absolute main-signal plate. Automatic/self-block signals carry different plates that allow passing at caution when unlit.",
           "related": [
-            "de-vorsignal-plate"
+            "de-vorsignal-plate",
+            "de-mast-distant",
+            "de-mast-vorsignalfunktion"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "main-distant-mast",
+      "name": "Main + distant mast plate",
+      "shortName": "W-Y-W-Y-W",
+      "blurb": "White-yellow-white-yellow-white — a main signal that also acts as a distant signal.",
+      "panels": [
+        {
+          "type": "sign",
+          "id": "plate",
+          "kind": "de-mast-distant",
+          "size": 30,
+          "label": "White-yellow-white-yellow-white mast plate"
+        }
+      ],
+      "aspects": [
+        {
+          "id": "distant-plate",
+          "name": "Main signal with distant function",
+          "meaning": "Main signal that also announces the next one; a failed one may be passed on sight if the signaller can't be reached",
+          "concept": "de-mast-distant",
+          "whatItMeans": "A white-yellow-white-yellow-white plate marks a light main signal that also has a distant-signal function — it tells you about the next signal as well as governing its own stop. If it is showing stop or has failed and, after stopping in front of it, you cannot reach the signaller, you may pass without consent and run on sight to the next main signal.",
+          "whatYouDo": "Stop at a red or failed signal and try to contact the signaller. If you cannot, pass at caution and run on sight to the next main signal, ready to stop short of any obstruction.",
+          "lookAlikes": "The yellow stripes separate it from the white-red-white absolute plate, which never lets you pass a failed signal on your own judgement.",
+          "realWorldNote": "Weiß-gelb-weiß-gelb-weiß Mastschild. Marks a Lichthauptsignal that also has Vorsignalfunktion.",
+          "related": [
+            "de-main-plate",
+            "de-mast-vorsignalfunktion"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sbahn-black-mast",
+      "name": "S-Bahn automatic mast plate",
+      "shortName": "W-B-W-B-W",
+      "blurb": "White-black-white-black-white — Berlin/Hamburg DC S-Bahn automatic block.",
+      "panels": [
+        {
+          "type": "sign",
+          "id": "plate",
+          "kind": "de-mast-black",
+          "size": 30,
+          "label": "White-black-white-black-white mast plate"
+        }
+      ],
+      "aspects": [
+        {
+          "id": "sbahn-black-plate",
+          "name": "S-Bahn automatic block plate",
+          "meaning": "Berlin/Hamburg DC S-Bahn — a stop or failed signal may be passed on sight after stopping",
+          "concept": "de-mast-sbahn-black",
+          "whatItMeans": "A white-black-white-black-white plate is used on the Berlin and Hamburg DC S-Bahn. At a signal so marked showing stop or failed, you may pass without consent after stopping in front of it, then run on sight under the S-Bahn's local rules. Such signals also have a distant-signal function.",
+          "whatYouDo": "Stop, then pass at caution on sight per the S-Bahn directives, ready to stop.",
+          "realWorldNote": "Weiß-schwarz-weiß-schwarz-weiß Mastschild. Berlin (Ril 432 / SBS) and Hamburg S-Bahn only.",
+          "related": [
+            "de-main-plate"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sbahn-red-mast",
+      "name": "S-Bahn red mast plate",
+      "shortName": "All red",
+      "blurb": "All-red plate — Berlin DC S-Bahn; pass a stop signal only on authority.",
+      "panels": [
+        {
+          "type": "sign",
+          "id": "plate",
+          "kind": "de-mast-red",
+          "size": 30,
+          "label": "Solid red mast plate"
+        }
+      ],
+      "aspects": [
+        {
+          "id": "sbahn-red-plate",
+          "name": "S-Bahn absolute plate",
+          "meaning": "Berlin DC S-Bahn — pass a stop or failed signal only on a substitute signal or written order",
+          "concept": "de-mast-sbahn-red",
+          "whatItMeans": "A plain red plate is used only on the Berlin DC S-Bahn. At a signal so marked showing stop or failed, you may pass only on a substitute signal (Zs 1), a wrong-line substitute (Zs 8), a written order (Befehl), or — at a Zs 12 signal — a verbal instruction.",
+          "whatYouDo": "Treat it as absolute. Do not pass without one of the listed authorities.",
+          "realWorldNote": "Rotes Mastschild. Berlin DC S-Bahn only (Ril 432).",
+          "related": [
+            "de-main-plate"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "two-dot-mast",
+      "name": "Two-dot mast plate",
+      "shortName": "Two dots",
+      "blurb": "White plate with two black dots — pass a stop signal only on written order.",
+      "panels": [
+        {
+          "type": "sign",
+          "id": "plate",
+          "kind": "de-mast-dots",
+          "size": 30,
+          "label": "White mast plate with two black dots"
+        }
+      ],
+      "aspects": [
+        {
+          "id": "two-dot-plate",
+          "name": "Two black dots",
+          "meaning": "Pass a stop signal only on a written order; dark or Ra 12 means it doesn't apply to trains",
+          "concept": "de-mast-dots",
+          "whatItMeans": "A white plate with two black dots marks a signal you may pass, when it is at stop, only on a written order (Befehl). If such a signal shows Ra 12 or is extinguished, it has no meaning for trains.",
+          "whatYouDo": "Stop at a red signal and wait for a written order before passing. If the signal is dark or shows the shunting-stop-lifted indication, it does not apply to your train.",
+          "realWorldNote": "Weiß mit zwei schwarzen Punkten.",
+          "related": [
+            "de-main-plate"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ks-vorsignal-mast",
+      "name": "Distant-function plate (Ks)",
+      "shortName": "Yellow ▽",
+      "blurb": "Yellow downward triangle below the white-red-white plate — a Ks signal that is main and distant in one.",
+      "panels": [
+        {
+          "type": "sign",
+          "id": "plate",
+          "kind": "de-mast-main",
+          "size": 30,
+          "label": "White-red-white main signal mast plate"
+        },
+        {
+          "type": "sign",
+          "id": "vf",
+          "kind": "de-mast-vf",
+          "size": 30,
+          "label": "Yellow downward-triangle distant-function plate"
+        }
+      ],
+      "aspects": [
+        {
+          "id": "ks-vorsignal-plate",
+          "name": "Ks main signal with distant function",
+          "meaning": "A Ks signal that shows both its own aspect and an advance warning of the next signal",
+          "concept": "de-mast-vorsignalfunktion",
+          "whatItMeans": "A yellow triangle pointing downwards, placed below the white-red-white plate on a Ks signal, means that Ks main signal also has a distant-signal function — it shows you the aspect of the next signal as well as governing its own stop. It is combined main-and-distant on a single head.",
+          "whatYouDo": "Read a Ks 1 / Ks 2 / Hp 0 here as both a main aspect and an advance warning of the next signal, and brake accordingly.",
+          "sequenceNote": "Ks 1 = proceed, Ks 2 = expect stop, Hp 0 = stop. With this plate a green (Ks 1) also promises the next signal is passable; a yellow (Ks 2) warns the next signal is at stop.",
+          "realWorldNote": "Gelbes, mit der Spitze nach unten weisendes Mastschild (§ 5a (1a)). Marks a Ks-Hauptsignal mit Vorsignalfunktion, placed below the white-red-white plate.",
+          "related": [
+            "de-main-plate",
+            "de-mast-distant"
           ]
         }
       ]
